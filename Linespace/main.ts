@@ -214,10 +214,6 @@ module Linespace {
             const starsPerTile = 100;
 
             const roundToTile = function(x: number) {
-                //if (x < 0) {
-                //    x -= tileSize;
-                //}
-
                 return Math.floor(x / tileSize) * tileSize;
             }
 
@@ -241,7 +237,7 @@ module Linespace {
                 context.stroke();
                 //context.strokeRect(tileX, tileY, tileSize, tileSize);
                 context.fillStyle = rgb(80, 80, 80);
-                context.fillText(`[${tileX}, ${tileY}]`, tileX + 10, tileY + 10);
+                context.fillText(`(${tileX}, ${tileY})`, tileX + 10, tileY + 20);
             };
 
             const maxX = canvas.width - currentTransform.dx;
