@@ -1,6 +1,4 @@
-﻿interface CanvasRenderingContext2D {
-    ellipse(x: number, y: number, radiusX: number, radiusY: number, rotation: number, startAngle: number, endAngle: number, anticlockwise?: boolean);
-}
+﻿///<reference path="definitions.d.ts" />
 
 module Linespace {
 
@@ -139,12 +137,14 @@ module Linespace {
             color: string;
         }
 
+        const starRng = new Math.seedrandom(':)');
+        
         const stars: Star[] = generate(1000, () => {
-            const intensity = 100 + Math.random() * 155;
+            const intensity = 100 + starRng.double() * 155;
             return {
                 position: {
-                    x: Math.random(),
-                    y: Math.random()
+                    x: starRng.double(),
+                    y: starRng.double()
                 },
                 color: rgb(intensity, intensity, intensity)
             };
