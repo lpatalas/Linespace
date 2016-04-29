@@ -159,9 +159,9 @@ module Linespace {
         }
 
         const planets: Planet[] = [
-            { color: '#804000', radius: 10, speed: 0.7, orbit: { radius: { x: 120, y: 100 }, orientation: 100 } },
-            { color: '#804080', radius: 10, speed: 0.4, orbit: { radius: { x: 220, y: 200 }, orientation: 100 } },
-            { color: '#3040F0', radius: 20, speed: 0.2, orbit: { radius: { x: 500, y: 450 }, orientation: 100 } }
+            { color: '#804000', radius: 10, speed: 0.7, orbit: { radius: { x: 120, y: 115 }, orientation: 100 } },
+            { color: '#804080', radius: 10, speed: 0.4, orbit: { radius: { x: 220, y: 210 }, orientation: 100 } },
+            { color: '#3040F0', radius: 20, speed: 0.2, orbit: { radius: { x: 500, y: 470 }, orientation: 100 } }
         ];
 
         const drawPlanet = function(time: number, planet: Planet) {
