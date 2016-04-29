@@ -131,6 +131,31 @@ module Linespace {
             context.fill();
         };
 
+        let debugLines: string[];
+
+        const resetDebugLines = function() {
+            debugLines = [];
+        };
+
+        const addDebugText = function(text: string) {
+            debugLines.push(text);
+        }
+
+        const addDebugJson = function(obj: any) {
+            addDebugText(JSON.stringify(obj));
+        }
+
+        const lineHeight = 10;
+
+        const drawDebugText = function(pos: Vec2D) {
+            context.setTransform(2, 0, 0, 2, pos.x * 2, pos.y * 2);
+            context.fillStyle = 'red';
+
+            debugLines.forEach((line, index) => {
+                context.fillText(line, 0, index * lineHeight);
+            });
+        }
+
         const planets: Planet[] = [
             { color: '#804000', radius: 10, speed: 0.7, orbit: { radius: { x: 120, y: 100 }, orientation: 100 } },
             { color: '#804080', radius: 10, speed: 0.4, orbit: { radius: { x: 220, y: 200 }, orientation: 100 } },
@@ -171,6 +196,7 @@ module Linespace {
         }
 
         const starRng = new Math.seedrandom(':)');
+        //starRng.
         
         const stars: Star[] = generate(1000, () => {
             const intensity = 100 + starRng.double() * 155;
@@ -184,7 +210,54 @@ module Linespace {
         });
 
         const drawStars = function() {
-            stars.forEach(star => drawPixel(vmul(star.position, getSize()), star.color));
+            const tileSize = 1000;
+            const starsPerTile = 100;
+
+            const roundToTile = function(x: number) {
+                //if (x < 0) {
+                //    x -= tileSize;
+                //}
+
+                return Math.floor(x / tileSize) * tileSize;
+            }
+
+            const drawTile = function(tileX: number, tileY: number) {
+                addDebugText(`Drawing tile: ${tileX}, ${tileY}`);
+
+                var rng = new Math.seedrandom(`${tileX},${tileY}`);
+                for (let i = 0; i < starsPerTile; i++) {
+                    const x = tileX + rng.quick() * tileSize;
+                    const y = tileY + rng.quick() * tileSize;
+                    const c = 100 + rng.quick() * 155;
+                    drawPixel(vec(x, y), rgb(c, c, c));
+                }
+                context.strokeStyle = rgb(80, 80, 80);
+                context.setLineDash([10, 10]);
+                context.beginPath();
+                context.moveTo(tileX, tileY);
+                context.lineTo(tileX + tileSize, tileY);
+                context.moveTo(tileX, tileY);
+                context.lineTo(tileX, tileY + tileSize);
+                context.stroke();
+                //context.strokeRect(tileX, tileY, tileSize, tileSize);
+                context.fillStyle = rgb(80, 80, 80);
+                context.fillText(`[${tileX}, ${tileY}]`, tileX + 10, tileY + 10);
+            };
+
+            const maxX = canvas.width - currentTransform.dx;
+            const maxY = canvas.height - currentTransform.dy;
+            const startX = roundToTile(-currentTransform.dx);
+            const startY = roundToTile(-currentTransform.dy);
+
+            addDebugJson({ maxX, maxY, startX, startY });
+
+            for (let tileY = startY; tileY < maxY; tileY += tileSize) {
+                for (let tileX = startX; tileX < maxX; tileX += tileSize) {
+                    drawTile(tileX, tileY);
+                }
+            }
+
+            context.setLineDash([]);
         };
 
         let currentTransform = xidentity();
@@ -196,18 +269,14 @@ module Linespace {
             planets.forEach(planet => drawPlanet(time, planet));
         };
 
-        const drawDebugOverlay = function() {
-            const transformJson = JSON.stringify(currentTransform);
-            context.fillStyle = 'red';
-            context.setTransform(2, 0, 0, 2, 0, 0);
-            context.fillText(transformJson, 10, 10);
-        };
-
         const update = function(dt: number, time: number) {
+            resetDebugLines();
+            addDebugJson(currentTransform);
+
             fitCanvasToWindow();
             clearCanvas();
             drawObjects(time);
-            drawDebugOverlay();
+            drawDebugText(vec(10, 10));
         };
 
         const hookMouseEvents = function() {
