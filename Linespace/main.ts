@@ -2,6 +2,8 @@
 
 module Linespace {
 
+    const isDebugMode = window.location.search.indexOf('debug=1') >= 0;
+
     interface Vec2D {
         x: number;
         y: number;
@@ -272,7 +274,10 @@ module Linespace {
             fitCanvasToWindow();
             clearCanvas();
             drawObjects(time);
-            drawDebugText(vec(10, 10));
+
+            if (isDebugMode) {
+                drawDebugText(vec(10, 10));
+            }
         };
 
         const hookMouseEvents = function() {
