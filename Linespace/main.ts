@@ -147,14 +147,15 @@ module Linespace {
             addDebugText(JSON.stringify(obj));
         }
 
-        const lineHeight = 10;
+        const fontSize = 20;
 
         const drawDebugText = function(pos: Vec2D) {
-            context.setTransform(2, 0, 0, 2, pos.x * 2, pos.y * 2);
-            context.fillStyle = 'red';
+            context.setTransform(1, 0, 0, 1, pos.x, pos.y + fontSize);
+            context.font = `${fontSize}px Consolas`;
+            context.fillStyle = '#40a040';
 
             debugLines.forEach((line, index) => {
-                context.fillText(line, 0, index * lineHeight);
+                context.fillText(line, 0, index * fontSize);
             });
         }
 
