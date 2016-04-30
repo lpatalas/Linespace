@@ -1,8 +1,15 @@
+param(
+	[String] $UserName,
+	[String] $Password)
 
 $MsBuildExe = 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe';
 $MsDeployExe = 'C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe'
 $ProjectName = 'Linespace.csproj'
 $PublishDir = 'Build\Output'
+
+$sourceFiles = @(
+	'index.html'
+)
 
 $MsBuildProperties = @(
 	"Configuration=Debug"
@@ -10,9 +17,13 @@ $MsBuildProperties = @(
 	"VisualStudioVersion=14.0"
 ) -join ';'
 
-$sourceFiles = @(
-	'index.html'
-)
+$MsDeployDest = @(
+	'contentPath=linespace'
+	'ComputerName=https://waws-prod-am2-057.publish.azurewebsites.windows.net/MsDeploy.axd?site=linespace'
+	"UserName=$UserName"
+	"Password=$Password"
+	'AuthType=Basic'
+) -join ','
 
 function BeginSection($title) {
 	Write-Host
@@ -59,6 +70,10 @@ try {
 		}
 	}
 
+	if (Test-Path $PublishDir) {
+		Remove-Item $PublishDir -Force -Recurse
+	}
+
 	foreach ($sourcePath in $outputs) {
 		$targetPath = Join-Path $PublishDir $sourcePath
 		$targetDir = Split-Path $targetPath
@@ -70,6 +85,12 @@ try {
 		Write-Host "$sourcePath => $targetPath"
 		Copy-Item $sourcePath $targetPath -Force
 	}
+
+	BeginSection 'Deploying files'
+
+	$FullPublishDir = Join-Path (pwd) $PublishDir
+	& $MsDeployExe -verb:sync -source:contentPath=$FullPublishDir -dest:$MsDeployDest
+		
 }
 catch {
 	Write-Host $_.Exception.Message -ForegroundColor Red
