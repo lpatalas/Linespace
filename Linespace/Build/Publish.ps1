@@ -1,6 +1,8 @@
 
-$MsBuildExe = "C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe";
+$MsBuildExe = 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe';
+$MsDeployExe = 'C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe'
 $ProjectName = 'Linespace.csproj'
+$PublishDir = 'Build\Output'
 
 $MsBuildProperties = @(
 	"Configuration=Debug"
@@ -33,7 +35,6 @@ try {
 		}
 
 		$script:outputs += @( $path );
-		Write-Host $path
 	}
 
 	function AddReferencedScripts($htmlPath) {
@@ -46,7 +47,7 @@ try {
 		}
 	}
 
-	BeginSection 'Getting list of published files:'
+	BeginSection 'Publishing files:'
 
 	foreach ($pattern in $sourceFiles) {
 		$items = Get-ChildItem $pattern -Name
@@ -58,7 +59,17 @@ try {
 		}
 	}
 
+	foreach ($sourcePath in $outputs) {
+		$targetPath = Join-Path $PublishDir $sourcePath
+		$targetDir = Split-Path $targetPath
 
+		if (-not (Test-Path $targetDir)) {
+			New-Item $targetDir -ItemType Directory | Out-Null
+		}
+
+		Write-Host "$sourcePath => $targetPath"
+		Copy-Item $sourcePath $targetPath -Force
+	}
 }
 catch {
 	Write-Host $_.Exception.Message -ForegroundColor Red
