@@ -267,8 +267,31 @@ module Linespace {
             planets.forEach(planet => drawPlanet(time, planet));
         };
 
+        const updateFpsCounter = (() => {
+            let frameCounter = 0;
+            let fpsMeasureStartTime = null;
+            const fpsMeasureInterval = 1;
+            let currentFps = 0;
+
+            return function(time: number) {
+                frameCounter++;
+
+                if (!fpsMeasureStartTime) {
+                    fpsMeasureStartTime = time;
+                }
+                else if (time - fpsMeasureStartTime >= fpsMeasureInterval) {
+                    currentFps = frameCounter / (time - fpsMeasureStartTime);
+                    fpsMeasureStartTime = time;
+                    frameCounter = 0;
+                }
+
+                addDebugText(`FPS: ${currentFps.toFixed(2)}`);
+            };
+        })();
+
         const update = function(dt: number, time: number) {
             resetDebugLines();
+            updateFpsCounter(time);
             addDebugJson(currentTransform);
 
             fitCanvasToWindow();
