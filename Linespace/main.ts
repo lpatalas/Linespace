@@ -352,12 +352,15 @@ module Linespace {
             fitCanvasToWindow();
             clearCanvas();
             drawObjects(time);
-            fillCircle(vec(0, 0), 10, 'red');
-
-            context.setTransform(1, 0, 0, 1, 0, 0);
-            drawCircle(vec(canvas.width / 2, canvas.height / 2), 20, 'white');
 
             if (isDebugMode) {
+                // World (0, 0) position
+                fillCircle(vec(0, 0), 10, 'red');
+
+                // Circle centered in the screen
+                context.setTransform(1, 0, 0, 1, 0, 0);
+                drawCircle(vec(canvas.width / 2, canvas.height / 2), 20, 'white');
+
                 drawDebugText(vec(10, 10));
             }
         };
