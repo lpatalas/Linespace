@@ -232,6 +232,9 @@ module Linespace {
             addDebugText(`cint: ${cint}`);
 
             const drawTile = function(tileX: number, tileY: number) {
+                tileX = Math.round(tileX);
+                tileY = Math.round(tileY);
+
                 addDebugText(`Drawing tile: ${tileX}, ${tileY}`);
 
                 var rng = new Math.seedrandom(`${tileX},${tileY}`);
@@ -254,9 +257,9 @@ module Linespace {
             };
 
             const pos = vec(worldPosition.x, worldPosition.y);
-            const topLeft = vec(pos.x - canvas.width / 2, pos.y - canvas.height / 2);
-            const maxX = canvas.width + topLeft.x;
-            const maxY = canvas.height + topLeft.y;
+            const topLeft = vec(pos.x - canvas.width / worldScale / 2, pos.y - canvas.height / worldScale / 2);
+            const maxX = canvas.width / worldScale + topLeft.x;
+            const maxY = canvas.height / worldScale + topLeft.y;
             const startX = roundToTile(topLeft.x);
             const startY = roundToTile(topLeft.y);
 
@@ -271,6 +274,30 @@ module Linespace {
             context.setLineDash([]);
         };
 
+        const drawGrid = function(position: Vec2D, scale: number, gridSize: number) {
+            const topLeftX = position.x - (canvas.width / 2) / scale;
+            const topLeftY = position.y - (canvas.height / 2) / scale;
+            const gridOffsetX = (topLeftX % gridSize) * scale;
+            const gridOffsetY = (topLeftY % gridSize) * scale;
+            const screenGridSize = gridSize * scale;
+
+            addDebugJson({ gridOffsetX, gridOffsetY, gridSize, screenGridSize });
+
+            context.setLineDash([10, 10]);
+            context.strokeStyle = 'gray';
+            context.beginPath();
+            for (let y = -gridOffsetY; y < canvas.height; y += screenGridSize) {
+                context.moveTo(gridOffsetX, y);
+                context.lineTo(canvas.width, y);
+            }
+            for (let x = -gridOffsetX; x < canvas.width; x += screenGridSize) {
+                context.moveTo(x, gridOffsetY);
+                context.lineTo(x, canvas.height);
+            }
+            context.stroke();
+            context.setLineDash([]);
+        };
+
         let worldPosition;
         let worldScale = 1;
 
@@ -282,9 +309,11 @@ module Linespace {
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
 
-            const starsTopLeft = getScreenTopLeftPosition(1);
-            context.setTransform(1, 0, 0, 1, -starsTopLeft.x, -starsTopLeft.y);
-            drawStars();
+            //const starsTopLeft = getScreenTopLeftPosition(1);
+            //context.setTransform(1, 0, 0, 1, -starsTopLeft.x, -starsTopLeft.y);
+            //drawStars();
+
+            drawGrid(worldPosition, worldScale, 1000);
 
             const topLeft = getScreenTopLeftPosition();
             context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
@@ -323,6 +352,10 @@ module Linespace {
             fitCanvasToWindow();
             clearCanvas();
             drawObjects(time);
+            fillCircle(vec(0, 0), 10, 'red');
+
+            context.setTransform(1, 0, 0, 1, 0, 0);
+            drawCircle(vec(canvas.width / 2, canvas.height / 2), 20, 'white');
 
             if (isDebugMode) {
                 drawDebugText(vec(10, 10));
