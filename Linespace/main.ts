@@ -287,12 +287,12 @@ module Linespace {
             context.strokeStyle = 'gray';
             context.beginPath();
             for (let y = -gridOffsetY; y < canvas.height; y += screenGridSize) {
-                context.moveTo(gridOffsetX, y);
-                context.lineTo(canvas.width, y);
+                context.moveTo(-gridOffsetX - screenGridSize, y);
+                context.lineTo(canvas.width + screenGridSize - gridOffsetX, y);
             }
             for (let x = -gridOffsetX; x < canvas.width; x += screenGridSize) {
-                context.moveTo(x, gridOffsetY);
-                context.lineTo(x, canvas.height);
+                context.moveTo(x, -gridOffsetY - screenGridSize);
+                context.lineTo(x, canvas.height + screenGridSize - gridOffsetY);
             }
             context.stroke();
             context.setLineDash([]);
