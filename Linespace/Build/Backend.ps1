@@ -89,7 +89,7 @@ function Publish-Files {
 		}
 	}
 
-	$outputs = $outputs | Get-Unique
+	$outputs = $outputs | Sort-Object | Get-Unique
 
 	foreach ($path in $outputs) {
 		if (-not (Test-Path $path)) {
