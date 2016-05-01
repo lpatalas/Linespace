@@ -249,12 +249,12 @@ module Linespace {
                 context.moveTo(tileX, tileY);
                 context.lineTo(tileX, tileY + tileSize);
                 context.stroke();
-                //context.strokeRect(tileX, tileY, tileSize, tileSize);
                 context.fillStyle = rgb(80, 80, 80);
                 context.fillText(`(${tileX}, ${tileY})`, tileX + 10, tileY + 20);
             };
 
-            const topLeft = getScreenTopLeftPosition();
+            const pos = vec(worldPosition.x, worldPosition.y);
+            const topLeft = vec(pos.x - canvas.width / 2, pos.y - canvas.height / 2);
             const maxX = canvas.width + topLeft.x;
             const maxY = canvas.height + topLeft.y;
             const startX = roundToTile(topLeft.x);
