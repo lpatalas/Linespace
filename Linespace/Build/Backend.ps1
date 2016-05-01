@@ -27,6 +27,17 @@ function Read-IniFile($path) {
 	return $data
 }
 
+function Find-ExecutablePath {
+	foreach ($path in $args) {
+		$command = Get-Command $path -ErrorAction SilentlyContinue
+		if ($command) {
+			return $command.Source
+		}
+	}
+
+	throw "Can't find required executable in any of paths: $args"
+}
+
 function Get-FullPath {
 	param(
 		[Parameter(Position = 0, Mandatory = $true)]
@@ -70,7 +81,7 @@ function Get-RelativePath {
 ################################
 # MS BUILD
 
-$MsBuildExe = 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe';
+$MsBuildExe = Find-ExecutablePath 'msbuild.exe' 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe'
 
 function Invoke-MSBuild {
 	param(
@@ -169,7 +180,7 @@ function Publish-Files {
 ################################
 # MS DEPLOY
 
-$MsDeployExe = 'C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe'
+$MsDeployExe = Find-ExecutablePath 'msdeploy.exe' 'C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe'
 
 function Invoke-MSDeploy {
 	param(
