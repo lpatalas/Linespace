@@ -123,10 +123,19 @@ function Publish-Files {
 
 	$WorkingDir = Get-FullPath $WorkingDir
 
-	function GetReferencedScripts($htmlPath) {
-		$basePath = [IO.Path]::GetDirectoryName($htmlPath)
-		$references = Select-String '<script src="([^`"]+)"' $htmlPath -AllMatches `
-			| %{ Get-FullPath $_.matches.Groups[1].Value $basePath }
+	function GetReferencedResources($parentPath) {
+		$basePath = [IO.Path]::GetDirectoryName($parentPath)
+		$patterns = @(
+			'<script src="([^`"]+)"'
+			'<link href="([^`"]+)"'
+		)
+
+		$references = @()
+
+		foreach ($pattern in $patterns) {
+			$references += Select-String $pattern $parentPath -AllMatches `
+				| %{ Get-FullPath $_.matches.Groups[1].Value $basePath }
+		}
 
 		return $references
 	}
@@ -139,7 +148,7 @@ function Publish-Files {
 			foreach ($item in $items) {
 				$publishedFiles += @( $item )
 				if ($item -like '*.htm?') {
-					$publishedFiles += @( GetReferencedScripts $item )
+					$publishedFiles += @( GetReferencedResources $item )
 				}
 			}
 		}
