@@ -254,10 +254,11 @@ module Linespace {
                 context.fillText(`(${tileX}, ${tileY})`, tileX + 10, tileY + 20);
             };
 
-            const maxX = canvas.width + worldPosition.x;
-            const maxY = canvas.height + worldPosition.y;
-            const startX = roundToTile(worldPosition.x);
-            const startY = roundToTile(worldPosition.y);
+            const topLeft = getScreenTopLeftPosition();
+            const maxX = canvas.width + topLeft.x;
+            const maxY = canvas.height + topLeft.y;
+            const startX = roundToTile(topLeft.x);
+            const startY = roundToTile(topLeft.y);
 
             addDebugJson({ maxX, maxY, startX, startY });
 
@@ -270,14 +271,23 @@ module Linespace {
             context.setLineDash([]);
         };
 
-        let worldPosition = vec(0, 0);
+        let worldPosition;
         let worldScale = 1;
 
+        const getScreenTopLeftPosition = function(scale?: number) {
+            scale = scale || worldScale;
+            return vec(worldPosition.x * scale - (canvas.width / 2), worldPosition.y * scale - canvas.height / 2);
+        };
+
         const drawObjects = function(time: number) {
-            context.setTransform(1, 0, 0, 1, -worldPosition.x, -worldPosition.y);
+            worldPosition = worldPosition || getCenter();
+
+            const starsTopLeft = getScreenTopLeftPosition(1);
+            context.setTransform(1, 0, 0, 1, -starsTopLeft.x, -starsTopLeft.y);
             drawStars();
 
-            context.setTransform(worldScale, 0, 0, worldScale, -worldPosition.x, -worldPosition.y);
+            const topLeft = getScreenTopLeftPosition();
+            context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
             fillCircle(getCenter(), 30, '#ff8000');
             planets.forEach(planet => drawPlanet(time, planet));
         };
@@ -343,6 +353,8 @@ module Linespace {
                 if (mousePressed) {
                     const currentMousePos = vec(event.pageX, event.pageY);
                     const offset = vsub(currentMousePos, initialMousePos);
+                    offset.x /= worldScale;
+                    offset.y /= worldScale;
                     worldPosition = vsub(initialPosition, offset);
                 }
             });
