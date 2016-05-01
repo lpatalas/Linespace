@@ -1,13 +1,20 @@
+param(
+	[switch] $Deploy
+)
+
 . "$PSScriptRoot\Backend.ps1"
 
 $ProjectName = 'Linespace.csproj'
 $PublishDir = 'Build\Output'
 $DeploymentConfigPath = 'Build\deploy.ini.user'
 
-$sourceFiles = @(
+$SourceFiles = @(
 	'index.html'
 )
 
 Invoke-MSBuild $ProjectName
-Publish-Files $sourceFiles $PublishDir
-Invoke-MSDeploy $PublishDir -ConfigurationPath:$DeploymentConfigPath
+Publish-Files $SourceFiles $PublishDir
+
+if ($Deploy) {
+	Invoke-MSDeploy $PublishDir -ConfigurationPath:$DeploymentConfigPath
+}
