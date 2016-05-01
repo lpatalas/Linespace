@@ -67,8 +67,6 @@
     <Content Include="Build\Backend.ps1" />
     <Content Include="Build\deploy.ini.example" />
     <Content Include=".gitignore" />
-    <None Include="Properties\PublishProfiles\linespace - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\PackageDeploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
