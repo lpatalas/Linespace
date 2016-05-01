@@ -9,8 +9,12 @@ module Linespace {
         y: number;
     }
 
-    const vec = function(x: number, y: number): Vec2D {
+    const vec = function(x: any, y: number): Vec2D {
         return { x, y };
+    }
+
+    const vcopy = function(v: Vec2D): Vec2D {
+        return { x: v.x, y: v.y };
     }
 
     const vadd = function(a: Vec2D, b: Vec2D): Vec2D {
@@ -243,10 +247,10 @@ module Linespace {
                 context.fillText(`(${tileX}, ${tileY})`, tileX + 10, tileY + 20);
             };
 
-            const maxX = canvas.width - currentTransform.dx;
-            const maxY = canvas.height - currentTransform.dy;
-            const startX = roundToTile(-currentTransform.dx);
-            const startY = roundToTile(-currentTransform.dy);
+            const maxX = canvas.width + worldPosition.x;
+            const maxY = canvas.height + worldPosition.y;
+            const startX = roundToTile(worldPosition.x);
+            const startY = roundToTile(worldPosition.y);
 
             addDebugJson({ maxX, maxY, startX, startY });
 
@@ -259,11 +263,14 @@ module Linespace {
             context.setLineDash([]);
         };
 
-        let currentTransform = xidentity();
+        let worldPosition = vec(0, 0);
+        let worldScale = 1;
 
         const drawObjects = function(time: number) {
-            xapply(currentTransform, context);
+            context.setTransform(1, 0, 0, 1, -worldPosition.x, -worldPosition.y);
             drawStars();
+
+            context.setTransform(worldScale, 0, 0, worldScale, -worldPosition.x, -worldPosition.y);
             fillCircle(getCenter(), 30, '#ff8000');
             planets.forEach(planet => drawPlanet(time, planet));
         };
@@ -293,7 +300,8 @@ module Linespace {
         const update = function(dt: number, time: number) {
             resetDebugLines();
             updateFpsCounter(time);
-            addDebugJson(currentTransform);
+            addDebugJson({ worldPosition, worldScale });
+            addDebugText(`Zoom: ${worldScale}`);
 
             fitCanvasToWindow();
             clearCanvas();
@@ -308,13 +316,13 @@ module Linespace {
             const body = document.getElementsByTagName('body')[0];
             let initialMousePos: Vec2D = null;
             let mousePressed = false;
-            let initialTransform = currentTransform;
+            let initialPosition: Vec2D;
 
             body.addEventListener('mousedown', event => {
                 if (event.button == 0) {
                     mousePressed = true;
                     initialMousePos = vec(event.pageX, event.pageY);
-                    initialTransform = currentTransform;
+                    initialPosition = vcopy(worldPosition);
                 }
             });
 
@@ -328,8 +336,14 @@ module Linespace {
                 if (mousePressed) {
                     const currentMousePos = vec(event.pageX, event.pageY);
                     const offset = vsub(currentMousePos, initialMousePos);
-                    currentTransform = xtranslate(initialTransform, offset.x, offset.y);
-                    xapply(currentTransform, context);
+                    worldPosition = vsub(initialPosition, offset);
+                }
+            });
+
+            body.addEventListener('wheel', event => {
+                worldScale -= event.deltaY * 0.0001;
+                if (worldScale < 0.0001) {
+                    worldScale = 0.0001;
                 }
             });
         };
