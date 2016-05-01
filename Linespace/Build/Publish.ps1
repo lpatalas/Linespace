@@ -9,7 +9,7 @@ $PublishDir = 'Build\Output'
 $DeploymentConfigPath = 'Build\deploy.ini.user'
 
 $SourceFiles = @(
-	'index.html'
+	'*.html'
 )
 
 Invoke-MSBuild $ProjectName
