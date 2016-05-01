@@ -224,6 +224,13 @@ module Linespace {
                 return Math.floor(x / tileSize) * tileSize;
             }
 
+            const minStarScale = 0.1;
+            const maxStarScale = 0.5;
+
+            let cint = (worldScale - minStarScale) / (maxStarScale - minStarScale);
+            cint = Math.min(1, Math.max(0, cint));
+            addDebugText(`cint: ${cint}`);
+
             const drawTile = function(tileX: number, tileY: number) {
                 addDebugText(`Drawing tile: ${tileX}, ${tileY}`);
 
@@ -232,7 +239,7 @@ module Linespace {
                     const x = tileX + rng.quick() * tileSize;
                     const y = tileY + rng.quick() * tileSize;
                     const c = 100 + rng.quick() * 155;
-                    drawPixel(vec(x, y), rgb(c, c, c));
+                    drawPixel(vec(x, y), rgb(c * cint, c * cint, c * cint));
                 }
                 context.strokeStyle = rgb(80, 80, 80);
                 context.setLineDash([10, 10]);
