@@ -27,6 +27,45 @@ function Read-IniFile($path) {
 	return $data
 }
 
+function Get-FullPath {
+	param(
+		[Parameter(Position = 0, Mandatory = $true)]
+		[String] $InputPath,
+
+		[Parameter(Position = 1)]
+		[String] $ParentPath = (pwd).Path
+	)
+
+	if (-not [IO.Path]::IsPathRooted($InputPath)) {
+		$ParentPath = Get-FullPath $ParentPath
+		$fullPath = Join-Path $ParentPath $InputPath
+		return [IO.Path]::GetFullPath($fullPath)
+	}
+	else {
+		return [IO.Path]::GetFullPath($InputPath)
+	}
+}
+
+function Get-RelativePath {
+	param(
+		[Parameter(Position = 0, Mandatory = $true)]
+		[String] $InputPath,
+
+		[Parameter(Position = 1, Mandatory = $true)]
+		[String] $ParentPath
+	)
+
+	$fullInputPath = Get-FullPath $InputPath
+	$fullParentPath = Get-FullPath $ParentPath
+
+	if ($fullInputPath.StartsWith($fullParentPath)) {
+		return $fullInputPath.Substring($fullParentPath.Length + 1)
+	}
+	else {
+		return $fullInputPath
+	}
+}
+
 
 ################################
 # MS BUILD
@@ -64,53 +103,64 @@ function Publish-Files {
 		[String[]] $InputPatterns,
 
 		[Parameter(Position = 1, Mandatory = $true)]
-		[String] $PublishDir
+		[String] $PublishDir,
+
+		[String] $WorkingDir = (pwd).Path
 	)
 
-	Write-Header "Publishing files to '$PublishDir'"
+	Write-Header "Publishing files from '$WorkingDir' to '$PublishDir'"
+
+	$WorkingDir = Get-FullPath $WorkingDir
 
 	function GetReferencedScripts($htmlPath) {
 		$basePath = [IO.Path]::GetDirectoryName($htmlPath)
 		$references = Select-String '<script src="([^`"]+)"' $htmlPath -AllMatches `
-			| %{ $basePath + $_.matches.Groups[1].Value }
+			| %{ Get-FullPath $_.matches.Groups[1].Value $basePath }
 
 		return $references
 	}
 	
-	$outputs = @()
+	function GetPublishedFiles($inputPatterns) {
+		$publishedFiles = @()
 
-	foreach ($pattern in $InputPatterns) {
-		$items = Get-ChildItem $pattern -Name
-		foreach ($item in $items) {
-			$outputs += @( $item )
-			if ($item -like '*.htm?') {
-				$outputs += @( GetReferencedScripts $item )
+		foreach ($pattern in $InputPatterns) {
+			$items = Get-ChildItem $pattern | % FullName
+			foreach ($item in $items) {
+				$publishedFiles += @( $item )
+				if ($item -like '*.htm?') {
+					$publishedFiles += @( GetReferencedScripts $item )
+				}
 			}
 		}
+
+		return $publishedFiles
 	}
 
-	$outputs = $outputs | Sort-Object | Get-Unique
+	$outputs = GetPublishedFiles $InputPatterns | Sort-Object | Get-Unique
 
 	foreach ($path in $outputs) {
-		if (-not (Test-Path $path)) {
+		if (-not (Test-Path (Get-FullPath $path))) {
 			throw "Referenced file '$path' does not exist"
 		}
 	}
 
-	if (Test-Path $PublishDir) {
-		Remove-Item $PublishDir -Force -Recurse
+	$fullPublishDir = Get-FullPath $PublishDir $WorkingDir
+
+	if (Test-Path $fullPublishDir) {
+		Remove-Item $fullPublishDir -Force -Recurse
 	}
 
 	foreach ($sourcePath in $outputs) {
-		# TODO: build target correctly even for absolute source path
-		$targetPath = Join-Path $PublishDir $sourcePath
+		$relativeSourcePath = Get-RelativePath $sourcePath $WorkingDir
+		$targetPath = Get-FullPath $relativeSourcePath $fullPublishDir
 		$targetDir = Split-Path $targetPath
 
 		if (-not (Test-Path $targetDir)) {
 			New-Item $targetDir -ItemType Directory | Out-Null
 		}
 
-		Write-Host "$sourcePath => $targetPath"
+		$relativeTargetPath = Get-RelativePath $targetPath $WorkingDir
+		Write-Host "$relativeSourcePath => $relativeTargetPath"
 		Copy-Item $sourcePath $targetPath -Force
 	}
 }
