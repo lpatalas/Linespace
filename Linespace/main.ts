@@ -1,4 +1,4 @@
-﻿module Linespace {
+﻿namespace Linespace {
 
     const isDebugMode = window.location.search.indexOf('debug=1') >= 0;
     const debugDisplay = new DebugDisplay();

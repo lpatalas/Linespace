@@ -1,4 +1,4 @@
-﻿module Linespace {
+﻿namespace Linespace {
 
     export interface Vec2D {
         x: number;

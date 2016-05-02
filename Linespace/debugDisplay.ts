@@ -1,4 +1,4 @@
-﻿module Linespace {
+﻿namespace Linespace {
 
     const color = '#40a040';
     const fontSize = 20;
