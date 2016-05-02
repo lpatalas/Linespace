@@ -1,8 +1,4 @@
-﻿///<reference path="definitions.d.ts" />
-///<reference path="vec2D.ts" />
-///<reference path="debugDisplay.ts" />
-
-module Linespace {
+﻿module Linespace {
 
     const isDebugMode = window.location.search.indexOf('debug=1') >= 0;
     const debugDisplay = new DebugDisplay();
