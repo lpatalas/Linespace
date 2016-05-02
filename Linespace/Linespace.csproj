@@ -84,6 +84,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="debugDisplay.ts" />
     <TypeScriptCompile Include="definitions.d.ts" />
     <TypeScriptCompile Include="main.ts" />
     <TypeScriptCompile Include="Scripts\typings\seedrandom\seedrandom.d.ts" />

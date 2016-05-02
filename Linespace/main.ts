@@ -1,9 +1,11 @@
 ﻿///<reference path="definitions.d.ts" />
 ///<reference path="vec2D.ts" />
+///<reference path="debugDisplay.ts" />
 
 module Linespace {
 
     const isDebugMode = window.location.search.indexOf('debug=1') >= 0;
+    const debugDisplay = new DebugDisplay();
 
     interface Orbit {
         radius: Vec2D;
@@ -84,32 +86,6 @@ module Linespace {
             context.fill();
         };
 
-        let debugLines: string[];
-
-        const resetDebugLines = function() {
-            debugLines = [];
-        };
-
-        const addDebugText = function(text: string) {
-            debugLines.push(text);
-        }
-
-        const addDebugJson = function(obj: any) {
-            addDebugText(JSON.stringify(obj));
-        }
-
-        const fontSize = 20;
-
-        const drawDebugText = function(pos: Vec2D) {
-            context.setTransform(1, 0, 0, 1, pos.x, pos.y + fontSize);
-            context.font = `${fontSize}px Consolas`;
-            context.fillStyle = '#40a040';
-
-            debugLines.forEach((line, index) => {
-                context.fillText(line, 0, index * fontSize);
-            });
-        }
-
         const planets: Planet[] = [
             { color: '#804000', radius: 10, speed: 0.7, orbit: { radius: { x: 120, y: 115 }, orientation: 100 } },
             { color: '#804080', radius: 10, speed: 0.4, orbit: { radius: { x: 220, y: 210 }, orientation: 100 } },
@@ -176,13 +152,13 @@ module Linespace {
 
             let cint = (worldScale - minStarScale) / (maxStarScale - minStarScale);
             cint = Math.min(1, Math.max(0, cint));
-            addDebugText(`cint: ${cint}`);
+            debugDisplay.addText(`cint: ${cint}`);
 
             const drawTile = function(tileX: number, tileY: number) {
                 tileX = Math.round(tileX);
                 tileY = Math.round(tileY);
 
-                addDebugText(`Drawing tile: ${tileX}, ${tileY}`);
+                debugDisplay.addText(`Drawing tile: ${tileX}, ${tileY}`);
 
                 var rng = new Math.seedrandom(`${tileX},${tileY}`);
                 for (let i = 0; i < starsPerTile; i++) {
@@ -210,7 +186,7 @@ module Linespace {
             const startX = roundToTile(topLeft.x);
             const startY = roundToTile(topLeft.y);
 
-            addDebugJson({ maxX, maxY, startX, startY });
+            debugDisplay.addJson({ maxX, maxY, startX, startY });
 
             for (let tileY = startY; tileY < maxY; tileY += tileSize) {
                 for (let tileX = startX; tileX < maxX; tileX += tileSize) {
@@ -228,7 +204,7 @@ module Linespace {
             const gridOffsetY = (topLeftY % gridSize) * scale;
             const screenGridSize = gridSize * scale;
 
-            addDebugJson({ gridOffsetX, gridOffsetY, gridSize, screenGridSize });
+            debugDisplay.addJson({ gridOffsetX, gridOffsetY, gridSize, screenGridSize });
 
             context.setLineDash([10, 10]);
             context.strokeStyle = 'gray';
@@ -286,15 +262,16 @@ module Linespace {
                     frameCounter = 0;
                 }
 
-                addDebugText(`FPS: ${currentFps.toFixed(2)}`);
+                debugDisplay.addText(`FPS: ${currentFps.toFixed(2)}`);
             };
         })();
 
         const update = function(dt: number, time: number) {
-            resetDebugLines();
+            debugDisplay.reset();
             updateFpsCounter(time);
-            addDebugJson({ worldPosition, worldScale });
-            addDebugText(`Zoom: ${worldScale}`);
+
+            debugDisplay.addJson({ worldPosition, worldScale });
+            debugDisplay.addText(`Zoom: ${worldScale}`);
 
             fitCanvasToWindow();
             clearCanvas();
@@ -308,7 +285,7 @@ module Linespace {
                 context.setTransform(1, 0, 0, 1, 0, 0);
                 drawCircle(vec(canvas.width / 2, canvas.height / 2), 20, 'white');
 
-                drawDebugText(vec(10, 10));
+                debugDisplay.draw(vec(10, 10), context);
             }
         };
 
