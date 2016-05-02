@@ -75,7 +75,7 @@
             context.stroke();
         };
 
-        const fillEllipse = function(center: Vec2D, radius: Vec2D, number, color: string) {
+        const fillEllipse = function(center: Vec2D, radius: Vec2D, color: string) {
             context.strokeStyle = color;
             context.beginPath();
             context.ellipse(center.x, center.y, radius.x, radius.y, 0, 0, TWO_PI);
@@ -109,7 +109,7 @@
         }
 
         const generate = function <T>(count: number, generator: (i: number) => T): T[] {
-            const result = [];
+            const result: T[] = [];
             for (let i = 0; i < count; i++) {
                 result.push(generator(i));
             }
@@ -259,7 +259,7 @@
                 context.setLineDash([]);
             };
         })();
-        let worldPosition;
+        let worldPosition: Vec2D;
         let worldScale = 1;
 
         const getScreenTopLeftPosition = function(scale?: number) {
@@ -284,7 +284,7 @@
 
         const updateFpsCounter = (() => {
             let frameCounter = 0;
-            let fpsMeasureStartTime = null;
+            let fpsMeasureStartTime: number;
             const fpsMeasureInterval = 1;
             let currentFps = 0;
 
