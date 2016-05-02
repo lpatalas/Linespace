@@ -1,62 +1,9 @@
 ﻿///<reference path="definitions.d.ts" />
+///<reference path="vec2D.ts" />
 
 module Linespace {
 
     const isDebugMode = window.location.search.indexOf('debug=1') >= 0;
-
-    interface Vec2D {
-        x: number;
-        y: number;
-    }
-
-    const vec = function(x: any, y: number): Vec2D {
-        return { x, y };
-    }
-
-    const vcopy = function(v: Vec2D): Vec2D {
-        return { x: v.x, y: v.y };
-    }
-
-    const vadd = function(a: Vec2D, b: Vec2D): Vec2D {
-        return { x: a.x + b.x, y: a.y + b.y };
-    }
-
-    const vsub = function(a: Vec2D, b: Vec2D): Vec2D {
-        return vec(a.x - b.x, a.y - b.y);
-    }
-
-    const vmul = function(a: Vec2D, b: Vec2D): Vec2D {
-        return { x: a.x * b.x, y: a.y * b.y };
-    }
-
-    const vsqrt = function(v: Vec2D): Vec2D {
-        return { x: Math.sqrt(v.x), y: Math.sqrt(v.y) };
-    }
-
-    interface Transform2D {
-        m11: number;
-        m12: number;
-        m21: number;
-        m22: number;
-        dx: number;
-        dy: number;
-    }
-
-    const xform = function(m11: number, m12: number, m21: number, m22: number, dx: number, dy: number): Transform2D {
-        return { m11, m12, m21, m22, dx, dy };
-    }
-
-    const xidentity = function(): Transform2D {
-        return xform(1, 0, 0, 1, 0, 0);
-    }
-
-    const xtranslate = function(original: Transform2D, dx: number, dy: number): Transform2D {
-        return xform(original.m11, original.m12, original.m21, original.m22, original.dx + dx, original.dy + dy);
-    }
-
-    const xapply = function(t: Transform2D, context: CanvasRenderingContext2D) {
-        context.setTransform(t.m11, t.m12, t.m21, t.m22, t.dx, t.dy);
-    }
 
     interface Orbit {
         radius: Vec2D;
