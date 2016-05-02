@@ -86,6 +86,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="debugDisplay.ts" />
     <TypeScriptCompile Include="definitions.d.ts" />
+    <TypeScriptCompile Include="fpsCounter.ts" />
     <TypeScriptCompile Include="main.ts" />
     <TypeScriptCompile Include="Scripts\typings\seedrandom\seedrandom.d.ts" />
     <TypeScriptCompile Include="vec2D.ts" />
