@@ -24,6 +24,10 @@
         return `rgb(${r}, ${g}, ${b})`;
     };
 
+    const rgbf = function(r: number, g: number, b: number) {
+        return rgb(r * 255, g * 255, b * 255);
+    };
+
     export function runGame(canvas: HTMLCanvasElement) {
         const context = canvas.getContext('2d');
 
@@ -267,6 +271,61 @@
             return vec(worldPosition.x * scale - (canvas.width / 2), worldPosition.y * scale - canvas.height / 2);
         };
 
+        class RandomNumberGenerator {
+            private rng: prng;
+
+            constructor(seed?: any) {
+                if (seed != null) {
+                    this.rng = new Math.seedrandom(JSON.stringify(seed));
+                }
+                else {
+                    this.rng = new Math.seedrandom();
+                }
+            }
+
+            float(): number {
+                return this.rng.quick();
+            }
+
+            floatRange(min: number, max: number): number {
+                return min + this.float() * (max - min);
+            }
+
+            intRange(min: number, max: number): number {
+                return min + (this.rng.int32() % (max - min));
+            }
+        }
+
+        const drawGalaxy = (() => {
+            const MAX_ARM_SHIFT = Math.PI / 8;
+            const MAX_SPREAD = Math.PI / 8;
+            const MAX_STARS_PER_ARM = 1000;
+            const MIN_ARMS = 6;
+            const MAX_ARMS = 10;
+
+            return function(center: Vec2D, maxRadius: number) {
+                const rng = new RandomNumberGenerator({ center, maxRadius });
+                const spiralCount = rng.intRange(MIN_ARMS, MAX_ARMS);
+                debugDisplay.addJson({ spiralCount });
+
+                for (let spiralIndex = 0; spiralIndex < spiralCount; spiralIndex++) {
+                    const baseSpiralAngle = spiralIndex * TWO_PI / spiralCount;
+                    const spiralAngle = baseSpiralAngle + rng.floatRange(0, MAX_ARM_SHIFT);
+
+                    for (let i = 0; i < MAX_STARS_PER_ARM; i++) {
+                        const spreadFactor = rng.floatRange(-1, 1);
+                        const spread = spreadFactor * MAX_SPREAD;
+                        const baseAngle = spiralAngle + spread;
+                        const luminance = 0.6 + spreadFactor * 0.4;
+                        const angle = rng.float();
+                        const x = center.x + Math.sin(baseAngle + angle * Math.PI) * angle * maxRadius;
+                        const y = center.y + Math.cos(baseAngle + angle * Math.PI) * angle * maxRadius;
+                        drawPixel(vec(x, y), rgbf(luminance, luminance, luminance));
+                    }
+                }
+            };
+        })();
+
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
 
@@ -278,8 +337,9 @@
 
             const topLeft = getScreenTopLeftPosition();
             context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
-            fillCircle(getCenter(), 30, '#ff8000');
-            planets.forEach(planet => drawPlanet(time, planet));
+            drawGalaxy(vec(400, 400), 200);
+            //fillCircle(getCenter(), 30, '#ff8000');
+            //planets.forEach(planet => drawPlanet(time, planet));
         };
 
         const updateFpsCounter = createFpsCounter(debugDisplay);
