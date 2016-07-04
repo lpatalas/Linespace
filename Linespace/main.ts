@@ -356,15 +356,15 @@
 
                 const PIXEL_COUNT = 10000;
                 const da = TWO_PI / PIXEL_COUNT;
-
+                
                 const ROTATION_SPEED = 0.1;
 
                 const SIZE_X = 200;
                 const SIZE_Y = 100;
 
                 const SIZE_MIN = 1;
-                const SIZE_MAX = 200;
-                const SIZE_RATIO = 0.85;
+                const SIZE_MAX = 400;
+                const SIZE_RATIO = 0.875;
                 const SIZE_DELTA = (SIZE_MAX - SIZE_MIN) / PIXEL_COUNT;
 
                 let size = SIZE_MIN;
