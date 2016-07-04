@@ -296,33 +296,117 @@
             }
         }
 
+        interface BatchedPixel {
+            x: number;
+            y: number;
+            color: string;
+        }
+
+        class PixelBatch {
+
+            private buffer: BatchedPixel[];
+
+            get count() {
+                return this.buffer.length;
+            }
+
+            clear() {
+                this.buffer = [];
+            }
+
+            add(x: number, y: number, color: string) {
+                this.buffer.push({ x, y, color });
+            }
+
+            draw() {
+                //this.buffer.sort((a, b) => {
+                //    if (a.color < b.color) return -1
+                //    else if (a.color > b.color) return 1;
+                //    else return 0;
+                //});
+
+                let currentColor: string = null;
+
+                this.buffer.forEach(pixel => {
+                    //if (pixel.color !== currentColor) {
+                    //    currentColor = pixel.color;
+                        context.fillStyle = pixel.color;
+                    //}
+
+                    context.fillRect(pixel.x, pixel.y, 1, 1);
+                });
+            }
+        }
+
         const drawGalaxy = (() => {
             const MAX_ARM_SHIFT = Math.PI / 8;
-            const MAX_SPREAD = Math.PI / 8;
-            const MAX_STARS_PER_ARM = 1000;
+            const MAX_SPREAD = Math.PI / 4;
+            const MAX_STARS_PER_ARM = 800;
             const MIN_ARMS = 6;
             const MAX_ARMS = 10;
+            const pixelBatch = new PixelBatch();
 
-            return function(center: Vec2D, maxRadius: number) {
+            return function(center: Vec2D, maxRadius: number, time: number) {
                 const rng = new RandomNumberGenerator({ center, maxRadius });
                 const spiralCount = rng.intRange(MIN_ARMS, MAX_ARMS);
                 debugDisplay.addJson({ spiralCount });
 
-                for (let spiralIndex = 0; spiralIndex < spiralCount; spiralIndex++) {
-                    const baseSpiralAngle = spiralIndex * TWO_PI / spiralCount;
-                    const spiralAngle = baseSpiralAngle + rng.floatRange(0, MAX_ARM_SHIFT);
+                pixelBatch.clear();
 
-                    for (let i = 0; i < MAX_STARS_PER_ARM; i++) {
-                        const spreadFactor = rng.floatRange(-1, 1);
-                        const spread = spreadFactor * MAX_SPREAD;
-                        const baseAngle = spiralAngle + spread;
-                        const luminance = 0.6 + spreadFactor * 0.4;
-                        const angle = rng.float();
-                        const x = center.x + Math.sin(baseAngle + angle * Math.PI) * angle * maxRadius;
-                        const y = center.y + Math.cos(baseAngle + angle * Math.PI) * angle * maxRadius;
-                        drawPixel(vec(x, y), rgbf(luminance, luminance, luminance));
-                    }
+
+                const PIXEL_COUNT = 10000;
+                const da = TWO_PI / PIXEL_COUNT;
+
+                const ROTATION_SPEED = 0.1;
+
+                const SIZE_X = 200;
+                const SIZE_Y = 100;
+
+                const SIZE_MIN = 1;
+                const SIZE_MAX = 200;
+                const SIZE_RATIO = 0.85;
+                const SIZE_DELTA = (SIZE_MAX - SIZE_MIN) / PIXEL_COUNT;
+
+                let size = SIZE_MIN;
+
+                for (let a = 0; a < TWO_PI; a += da) {
+                    const w = size;
+                    const h = size * SIZE_RATIO;
+                    const t = rng.floatRange(0, TWO_PI) + time * ROTATION_SPEED;
+                    const x = Math.sin(t) * w;
+                    const y = Math.cos(t) * h;
+
+                    const xx = x * Math.cos(a) - y * Math.sin(a);
+                    const yy = x * Math.sin(a) + y * Math.cos(a);
+
+                    pixelBatch.add(xx, yy, rgbf(1, 1, 1));
+
+                    size += SIZE_DELTA;
                 }
+
+                //for (let spiralIndex = 0; spiralIndex < spiralCount; spiralIndex++) {
+                //    const baseSpiralAngle = spiralIndex * TWO_PI / spiralCount;
+                //    const spiralAngle = baseSpiralAngle + rng.floatRange(0, MAX_ARM_SHIFT);
+
+                //    for (let i = 0; i < MAX_STARS_PER_ARM; i++) {
+                //        const spreadFactor = rng.floatRange(-1, 1);
+                //        const spread = spreadFactor * MAX_SPREAD;
+                //        const baseAngle = spiralAngle + spread;
+                //        const luminance = 0.6 + (1 - Math.abs(spreadFactor)) * 0.4;
+                //        const angle = rng.float();
+                //        const x = center.x + Math.sin(baseAngle + angle * Math.PI) * angle * maxRadius;
+                //        const y = center.y + Math.cos(baseAngle + angle * Math.PI) * angle * maxRadius;
+
+                //        pixelBatch.add(x, y, rgbf(luminance, luminance, 1));
+                //        //drawPixel(vec(x, y), rgbf(luminance, luminance, luminance));
+                //    }
+                //}
+
+                debugDisplay.addJson({
+                    starCount: pixelBatch.count
+                });
+
+                pixelBatch.draw();
             };
         })();
 
@@ -337,7 +421,7 @@
 
             const topLeft = getScreenTopLeftPosition();
             context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
-            drawGalaxy(vec(400, 400), 200);
+            drawGalaxy(vec(400, 400), 200, time);
             //fillCircle(getCenter(), 30, '#ff8000');
             //planets.forEach(planet => drawPlanet(time, planet));
         };
@@ -357,7 +441,7 @@
 
             if (isDebugMode) {
                 // World (0, 0) position
-                fillCircle(vec(0, 0), 10, 'red');
+                //fillCircle(vec(0, 0), 10, 'red');
 
                 // Circle centered in the screen
                 context.setTransform(1, 0, 0, 1, 0, 0);
@@ -408,12 +492,21 @@
         const runMainLoop = function() {
             const getCurrentTime = () => new Date().getTime() / 1000;
             let lastTime = getCurrentTime();
-            
-            setInterval(() => {
+
+            const updateFrame = function() {
                 const currentTime = getCurrentTime();
                 update(currentTime - lastTime, currentTime);
                 lastTime = currentTime;
-            }, 33);
+                requestAnimationFrame(updateFrame);
+            };
+
+            updateFrame();
+            
+            //setInterval(() => {
+            //    const currentTime = getCurrentTime();
+            //    update(currentTime - lastTime, currentTime);
+            //    lastTime = currentTime;
+            //}, 33);
         };
 
         hookMouseEvents();
