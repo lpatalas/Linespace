@@ -43,58 +43,7 @@
             return vec(worldPosition.x * scale - (canvas.width / 2), worldPosition.y * scale - canvas.height / 2);
         };
 
-        const drawGalaxy = (() => {
-            const MAX_ARM_SHIFT = Math.PI / 8;
-            const MAX_SPREAD = Math.PI / 4;
-            const MAX_STARS_PER_ARM = 800;
-            const MIN_ARMS = 6;
-            const MAX_ARMS = 10;
-            const pixelBatch = new PixelBatch();
-
-            return function(center: Vec2D, maxRadius: number, time: number) {
-                const rng = new RandomNumberGenerator({ center, maxRadius });
-                const spiralCount = rng.intRange(MIN_ARMS, MAX_ARMS);
-                debugDisplay.addJson({ spiralCount });
-
-                pixelBatch.clear();
-
-                const PIXEL_COUNT = 10000;
-                const da = TWO_PI / PIXEL_COUNT;
-                
-                const ROTATION_SPEED = 0.1;
-
-                const SIZE_X = 200;
-                const SIZE_Y = 100;
-
-                const SIZE_MIN = 1;
-                const SIZE_MAX = 400;
-                const SIZE_RATIO = 0.875;
-                const SIZE_DELTA = (SIZE_MAX - SIZE_MIN) / PIXEL_COUNT;
-
-                let size = SIZE_MIN;
-
-                for (let a = 0; a < TWO_PI; a += da) {
-                    const w = size;
-                    const h = size * SIZE_RATIO;
-                    const t = rng.floatRange(0, TWO_PI) + time * ROTATION_SPEED;
-                    const x = Math.sin(t) * w;
-                    const y = Math.cos(t) * h;
-
-                    const xx = x * Math.cos(a) - y * Math.sin(a);
-                    const yy = x * Math.sin(a) + y * Math.cos(a);
-
-                    pixelBatch.add(xx, yy, rgbf(1, 1, 1));
-
-                    size += SIZE_DELTA;
-                }
-
-                debugDisplay.addJson({
-                    starCount: pixelBatch.count
-                });
-
-                pixelBatch.draw(context);
-            };
-        })();
+        
 
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
@@ -103,7 +52,7 @@
 
             const topLeft = getScreenTopLeftPosition();
             context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
-            drawGalaxy(vec(400, 400), 200, time);
+            drawGalaxy(context, vec(400, 400), 200, time);
         };
 
         const updateFpsCounter = createFpsCounter(debugDisplay);
