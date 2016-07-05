@@ -43,7 +43,13 @@
             return vec(worldPosition.x * scale - (canvas.width / 2), worldPosition.y * scale - canvas.height / 2);
         };
 
-        
+        const galaxy = new Galaxy({
+            center: vec(400, 400),
+            rotationSpeed: 0.1,
+            size: 400,
+            sizeRatio: 0.875,
+            starCount: 10000
+        });
 
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
@@ -52,7 +58,7 @@
 
             const topLeft = getScreenTopLeftPosition();
             context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
-            drawGalaxy(context, vec(400, 400), 200, time);
+            galaxy.draw(context, time);
         };
 
         const updateFpsCounter = createFpsCounter(debugDisplay);

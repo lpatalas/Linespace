@@ -2,44 +2,85 @@
 
     const TWO_PI = Math.PI * 2;
 
-    const pixelBatch = new PixelBatch();
+    export interface GalaxyParameters {
+        center: Vec2D;
+        rotationSpeed: number;
+        size: number;
+        sizeRatio: number;
+        starCount: number;
+    }
 
-    export function drawGalaxy(context: CanvasRenderingContext2D, center: Vec2D, maxRadius: number, time: number) {
-        const rng = new RandomNumberGenerator({ center, maxRadius });
+    interface StarDefinition {
+        longerRadius: number;
+        shorterRadius: number;
+        initialRotation: number;
+        orbitRotation: number;
+    }
 
-        pixelBatch.clear();
+    const generateStars = function(params: GalaxyParameters): StarDefinition[] {
+        const rng = new RandomNumberGenerator(JSON.stringify(params));
 
-        const PIXEL_COUNT = 10000;
-        const da = TWO_PI / PIXEL_COUNT;
-
-        const ROTATION_SPEED = 0.1;
-
-        const SIZE_X = 200;
-        const SIZE_Y = 100;
-
+        const angleDelta = TWO_PI / params.starCount;
         const SIZE_MIN = 1;
-        const SIZE_MAX = 400;
-        const SIZE_RATIO = 0.875;
-        const SIZE_DELTA = (SIZE_MAX - SIZE_MIN) / PIXEL_COUNT;
+        const sizeDelta = (params.size - SIZE_MIN) / params.starCount;
 
         let size = SIZE_MIN;
+        const result: StarDefinition[] = [];
 
-        for (let a = 0; a < TWO_PI; a += da) {
+        for (let a = 0; a < TWO_PI; a += angleDelta) {
             const w = size;
-            const h = size * SIZE_RATIO;
-            const t = rng.floatRange(0, TWO_PI) + time * ROTATION_SPEED;
-            const x = Math.sin(t) * w;
-            const y = Math.cos(t) * h;
+            const h = size * params.sizeRatio;
+            const t = rng.floatRange(0, TWO_PI);
 
-            const xx = x * Math.cos(a) - y * Math.sin(a);
-            const yy = x * Math.sin(a) + y * Math.cos(a);
+            result.push({
+                initialRotation: t,
+                longerRadius: w,
+                shorterRadius: h,
+                orbitRotation: a
+            });
 
-            pixelBatch.add(xx, yy, rgbf(1, 1, 1));
-
-            size += SIZE_DELTA;
+            size += sizeDelta;
         }
 
-        pixelBatch.draw(context);
+        return result;
     };
 
+    export class Galaxy {
+
+        private stars: StarDefinition[];
+        private params: GalaxyParameters;
+        private pixelBatch = new PixelBatch();
+        private rngSeed: string;
+
+        constructor(parameters: GalaxyParameters) {
+            this.params = parameters;
+            this.rngSeed = JSON.stringify(this.params);
+            this.stars = generateStars(parameters);
+        }
+
+        draw(context: CanvasRenderingContext2D, time: number) {
+            const rng = new RandomNumberGenerator(this.rngSeed);
+
+            this.pixelBatch.clear();
+
+            this.stars.forEach(star => {
+                const pos = this.calculateStarPosition(star, time);
+                this.pixelBatch.add(pos.x, pos.y, rgbf(1, 1, 1));
+            });
+
+            this.pixelBatch.draw(context);
+        }
+
+        private calculateStarPosition(star: StarDefinition, time: number): Vec2D {
+            const r = star.initialRotation + time * this.params.rotationSpeed;
+            const x = Math.sin(r) * star.longerRadius;
+            const y = Math.cos(r) * star.shorterRadius;
+            const or = star.orbitRotation;
+
+            const xx = this.params.center.x + x * Math.cos(or) - y * Math.sin(or);
+            const yy = this.params.center.y + x * Math.sin(or) + y * Math.cos(or);
+
+            return vec(xx, yy);
+        }
+    };
 }
