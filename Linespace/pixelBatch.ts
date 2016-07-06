@@ -9,6 +9,15 @@
     export class PixelBatch {
 
         private buffer: BatchedPixel[];
+        private _pixelSize: number = 1;
+
+        get pixelSize() {
+            return this._pixelSize;
+        }
+
+        set pixelSize(size: number) {
+            this._pixelSize = size;
+        }
 
         get count() {
             return this.buffer.length;
@@ -24,10 +33,11 @@
 
         draw(context: CanvasRenderingContext2D) {
             let currentColor: string = null;
+            const hs = this.pixelSize / 2;
 
             this.buffer.forEach(pixel => {
                 context.fillStyle = pixel.color;
-                context.fillRect(pixel.x, pixel.y, 1, 1);
+                context.fillRect(pixel.x - hs, pixel.y - hs, this.pixelSize, this.pixelSize);
             });
         }
     }

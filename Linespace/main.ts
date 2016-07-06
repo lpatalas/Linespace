@@ -45,7 +45,7 @@
 
         const galaxy = new Galaxy({
             center: vec(400, 400),
-            rotationSpeed: 0.1,
+            rotationSpeed: 0.05,
             size: 400,
             sizeRatio: 0.875,
             starCount: 10000
@@ -54,7 +54,7 @@
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
 
-            drawGrid(context, worldPosition, worldScale);
+            //drawGrid(context, worldPosition, worldScale);
 
             const topLeft = getScreenTopLeftPosition();
             context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);

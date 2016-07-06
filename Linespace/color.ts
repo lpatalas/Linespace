@@ -1,9 +1,13 @@
 ﻿namespace Linespace {
 
+    const clamp = function(x: number, min: number, max: number) {
+        return Math.min(max, Math.max(x, min));
+    };
+
     export function rgb(r: number, g: number, b: number) {
-        r = Math.floor(r);
-        g = Math.floor(g);
-        b = Math.floor(b);
+        r = clamp(Math.floor(r), 0, 255);
+        g = clamp(Math.floor(g), 0, 255);
+        b = clamp(Math.floor(b), 0, 255);
         return `rgb(${r}, ${g}, ${b})`;
     };
 

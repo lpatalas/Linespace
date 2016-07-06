@@ -15,7 +15,24 @@
         shorterRadius: number;
         initialRotation: number;
         orbitRotation: number;
+        color: string;
     }
+
+    const lerp = function(a: number, b: number, t: number) {
+        return a + (b - a) * t;
+    };
+
+    const calculateStarColor = function(rng: RandomNumberGenerator, distance: number) {
+        const x = Math.pow(rng.float(), 5);
+        const y = Math.pow(rng.float(), 8);
+        const df = Math.pow(1 - distance, 3);
+
+        const r = 0.2 + lerp(x, 1, df) * 0.8;
+        const g = 0.2 + Math.min(lerp(y, 1, df), r) * 0.8;
+        const b = lerp(1 - x, 0.7, df);
+
+        return rgbf(r, g, b);
+    };
 
     const generateStars = function(params: GalaxyParameters): StarDefinition[] {
         const rng = new RandomNumberGenerator(JSON.stringify(params));
@@ -36,7 +53,8 @@
                 initialRotation: t,
                 longerRadius: w,
                 shorterRadius: h,
-                orbitRotation: a
+                orbitRotation: a,
+                color: calculateStarColor(rng, size / params.size)
             });
 
             size += sizeDelta;
@@ -56,6 +74,7 @@
             this.params = parameters;
             this.rngSeed = JSON.stringify(this.params);
             this.stars = generateStars(parameters);
+            this.pixelBatch.pixelSize = 2;
         }
 
         draw(context: CanvasRenderingContext2D, time: number) {
@@ -65,7 +84,7 @@
 
             this.stars.forEach(star => {
                 const pos = this.calculateStarPosition(star, time);
-                this.pixelBatch.add(pos.x, pos.y, rgbf(1, 1, 1));
+                this.pixelBatch.add(pos.x, pos.y, star.color);
             });
 
             this.pixelBatch.draw(context);
