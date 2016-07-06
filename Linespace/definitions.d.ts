@@ -7,3 +7,9 @@ interface CanvasRenderingContext2D {
 interface Math {
     seedrandom: prng;
 }
+
+interface WebGLDebugUtils {
+    makeDebugContext(context: WebGLRenderingContext): WebGLRenderingContext;
+}
+
+declare var WebGLDebugUtils: WebGLDebugUtils;
