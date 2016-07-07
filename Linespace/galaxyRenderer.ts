@@ -6,7 +6,7 @@
             attribute vec2 vpos;
 
             void main() {
-                vec2 screenPos = (vpos * 0.5) / (viewportSize * 0.5);
+                vec2 screenPos = vpos / (viewportSize * 0.5);
                 gl_Position = vec4(screenPos.x, screenPos.y, 0, 1);
                 gl_PointSize = 1.0;
             }
@@ -30,10 +30,11 @@
 
         private program: WebGLProgram;
         private vertexBuffer: WebGLBuffer;
+        private vertexCount: number;
         private attributes: Attributes;
         private uniforms: Uniforms;
 
-        constructor(gl: WebGLRenderingContext) {
+        constructor(gl: WebGLRenderingContext, galaxy: Galaxy) {
             this.program = GLUtils.createProgram(gl, vertexShaderSource, fragmentShaderSource);
 
             gl.useProgram(this.program);
@@ -47,14 +48,12 @@
                 viewportSize: gl.getUniformLocation(this.program, 'viewportSize')
             };
 
-            const vertices = [
-                200.2, 200.2, 0.0,
-                -200.2, 200.2, 0.0,
-                200.2, -200.2, 0.0,
-                -200.2, -200.2, 0.0
-            ];
+            const vertices = galaxy.getStarPositions()
+                .map(v => [v.x, v.y])
+                .reduce((acc, v) => acc.concat(v), []);
 
             this.vertexBuffer = GLUtils.createVertexBuffer(gl, vertices);
+            this.vertexCount = vertices.length / 2;
         }
 
         render(gl: WebGLRenderingContext, viewportSize: Vec2D) {
@@ -62,8 +61,8 @@
             gl.uniform2f(this.uniforms.viewportSize, viewportSize.x, viewportSize.y);
 
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            gl.vertexAttribPointer(this.attributes.vpos, 3, gl.FLOAT, false, 0, 0);
-            gl.drawArrays(gl.POINTS, 0, 4);
+            gl.vertexAttribPointer(this.attributes.vpos, 2, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(gl.POINTS, 0, this.vertexCount);
         }
 
     }

@@ -90,6 +90,10 @@
             this.pixelBatch.draw(context);
         }
 
+        getStarPositions() {
+            return this.stars.map(star => this.calculateStarPosition(star, 0));
+        }
+
         private calculateStarPosition(star: StarDefinition, time: number): Vec2D {
             const r = star.initialRotation + time * this.params.rotationSpeed;
             const x = Math.sin(r) * star.longerRadius;

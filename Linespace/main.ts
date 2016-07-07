@@ -12,13 +12,21 @@
             return { x: canvas.width / 2, y: canvas.height / 2 };
         };
 
+        const galaxy = new Galaxy({
+            center: vec(0, 0),
+            rotationSpeed: 0.05,
+            size: 400,
+            sizeRatio: 0.875,
+            starCount: 10000
+        });
+
         let galaxyRenderer: GalaxyRenderer;
 
         const setupWebGL = function() {
             gl.clearColor(0.0, 0.0, 0, 0);
             gl.disable(gl.DEPTH_TEST);
 
-            galaxyRenderer = new GalaxyRenderer(gl);
+            galaxyRenderer = new GalaxyRenderer(gl, galaxy);
         };
 
         const clearCanvas = function() {
@@ -53,14 +61,6 @@
         //    scale = scale || worldScale;
         //    return vec(worldPosition.x * scale - (canvas.width / 2), worldPosition.y * scale - canvas.height / 2);
         //};
-
-        //const galaxy = new Galaxy({
-        //    center: vec(400, 400),
-        //    rotationSpeed: 0.05,
-        //    size: 400,
-        //    sizeRatio: 0.875,
-        //    starCount: 10000
-        //});
 
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
