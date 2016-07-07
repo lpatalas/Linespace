@@ -5,6 +5,19 @@
         return WebGLDebugUtils.makeDebugContext(context);
     };
 
+    const parseStarCountParam = function() {
+        const regex = /starCount=([0-9]+)/;
+        const matches = window.location.search.match(regex);
+        if (matches && matches.length > 1) {
+            return parseInt(matches[1], 10);
+        }
+        else {
+            return 10000;
+        }
+    };
+
+    const starCountParam = parseStarCountParam();
+
     export function runGame(canvas: HTMLCanvasElement) {
         const gl = getWebGLContext(canvas);
         
@@ -17,7 +30,7 @@
             rotationSpeed: 0.05,
             size: 400,
             sizeRatio: 0.875,
-            starCount: 50000
+            starCount: starCountParam
         });
 
         let galaxyRenderer: GalaxyRenderer;
