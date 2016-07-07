@@ -17,7 +17,7 @@
             rotationSpeed: 0.05,
             size: 400,
             sizeRatio: 0.875,
-            starCount: 10000
+            starCount: 50000
         });
 
         let galaxyRenderer: GalaxyRenderer;
@@ -65,7 +65,7 @@
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
 
-            galaxyRenderer.render(gl, vec(canvas.width, canvas.height));
+            galaxyRenderer.render(gl, vec(canvas.width, canvas.height), time);
             //const topLeft = getScreenTopLeftPosition();
             //context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
             //galaxy.draw(context, time);
@@ -118,13 +118,18 @@
         const runMainLoop = function() {
             const getCurrentTime = () => new Date().getTime() / 1000;
             let lastTime = getCurrentTime();
+            let elapsedTime = 0;
 
             setupWebGL();
             setupViewport();
 
             const mainLoopStep = function() {
                 const currentTime = getCurrentTime();
-                processFrame(currentTime - lastTime, currentTime);
+                const deltaTime = currentTime - lastTime;
+
+                elapsedTime += deltaTime;
+
+                processFrame(deltaTime, elapsedTime);
                 lastTime = currentTime;
                 requestAnimationFrame(mainLoopStep);
             };

@@ -10,7 +10,7 @@
         starCount: number;
     }
 
-    interface StarDefinition {
+    export interface StarDefinition {
         longerRadius: number;
         shorterRadius: number;
         initialRotation: number;
@@ -70,6 +70,10 @@
         private pixelBatch = new PixelBatch();
         private rngSeed: string;
 
+        get rotationSpeed(): number {
+            return this.params.rotationSpeed;
+        }
+
         constructor(parameters: GalaxyParameters) {
             this.params = parameters;
             this.rngSeed = JSON.stringify(this.params);
@@ -88,6 +92,10 @@
             });
 
             this.pixelBatch.draw(context);
+        }
+
+        getStars(): StarDefinition[] {
+            return this.stars;
         }
 
         getStarPositions() {

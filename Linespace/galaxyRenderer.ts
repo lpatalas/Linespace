@@ -1,12 +1,30 @@
 ﻿namespace Linespace {
 
     const vertexShaderSource = `
+            precision mediump float;
+
+            uniform float rotationSpeed;
+            uniform float time;
             uniform vec2 viewportSize;            
 
-            attribute vec2 vpos;
+            attribute vec4 starParams;
 
             void main() {
+                float initialRotation = starParams.x;
+                float longerRadius = starParams.y;
+                float orbitRotation = starParams.z;
+                float shorterRadius = starParams.w;
+
+                float r = initialRotation + time * rotationSpeed;
+                float x = sin(r) * longerRadius;
+                float y = cos(r) * shorterRadius;
+
+                float xx = x * cos(orbitRotation) - y * sin(orbitRotation);
+                float yy = x * sin(orbitRotation) + y * cos(orbitRotation);
+
+                vec2 vpos = vec2(xx, yy);
                 vec2 screenPos = vpos / (viewportSize * 0.5);
+
                 gl_Position = vec4(screenPos.x, screenPos.y, 0, 1);
                 gl_PointSize = 1.0;
             }
@@ -19,15 +37,18 @@
 `;
 
     interface Attributes {
-        vpos: number;
+        starParams: number;
     }
 
     interface Uniforms {
+        rotationSpeed: WebGLUniformLocation;
+        time: WebGLUniformLocation;
         viewportSize: WebGLUniformLocation;
     }
 
     export class GalaxyRenderer {
 
+        private galaxy: Galaxy;
         private program: WebGLProgram;
         private vertexBuffer: WebGLBuffer;
         private vertexCount: number;
@@ -35,33 +56,47 @@
         private uniforms: Uniforms;
 
         constructor(gl: WebGLRenderingContext, galaxy: Galaxy) {
+            this.galaxy = galaxy;
+
             this.program = GLUtils.createProgram(gl, vertexShaderSource, fragmentShaderSource);
 
             gl.useProgram(this.program);
 
             this.attributes = {
-                vpos: gl.getAttribLocation(this.program, "vpos")
+                starParams: gl.getAttribLocation(this.program, "starParams")
             };
-            gl.enableVertexAttribArray(this.attributes.vpos);
+            gl.enableVertexAttribArray(this.attributes.starParams);
 
             this.uniforms = {
+                rotationSpeed: gl.getUniformLocation(this.program, 'rotationSpeed'),
+                time: gl.getUniformLocation(this.program, 'time'),
                 viewportSize: gl.getUniformLocation(this.program, 'viewportSize')
             };
 
-            const vertices = galaxy.getStarPositions()
-                .map(v => [v.x, v.y])
+            const stars = galaxy.getStars();
+            const vertices = galaxy.getStars()
+                .map(star => {
+                    return [
+                        star.initialRotation,
+                        star.longerRadius,
+                        star.orbitRotation,
+                        star.shorterRadius
+                    ];
+                })
                 .reduce((acc, v) => acc.concat(v), []);
 
             this.vertexBuffer = GLUtils.createVertexBuffer(gl, vertices);
-            this.vertexCount = vertices.length / 2;
+            this.vertexCount = stars.length;
         }
 
-        render(gl: WebGLRenderingContext, viewportSize: Vec2D) {
+        render(gl: WebGLRenderingContext, viewportSize: Vec2D, time: number) {
             gl.useProgram(this.program);
+            gl.uniform1f(this.uniforms.rotationSpeed, this.galaxy.rotationSpeed);
+            gl.uniform1f(this.uniforms.time, time);
             gl.uniform2f(this.uniforms.viewportSize, viewportSize.x, viewportSize.y);
 
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            gl.vertexAttribPointer(this.attributes.vpos, 2, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(this.attributes.starParams, 4, gl.FLOAT, false, 0, 0);
             gl.drawArrays(gl.POINTS, 0, this.vertexCount);
         }
 
