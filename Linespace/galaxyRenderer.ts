@@ -74,16 +74,15 @@
             };
 
             const stars = galaxy.getStars();
-            const vertices = galaxy.getStars()
-                .map(star => {
-                    return [
-                        star.initialRotation,
-                        star.longerRadius,
-                        star.orbitRotation,
-                        star.shorterRadius
-                    ];
-                })
-                .reduce((acc, v) => acc.concat(v), []);
+            const vertices = new Array(stars.length * 4);
+
+            let index = 0;
+            stars.forEach(star => {
+                vertices[index++] = star.initialRotation;
+                vertices[index++] = star.longerRadius;
+                vertices[index++] = star.orbitRotation;
+                vertices[index++] = star.shorterRadius;
+            });
 
             this.vertexBuffer = GLUtils.createVertexBuffer(gl, vertices);
             this.vertexCount = stars.length;
