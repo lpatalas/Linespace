@@ -12,81 +12,13 @@
             return { x: canvas.width / 2, y: canvas.height / 2 };
         };
 
-        const vertexShaderSource = `
-            attribute vec2 vpos;
-
-            void main() {
-                gl_Position = vec4(vpos.x, vpos.y, 0, 1);
-                gl_PointSize = 1.0;
-            }
-`;
-
-        const fragmentShaderSource = `
-            void main() {
-                gl_FragColor = vec4(1, 1, 1, 1);
-            }
-`;
-
-        const createShader = function(source: string, shaderType: number) {
-            const shader = gl.createShader(shaderType);
-            gl.shaderSource(shader, source);
-            gl.compileShader(shader);
-            
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                throw "Can't compile shader";
-            }
-
-            return shader;
-        };
-
-        const createShaderProgram = function() {
-            const vertexShader = createShader(vertexShaderSource, gl.VERTEX_SHADER);
-            const fragmentShader = createShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
-            const program = gl.createProgram();
-            gl.attachShader(program, vertexShader);
-            gl.attachShader(program, fragmentShader);
-            gl.linkProgram(program);
-
-            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-                throw "Can't create program";
-            }
-
-            return program;
-        };
-
-        const createPointsBuffer = function() {
-            var vertices = [
-                0.2, 0.2, 0.0,
-                -0.2, 0.2, 0.0,
-                0.2, -0.2, 0.0,
-                -0.2, -0.2, 0.0
-            ];
-
-            const vertexData = new Float32Array(vertices);
-
-            const buffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-            gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
-
-
-            return buffer;
-        };
-
-        let pointsBuffer: WebGLBuffer;
-        let vposAttrib: number;
+        let galaxyRenderer: GalaxyRenderer;
 
         const setupWebGL = function() {
             gl.clearColor(0.0, 0.0, 0, 0);
             gl.disable(gl.DEPTH_TEST);
 
-            pointsBuffer = createPointsBuffer();
-
-            const program = createShaderProgram();
-            gl.useProgram(program);
-
-
-            vposAttrib = gl.getAttribLocation(program, "vpos");
-            gl.enableVertexAttribArray(vposAttrib);
+            galaxyRenderer = new GalaxyRenderer(gl);
         };
 
         const clearCanvas = function() {
@@ -133,9 +65,7 @@
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, pointsBuffer);
-            gl.vertexAttribPointer(vposAttrib, 3, gl.FLOAT, false, 0, 0);
-            gl.drawArrays(gl.POINTS, 0, 4);
+            galaxyRenderer.render(gl);
             //const topLeft = getScreenTopLeftPosition();
             //context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
             //galaxy.draw(context, time);
