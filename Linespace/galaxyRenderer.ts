@@ -1,10 +1,13 @@
 ﻿namespace Linespace {
 
     const vertexShaderSource = `
+            uniform vec2 viewportSize;            
+
             attribute vec2 vpos;
 
             void main() {
-                gl_Position = vec4(vpos.x, vpos.y, 0, 1);
+                vec2 screenPos = (vpos * 0.5) / (viewportSize * 0.5);
+                gl_Position = vec4(screenPos.x, screenPos.y, 0, 1);
                 gl_PointSize = 1.0;
             }
 `;
@@ -15,32 +18,51 @@
             }
 `;
 
+    interface Attributes {
+        vpos: number;
+    }
+
+    interface Uniforms {
+        viewportSize: WebGLUniformLocation;
+    }
+
     export class GalaxyRenderer {
 
         private program: WebGLProgram;
-        private vposAttribIndex: number;
         private vertexBuffer: WebGLBuffer;
+        private attributes: Attributes;
+        private uniforms: Uniforms;
 
         constructor(gl: WebGLRenderingContext) {
             this.program = GLUtils.createProgram(gl, vertexShaderSource, fragmentShaderSource);
 
             gl.useProgram(this.program);
-            this.vposAttribIndex = gl.getAttribLocation(this.program, "vpos");
-            gl.enableVertexAttribArray(this.vposAttribIndex);
+
+            this.attributes = {
+                vpos: gl.getAttribLocation(this.program, "vpos")
+            };
+            gl.enableVertexAttribArray(this.attributes.vpos);
+
+            this.uniforms = {
+                viewportSize: gl.getUniformLocation(this.program, 'viewportSize')
+            };
 
             const vertices = [
-                0.2, 0.2, 0.0,
-                -0.2, 0.2, 0.0,
-                0.2, -0.2, 0.0,
-                -0.2, -0.2, 0.0
+                200.2, 200.2, 0.0,
+                -200.2, 200.2, 0.0,
+                200.2, -200.2, 0.0,
+                -200.2, -200.2, 0.0
             ];
 
             this.vertexBuffer = GLUtils.createVertexBuffer(gl, vertices);
         }
 
-        render(gl: WebGLRenderingContext) {
+        render(gl: WebGLRenderingContext, viewportSize: Vec2D) {
+            gl.useProgram(this.program);
+            gl.uniform2f(this.uniforms.viewportSize, viewportSize.x, viewportSize.y);
+
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            gl.vertexAttribPointer(this.vposAttribIndex, 3, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(this.attributes.vpos, 3, gl.FLOAT, false, 0, 0);
             gl.drawArrays(gl.POINTS, 0, 4);
         }
 

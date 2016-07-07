@@ -65,7 +65,7 @@
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
 
-            galaxyRenderer.render(gl);
+            galaxyRenderer.render(gl, vec(canvas.width, canvas.height));
             //const topLeft = getScreenTopLeftPosition();
             //context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
             //galaxy.draw(context, time);
