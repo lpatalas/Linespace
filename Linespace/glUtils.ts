@@ -6,7 +6,8 @@
         gl.compileShader(shader);
 
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-            throw "Can't compile shader";
+            const infoLog = gl.getShaderInfoLog(shader);
+            throw `Can't compile shader: ${infoLog}`;
         }
 
         return shader;
@@ -23,7 +24,7 @@
         if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
             throw "Can't create program";
         }
-
+        
         return program;
     }
 

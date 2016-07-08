@@ -8,6 +8,9 @@
             uniform vec2 viewportSize;            
 
             attribute vec4 starParams;
+            attribute vec3 color;
+
+            varying vec3 vColor;
 
             void main() {
                 float initialRotation = starParams.x;
@@ -26,18 +29,25 @@
                 vec2 screenPos = vpos / (viewportSize * 0.5);
 
                 gl_Position = vec4(screenPos.x, screenPos.y, 0, 1);
-                gl_PointSize = 1.0;
+                gl_PointSize = 3.0;
+
+                vColor = color;
             }
 `;
 
     const fragmentShaderSource = `
+            precision mediump float;
+
+            varying vec3 vColor;
+
             void main() {
-                gl_FragColor = vec4(1, 1, 1, 1);
+                gl_FragColor = vec4(vColor, 1);
             }
 `;
 
     interface Attributes {
         starParams: number;
+        color: number;
     }
 
     interface Uniforms {
@@ -63,9 +73,11 @@
             gl.useProgram(this.program);
 
             this.attributes = {
-                starParams: gl.getAttribLocation(this.program, "starParams")
+                starParams: gl.getAttribLocation(this.program, "starParams"),
+                color: gl.getAttribLocation(this.program, "color")
             };
             gl.enableVertexAttribArray(this.attributes.starParams);
+            gl.enableVertexAttribArray(this.attributes.color);
 
             this.uniforms = {
                 rotationSpeed: gl.getUniformLocation(this.program, 'rotationSpeed'),
@@ -74,7 +86,7 @@
             };
 
             const stars = galaxy.getStars();
-            const vertices = new Array(stars.length * 4);
+            const vertices = new Array(stars.length * 7);
 
             let index = 0;
             stars.forEach(star => {
@@ -82,6 +94,9 @@
                 vertices[index++] = star.longerRadius;
                 vertices[index++] = star.orbitRotation;
                 vertices[index++] = star.shorterRadius;
+                vertices[index++] = star.color.r;
+                vertices[index++] = star.color.g;
+                vertices[index++] = star.color.b;
             });
 
             this.vertexBuffer = GLUtils.createVertexBuffer(gl, vertices);
@@ -95,7 +110,8 @@
             gl.uniform2f(this.uniforms.viewportSize, viewportSize.x, viewportSize.y);
 
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            gl.vertexAttribPointer(this.attributes.starParams, 4, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(this.attributes.starParams, 4, gl.FLOAT, false, 7 * 4, 0);
+            gl.vertexAttribPointer(this.attributes.color, 3, gl.FLOAT, false, 7 * 4, 4 * 4);
             gl.drawArrays(gl.POINTS, 0, this.vertexCount);
         }
 
