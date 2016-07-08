@@ -39,6 +39,9 @@
             gl.clearColor(0.0, 0.0, 0, 0);
             gl.disable(gl.DEPTH_TEST);
 
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.ONE, gl.ONE);
+
             galaxyRenderer = new GalaxyRenderer(gl, galaxy);
         };
 
