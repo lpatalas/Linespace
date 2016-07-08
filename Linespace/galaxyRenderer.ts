@@ -3,6 +3,7 @@
     const vertexShaderSource = `
             precision mediump float;
 
+            uniform float scale;
             uniform float rotationSpeed;
             uniform float time;
             uniform vec2 viewportSize;            
@@ -19,8 +20,8 @@
                 float shorterRadius = starParams.w;
 
                 float r = initialRotation + time * rotationSpeed;
-                float x = sin(r) * longerRadius;
-                float y = cos(r) * shorterRadius;
+                float x = sin(r) * longerRadius * scale;
+                float y = cos(r) * shorterRadius * scale;
 
                 float xx = x * cos(orbitRotation) - y * sin(orbitRotation);
                 float yy = x * sin(orbitRotation) + y * cos(orbitRotation);
@@ -51,9 +52,15 @@
     }
 
     interface Uniforms {
+        scale: WebGLUniformLocation,
         rotationSpeed: WebGLUniformLocation;
         time: WebGLUniformLocation;
         viewportSize: WebGLUniformLocation;
+    }
+
+    export interface ViewParameters {
+        scale: number,
+        viewportSize: Vec2D
     }
 
     export class GalaxyRenderer {
@@ -80,6 +87,7 @@
             gl.enableVertexAttribArray(this.attributes.color);
 
             this.uniforms = {
+                scale: gl.getUniformLocation(this.program, 'scale'),
                 rotationSpeed: gl.getUniformLocation(this.program, 'rotationSpeed'),
                 time: gl.getUniformLocation(this.program, 'time'),
                 viewportSize: gl.getUniformLocation(this.program, 'viewportSize')
@@ -103,11 +111,12 @@
             this.vertexCount = stars.length;
         }
 
-        render(gl: WebGLRenderingContext, viewportSize: Vec2D, time: number) {
+        render(gl: WebGLRenderingContext, time: number, view: ViewParameters) {
             gl.useProgram(this.program);
+            gl.uniform1f(this.uniforms.scale, view.scale);
             gl.uniform1f(this.uniforms.rotationSpeed, this.galaxy.rotationSpeed);
             gl.uniform1f(this.uniforms.time, time);
-            gl.uniform2f(this.uniforms.viewportSize, viewportSize.x, viewportSize.y);
+            gl.uniform2f(this.uniforms.viewportSize, view.viewportSize.x, view.viewportSize.y);
 
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
             gl.vertexAttribPointer(this.attributes.starParams, 4, gl.FLOAT, false, 7 * 4, 0);

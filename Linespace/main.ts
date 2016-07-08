@@ -81,7 +81,10 @@
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
 
-            galaxyRenderer.render(gl, vec(canvas.width, canvas.height), time);
+            galaxyRenderer.render(gl, time, {
+                scale: worldScale,
+                viewportSize: vec(canvas.width, canvas.height)
+            });
             //const topLeft = getScreenTopLeftPosition();
             //context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
             //galaxy.draw(context, time);
@@ -124,7 +127,7 @@
             });
 
             body.addEventListener('wheel', event => {
-                worldScale -= event.deltaY * 0.0001;
+                worldScale -= event.deltaY * 0.001;
                 if (worldScale < 0.0001) {
                     worldScale = 0.0001;
                 }
