@@ -6,7 +6,7 @@ import { Vec2D, vec, vcopy, vsub } from './vec2D'
 
 const getWebGLContext = function(canvas: HTMLCanvasElement): WebGLRenderingContext {
     const context = <WebGLRenderingContext>canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    return WebGLDebugUtils.makeDebugContext(context);
+    return context;    
 };
 
 const parseStarCountParam = function() {
@@ -22,7 +22,7 @@ const parseStarCountParam = function() {
 
 const starCountParam = parseStarCountParam();
 
-export function runGame(canvas: HTMLCanvasElement) {
+function runGame(canvas: HTMLCanvasElement) {
     const gl = getWebGLContext(canvas);
     
     const getCenter = function(): Vec2D {
@@ -163,3 +163,6 @@ export function runGame(canvas: HTMLCanvasElement) {
     hookMouseEvents();
     runMainLoop();
 }
+
+const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
+runGame(canvas);
