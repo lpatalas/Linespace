@@ -1,28 +1,32 @@
-﻿namespace Linespace {
+﻿///<reference path="Scripts/typings/seedrandom/seedrandom.d.ts" />
 
-    export class RandomNumberGenerator {
-        private rng: prng;
+declare global {
+    interface Math {
+        seedrandom: prng;
+    }
+}
 
-        constructor(seed?: any) {
-            if (seed != null) {
-                this.rng = new Math.seedrandom(JSON.stringify(seed));
-            }
-            else {
-                this.rng = new Math.seedrandom();
-            }
+export class RandomNumberGenerator {
+    private rng: prng;
+
+    constructor(seed?: any) {
+        if (seed != null) {
+            this.rng = new Math.seedrandom(JSON.stringify(seed));
         }
-
-        float(): number {
-            return this.rng.quick();
-        }
-
-        floatRange(min: number, max: number): number {
-            return min + this.float() * (max - min);
-        }
-
-        intRange(min: number, max: number): number {
-            return min + (this.rng.int32() % (max - min));
+        else {
+            this.rng = new Math.seedrandom();
         }
     }
 
+    float(): number {
+        return this.rng.quick();
+    }
+
+    floatRange(min: number, max: number): number {
+        return min + this.float() * (max - min);
+    }
+
+    intRange(min: number, max: number): number {
+        return min + (this.rng.int32() % (max - min));
+    }
 }

@@ -1,4 +1,11 @@
-﻿namespace Linespace {
+﻿///<reference path="definitions.d.ts" />
+    
+import { Galaxy } from './galaxy'
+import { GalaxyRenderer } from './galaxyRenderer'
+import { Vec2D, vec, vcopy, vsub } from './vec2D'
+
+namespace Linespace {
+
 
     const getWebGLContext = function(canvas: HTMLCanvasElement): WebGLRenderingContext {
         const context = <WebGLRenderingContext>canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
