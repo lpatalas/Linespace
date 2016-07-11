@@ -1,4 +1,4 @@
-﻿///<reference path="Scripts/typings/seedrandom/seedrandom.d.ts" />
+﻿///<reference path="../typings/seedrandom/seedrandom.d.ts" />
 
 declare global {
     interface Math {
