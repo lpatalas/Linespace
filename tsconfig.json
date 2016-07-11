@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "outDir": "bin",
+        "pretty": true,
+        "rootDir": "src",
+        "target": "es5"
+    }
+}
