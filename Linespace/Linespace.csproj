@@ -23,7 +23,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TypeScriptToolsVersion>1.7</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,16 +78,24 @@
     <Content Include="index.html" />
     <Content Include="Scripts\seedrandom.js" />
     <Content Include="Scripts\seedrandom.min.js" />
+    <Content Include="Scripts\webgl-debug.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="color.ts" />
     <TypeScriptCompile Include="debugDisplay.ts" />
     <TypeScriptCompile Include="definitions.d.ts" />
     <TypeScriptCompile Include="fpsCounter.ts" />
+    <TypeScriptCompile Include="galaxy.ts" />
+    <TypeScriptCompile Include="galaxyRenderer.ts" />
+    <TypeScriptCompile Include="glUtils.ts" />
+    <TypeScriptCompile Include="grid.ts" />
     <TypeScriptCompile Include="main.ts" />
+    <TypeScriptCompile Include="pixelBatch.ts" />
+    <TypeScriptCompile Include="randomNumberGenerator.ts" />
     <TypeScriptCompile Include="Scripts\typings\seedrandom\seedrandom.d.ts" />
     <TypeScriptCompile Include="vec2D.ts" />
   </ItemGroup>

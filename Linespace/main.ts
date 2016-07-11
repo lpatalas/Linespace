@@ -1,310 +1,99 @@
 ﻿namespace Linespace {
 
-    const isDebugMode = window.location.search.indexOf('debug=1') >= 0;
-    const debugDisplay = new DebugDisplay();
-
-    interface Orbit {
-        radius: Vec2D;
-        orientation: number;
-    }
-
-    interface Planet {
-        color: string;
-        orbit: Orbit;
-        radius: number;
-        speed: number;
-    }
-
-    const TWO_PI = Math.PI * 2;
-
-    const rgb = function(r: number, g: number, b: number) {
-        r = Math.floor(r);
-        g = Math.floor(g);
-        b = Math.floor(b);
-        return `rgb(${r}, ${g}, ${b})`;
+    const getWebGLContext = function(canvas: HTMLCanvasElement): WebGLRenderingContext {
+        const context = <WebGLRenderingContext>canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        return WebGLDebugUtils.makeDebugContext(context);
     };
 
-    export function runGame(canvas: HTMLCanvasElement) {
-        const context = canvas.getContext('2d');
+    const parseStarCountParam = function() {
+        const regex = /starCount=([0-9]+)/;
+        const matches = window.location.search.match(regex);
+        if (matches && matches.length > 1) {
+            return parseInt(matches[1], 10);
+        }
+        else {
+            return 10000;
+        }
+    };
 
+    const starCountParam = parseStarCountParam();
+
+    export function runGame(canvas: HTMLCanvasElement) {
+        const gl = getWebGLContext(canvas);
+        
         const getCenter = function(): Vec2D {
             return { x: canvas.width / 2, y: canvas.height / 2 };
         };
 
-        const getSize = function(): Vec2D {
-            return { x: canvas.width, y: canvas.height };
-        }
+        const galaxy = new Galaxy({
+            center: vec(0, 0),
+            rotationSpeed: 0.05,
+            size: 400,
+            sizeRatio: 0.875,
+            starCount: starCountParam
+        });
 
-        const fitCanvasToWindow = function() {
-            if (canvas.width != window.innerHeight) {
-                canvas.width = window.innerWidth;
-            }
-            if (canvas.height != window.innerHeight) {
-                canvas.height = window.innerHeight;
-            }
+        let galaxyRenderer: GalaxyRenderer;
+
+        const setupWebGL = function() {
+            gl.clearColor(0.0, 0.0, 0, 0);
+            gl.disable(gl.DEPTH_TEST);
+
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.ONE, gl.ONE);
+
+            galaxyRenderer = new GalaxyRenderer(gl, galaxy);
         };
 
         const clearCanvas = function() {
-            context.fillStyle = '#000000';
-            context.fillRect(0, 0, canvas.width, canvas.height);
+            gl.clear(gl.COLOR_BUFFER_BIT);
         };
 
-        const drawPixel = function(position: Vec2D, color: string) {
-            context.fillStyle = color;
-            context.fillRect(position.x, position.y, 1, 1);
+        const setupViewport = function() {
+            gl.viewport(0, 0, canvas.width, canvas.height);
         };
 
-        const drawCircle = function(position: Vec2D, radius: number, color: string) {
-            context.strokeStyle = color;
-            context.beginPath();
-            context.arc(position.x, position.y, radius, 0, TWO_PI);
-            context.stroke();
-        };
+        const fitCanvasToWindow = function() {
+            let sizeChanged = false;
 
-        const fillCircle = function(position: Vec2D, radius: number, color: string) {
-            context.fillStyle = color;
-            context.beginPath();
-            context.arc(position.x, position.y, radius, 0, TWO_PI);
-            context.fill();
-        };
-
-        const drawEllipse = function(center: Vec2D, radius: Vec2D, color: string) {
-            context.strokeStyle = color;
-            context.beginPath();
-            context.ellipse(center.x, center.y, radius.x, radius.y, 0, 0, TWO_PI);
-            context.stroke();
-        };
-
-        const fillEllipse = function(center: Vec2D, radius: Vec2D, color: string) {
-            context.strokeStyle = color;
-            context.beginPath();
-            context.ellipse(center.x, center.y, radius.x, radius.y, 0, 0, TWO_PI);
-            context.fill();
-        };
-
-        const planets: Planet[] = [
-            { color: '#804000', radius: 10, speed: 0.7, orbit: { radius: { x: 120, y: 115 }, orientation: 100 } },
-            { color: '#804080', radius: 10, speed: 0.4, orbit: { radius: { x: 220, y: 210 }, orientation: 100 } },
-            { color: '#3040F0', radius: 20, speed: 0.2, orbit: { radius: { x: 500, y: 470 }, orientation: 100 } }
-        ];
-
-        const drawPlanet = function(time: number, planet: Planet) {
-            const a = planet.orbit.radius.x;
-            const b = planet.orbit.radius.y;
-            const c = Math.sqrt(a * a - b * b);
-            
-            drawEllipse(vadd(getCenter(), { x: c, y: 0 }), planet.orbit.radius, 'white');
-
-            const offset = {
-                x: Math.sin(planet.speed * time) * planet.orbit.radius.x + c,
-                y: Math.cos(planet.speed * time) * planet.orbit.radius.y
-            };
-            fillCircle(vadd(getCenter(), offset), planet.radius, planet.color);
-        };
-
-        const repeat = function(times: number, callback: Function) {
-            while (times-- > 0) {
-                callback();
+            if (canvas.width != window.innerHeight) {
+                canvas.width = window.innerWidth;
+                sizeChanged = true;
             }
-        }
-
-        const generate = function <T>(count: number, generator: (i: number) => T): T[] {
-            const result: T[] = [];
-            for (let i = 0; i < count; i++) {
-                result.push(generator(i));
-            }
-            return result;
-        };
-
-        interface Star {
-            position: Vec2D;
-            color: string;
-        }
-
-        const starRng = new Math.seedrandom(':)');
-        //starRng.
-        
-        const stars: Star[] = generate(1000, () => {
-            const intensity = 100 + starRng.double() * 155;
-            return {
-                position: {
-                    x: starRng.double(),
-                    y: starRng.double()
-                },
-                color: rgb(intensity, intensity, intensity)
-            };
-        });
-
-        const drawStars = function() {
-            const tileSize = 1000;
-            const starsPerTile = 100;
-
-            const roundToTile = function(x: number) {
-                return Math.floor(x / tileSize) * tileSize;
+            if (canvas.height != window.innerHeight) {
+                canvas.height = window.innerHeight;
+                sizeChanged = true;
             }
 
-            const minStarScale = 0.1;
-            const maxStarScale = 0.5;
-
-            let cint = (worldScale - minStarScale) / (maxStarScale - minStarScale);
-            cint = Math.min(1, Math.max(0, cint));
-            debugDisplay.addText(`cint: ${cint}`);
-
-            const drawTile = function(tileX: number, tileY: number) {
-                tileX = Math.round(tileX);
-                tileY = Math.round(tileY);
-
-                debugDisplay.addText(`Drawing tile: ${tileX}, ${tileY}`);
-
-                var rng = new Math.seedrandom(`${tileX},${tileY}`);
-                for (let i = 0; i < starsPerTile; i++) {
-                    const x = tileX + rng.quick() * tileSize;
-                    const y = tileY + rng.quick() * tileSize;
-                    const c = 100 + rng.quick() * 155;
-                    drawPixel(vec(x, y), rgb(c * cint, c * cint, c * cint));
-                }
-                context.strokeStyle = rgb(80, 80, 80);
-                context.setLineDash([10, 10]);
-                context.beginPath();
-                context.moveTo(tileX, tileY);
-                context.lineTo(tileX + tileSize, tileY);
-                context.moveTo(tileX, tileY);
-                context.lineTo(tileX, tileY + tileSize);
-                context.stroke();
-                context.fillStyle = rgb(80, 80, 80);
-                context.fillText(`(${tileX}, ${tileY})`, tileX + 10, tileY + 20);
-            };
-
-            const pos = vec(worldPosition.x, worldPosition.y);
-            const topLeft = vec(pos.x - canvas.width / worldScale / 2, pos.y - canvas.height / worldScale / 2);
-            const maxX = canvas.width / worldScale + topLeft.x;
-            const maxY = canvas.height / worldScale + topLeft.y;
-            const startX = roundToTile(topLeft.x);
-            const startY = roundToTile(topLeft.y);
-
-            debugDisplay.addJson({ maxX, maxY, startX, startY });
-
-            for (let tileY = startY; tileY < maxY; tileY += tileSize) {
-                for (let tileX = startX; tileX < maxX; tileX += tileSize) {
-                    drawTile(tileX, tileY);
-                }
+            if (sizeChanged) {
+                setupViewport();
             }
-
-            context.setLineDash([]);
         };
 
-        const drawGrid = (() => {
-            const options = {
-                minSize: 100,
-                maxSize: 1000,
-                minScreenSize: 100,
-                maxOpacity: 0.8,
-                incrementSize: (size: number) => size * 2
-            };
-
-            const roundTo = function(x: number, rounding: number) {
-                return Math.floor(x / rounding) * rounding;
-            };
-
-            const computeMinVisibleSize = function(scale: number) {
-                let minVisibleSize = options.minSize;
-                let screenSize = minVisibleSize * scale;
-
-                while (minVisibleSize < options.maxSize && screenSize < options.minScreenSize) {
-                    minVisibleSize *= 2;
-                    screenSize *= 2;
-                }
-
-                return minVisibleSize;
-            };
-
-            const computeOpacity = function(gridSize: number, scale: number) {
-                const screenSize = gridSize * scale;
-                const minScreenSize = options.minScreenSize;
-                const maxScreenSize = minScreenSize * 2;
-                const opacity = (screenSize - minScreenSize) / (maxScreenSize - minScreenSize);
-                return opacity * options.maxOpacity;
-            }
-
-            return function(position: Vec2D, scale: number) {
-                let gridSize = computeMinVisibleSize(scale);
-
-                while (gridSize < options.maxSize) {
-                    const opacity = computeOpacity(gridSize, scale);
-
-                    const topLeftX = position.x - (canvas.width / 2) / scale;
-                    const topLeftY = position.y - (canvas.height / 2) / scale;
-                    const gridOffsetX = (topLeftX % gridSize) * scale;
-                    const gridOffsetY = (topLeftY % gridSize) * scale;
-                    const screenGridSize = gridSize * scale;
-
-                    debugDisplay.addJson({ gridOffsetX, gridOffsetY, gridSize, screenGridSize });
-
-                    context.setLineDash([10, 10]);
-                    context.strokeStyle = rgb(opacity * 255, opacity * 255, opacity * 255);
-                    context.beginPath();
-                    for (let y = -gridOffsetY; y < canvas.height; y += screenGridSize) {
-                        context.moveTo(-gridOffsetX - screenGridSize, y);
-                        context.lineTo(canvas.width + screenGridSize - gridOffsetX, y);
-                    }
-                    for (let x = -gridOffsetX; x < canvas.width; x += screenGridSize) {
-                        context.moveTo(x, -gridOffsetY - screenGridSize);
-                        context.lineTo(x, canvas.height + screenGridSize - gridOffsetY);
-                    }
-                    context.stroke();
-
-                    gridSize *= 2;
-                }
-
-                context.setLineDash([]);
-            };
-        })();
         let worldPosition: Vec2D;
         let worldScale = 1;
 
-        const getScreenTopLeftPosition = function(scale?: number) {
-            scale = scale || worldScale;
-            return vec(worldPosition.x * scale - (canvas.width / 2), worldPosition.y * scale - canvas.height / 2);
-        };
+        //const getScreenTopLeftPosition = function(scale?: number) {
+        //    scale = scale || worldScale;
+        //    return vec(worldPosition.x * scale - (canvas.width / 2), worldPosition.y * scale - canvas.height / 2);
+        //};
 
         const drawObjects = function(time: number) {
             worldPosition = worldPosition || getCenter();
 
-            //const starsTopLeft = getScreenTopLeftPosition(1);
-            //context.setTransform(1, 0, 0, 1, -starsTopLeft.x, -starsTopLeft.y);
-            //drawStars();
-
-            drawGrid(worldPosition, worldScale);
-
-            const topLeft = getScreenTopLeftPosition();
-            context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
-            fillCircle(getCenter(), 30, '#ff8000');
-            planets.forEach(planet => drawPlanet(time, planet));
+            galaxyRenderer.render(gl, time, {
+                scale: worldScale,
+                viewportSize: vec(canvas.width, canvas.height)
+            });
+            //const topLeft = getScreenTopLeftPosition();
+            //context.setTransform(worldScale, 0, 0, worldScale, -topLeft.x, -topLeft.y);
+            //galaxy.draw(context, time);
         };
 
-        const updateFpsCounter = createFpsCounter(debugDisplay);
-
-        const update = function(dt: number, time: number) {
-            debugDisplay.reset();
-            updateFpsCounter(time);
-
-            debugDisplay.addJson({ worldPosition, worldScale });
-            debugDisplay.addText(`Zoom: ${worldScale}`);
-
+        const processFrame = function(dt: number, time: number) {
             fitCanvasToWindow();
             clearCanvas();
             drawObjects(time);
-
-            if (isDebugMode) {
-                // World (0, 0) position
-                fillCircle(vec(0, 0), 10, 'red');
-
-                // Circle centered in the screen
-                context.setTransform(1, 0, 0, 1, 0, 0);
-                drawCircle(vec(canvas.width / 2, canvas.height / 2), 20, 'white');
-
-                debugDisplay.draw(vec(10, 10), context);
-            }
         };
 
         const hookMouseEvents = function() {
@@ -338,7 +127,7 @@
             });
 
             body.addEventListener('wheel', event => {
-                worldScale -= event.deltaY * 0.0001;
+                worldScale -= event.deltaY * 0.001;
                 if (worldScale < 0.0001) {
                     worldScale = 0.0001;
                 }
@@ -348,12 +137,23 @@
         const runMainLoop = function() {
             const getCurrentTime = () => new Date().getTime() / 1000;
             let lastTime = getCurrentTime();
-            
-            setInterval(() => {
+            let elapsedTime = 0;
+
+            setupWebGL();
+            setupViewport();
+
+            const mainLoopStep = function() {
                 const currentTime = getCurrentTime();
-                update(currentTime - lastTime, currentTime);
+                const deltaTime = currentTime - lastTime;
+
+                elapsedTime += deltaTime;
+
+                processFrame(deltaTime, elapsedTime);
                 lastTime = currentTime;
-            }, 33);
+                requestAnimationFrame(mainLoopStep);
+            };
+
+            mainLoopStep();
         };
 
         hookMouseEvents();
