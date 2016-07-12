@@ -11,9 +11,12 @@
   "private": true,
   "homepage": "https://bitbucket.org/lpatalas/linespace#readme",
   "scripts": {
-    "start": "tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
+    "prestart": "tsc & webpack",
+    "start": "concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
+    "webpack": "webpack",
+    "webpack:w": "webpack -w",
     "lite": "lite-server",
     "typings": "typings",
     "postinstall": "typings install",
