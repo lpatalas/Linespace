@@ -5,3 +5,9 @@ packages/
 
 *.suo
 *.user
+
+node_modules/
+.idea/**
+nbproject/
+Scripts/generated/**
+build/Output/**

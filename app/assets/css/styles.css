@@ -1,0 +1,78 @@
+@import 'reset.css';
+/* html elements */
+body {
+  color: black;
+}
+table tr td {
+  padding: 5px;
+  box-sizing: border-box;
+}
+table thead tr td {
+  /*&:not(:last-child) {
+                    border-right: 1px dashed black;
+                }*/
+  border-bottom: 1px dashed black;
+}
+table tbody tr:hover {
+  background-color: #8d8d8d;
+  cursor: pointer;
+}
+/* general */
+.display-inline-block {
+  display: inline-block;
+}
+.float-right {
+  float: right;
+}
+.float-left {
+  float: left;
+}
+.clearboth {
+  float: none;
+}
+.text-not-selectable {
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none;
+  /* Likely future */
+}
+/* popup */
+.popup-container {
+  position: fixed;
+  /*top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;*/
+  z-index: 1111;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none;
+  /* Likely future */
+}
+.popup-container .popup {
+  background-color: gray;
+  width: 300px;
+  height: 200px;
+}
+.popup-container .header {
+  padding: 5px;
+  background-color: orangered;
+  cursor: move;
+  border-bottom: 1px solid black;
+}
+.popup-container .header:hover {
+  background-color: #ff581a;
+}
+.popup-container .content {
+  padding: 5px;
+  background-color: gray;
+}
+/* override bootstrap */

@@ -1,7 +1,7 @@
 module.exports = {
-    entry: './src/main.ts',
+    entry: './app/main.ts',
     output: {
-        path: './bin',
+        path: './app/bin',
         filename: 'app.bundle.js'
     },
     resolve: {
