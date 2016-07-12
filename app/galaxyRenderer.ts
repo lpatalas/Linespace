@@ -1,53 +1,11 @@
-﻿
-import { Galaxy } from './galaxy'
+﻿import { Galaxy } from './galaxy'
 import * as GLUtils from './glUtils'
 import { Vec2D } from './vec2D'
 
-const vertexShaderSource = `
-        precision mediump float;
+declare var require: (name: string) => any;
 
-        uniform float scale;
-        uniform float rotationSpeed;
-        uniform float time;
-        uniform vec2 viewportSize;            
-
-        attribute vec4 starParams;
-        attribute vec3 color;
-
-        varying vec3 vColor;
-
-        void main() {
-            float initialRotation = starParams.x;
-            float longerRadius = starParams.y;
-            float orbitRotation = starParams.z;
-            float shorterRadius = starParams.w;
-
-            float r = initialRotation + time * rotationSpeed;
-            float x = sin(r) * longerRadius * scale;
-            float y = cos(r) * shorterRadius * scale;
-
-            float xx = x * cos(orbitRotation) - y * sin(orbitRotation);
-            float yy = x * sin(orbitRotation) + y * cos(orbitRotation);
-
-            vec2 vpos = vec2(xx, yy);
-            vec2 screenPos = vpos / (viewportSize * 0.5);
-
-            gl_Position = vec4(screenPos.x, screenPos.y, 0, 1);
-            gl_PointSize = 3.0;
-
-            vColor = color;
-        }
-`;
-
-const fragmentShaderSource = `
-        precision mediump float;
-
-        varying vec3 vColor;
-
-        void main() {
-            gl_FragColor = vec4(vColor, 1);
-        }
-`;
+const vertexShaderSource: string = require('./shaders/galaxy.vert');
+const fragmentShaderSource: string = require('./shaders/galaxy.frag');
 
 interface Attributes {
     starParams: number;

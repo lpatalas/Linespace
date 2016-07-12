@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = {
     entry: './app/main.ts',
     output: {
@@ -9,6 +11,7 @@ module.exports = {
     },
     module: {
         loaders: [
+            { test: /(\.vert|\.frag)/, loader: 'raw' },
             { test: /\.ts/, loader: 'ts-loader' }
         ]
     }
