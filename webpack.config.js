@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
     entry: './app/main.ts',
     output: {
-        path: './app/bin',
+        path: './bin',
         filename: 'app.bundle.js'
     },
     resolve: {
