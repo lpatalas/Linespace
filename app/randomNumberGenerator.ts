@@ -1,6 +1,6 @@
 ﻿
-declare module global {
-    export interface Math {
+declare global {
+    interface Math {
         seedrandom: prng;
     }
 }
