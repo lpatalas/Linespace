@@ -198,7 +198,7 @@ function Invoke-MSDeploy {
 	)
 
 	if (-not $ConfigurationPath) {
-		$ConfigrationPath = 'deploy.ini.user'
+		$ConfigurationPath = 'deploy.ini.user'
 	}
 
 	$deployParams = Read-IniFile $ConfigurationPath
