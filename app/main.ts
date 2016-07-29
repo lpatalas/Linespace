@@ -1,8 +1,9 @@
 ﻿///<reference path="definitions.d.ts" />
     
-import { Galaxy } from './galaxy'
-import { GalaxyRenderer } from './galaxyRenderer'
-import { Vec2D, vec, vcopy, vsub } from './vec2D'
+import { Galaxy } from './galaxy';
+import { GalaxyRenderer } from './galaxyRenderer';
+import { Vec2D, vec, vcopy, vsub } from './vec2D';
+import {Gui} from './gui/gui';
 
 const getWebGLContext = function(canvas: HTMLCanvasElement): WebGLRenderingContext {
     const context = <WebGLRenderingContext>canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -134,6 +135,14 @@ function runGame(canvas: HTMLCanvasElement) {
             worldScale -= event.deltaY * 0.001;
             if (worldScale < 0.0001) {
                 worldScale = 0.0001;
+            }
+        });
+
+
+
+        body.addEventListener('click', (event: MouseEvent) => {
+            if (event.button == 0 && event.altKey) {
+                Gui.popup(event);
             }
         });
     };
