@@ -1,0 +1,21 @@
+{
+  "name": "linespace",
+  "description": "Linespace game",
+  "main": "index.js",
+  "authors": [
+    "Linespace Team"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-ui": "^1.12.0",
+    "jquery": ">=2.* <3.0.*"
+  }
+}

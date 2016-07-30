@@ -1,4 +1,6 @@
-﻿import {Guid} from '../common/guid';
+﻿//<reference path="../../typings/jquery.d.ts" />
+
+import {Guid} from '../common/guid';
 
 var counter = 0;
 
@@ -19,14 +21,16 @@ export class Gui {
             //$('#myModal').modal('show');
 
             //make draggable
-            $("#" + popupId).draggable({
+            var popupHandle = $("#" + popupId);
+            //console.log(popupHandle);
+            popupHandle.draggable({
                 handle: ".header"
             });
 
             //set position at cursor
-            $("#" + popupId).css("top", event.clientY + 10);
-            $("#" + popupId).css("left", event.clientX + 10);
-            $("#" + popupId).css("position", "fixed");
+            popupHandle.css("top", event.clientY + 10);
+            popupHandle.css("left", event.clientX + 10);
+            popupHandle.css("position", "fixed");
 
             elem.addEventListener("click", (ev:MouseEvent) => {
                 let evExt = <Ext.EventTargetExt>ev.target;
@@ -66,7 +70,7 @@ function LoadFile(path:string) {
                     reject(req.response);
                 }
             }
-        }
+        };
 
         req.send();
     });
