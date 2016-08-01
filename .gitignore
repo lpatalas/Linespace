@@ -1,13 +1,18 @@
+#visual studio files/flders
 .vs/
 bin/
 obj/
 packages/
-
 *.suo
 *.user
 
+
+#project files
 node_modules/
+bower_components/
 .idea/**
 nbproject/
 Scripts/generated/**
 build/Output/**
+.idea/
+Scripts/

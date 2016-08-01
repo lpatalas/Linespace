@@ -1,104 +1,106 @@
 ﻿@import 'reset.css';
 @import 'variables.less';
 
-
 /* html elements */
 body {
-    color: black;
+  background-color: black;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+
+  color: black;
+
 }
 
-
 table {
+  & tr {
+    & td {
+      padding: 5px;
+      box-sizing: border-box;
+    }
+  }
+
+  & thead {
     & tr {
-        & td {
-            padding: 5px;
-            box-sizing: border-box;
-        }
+      & td {
+        /*&:not(:last-child) {
+            border-right: 1px dashed black;
+        }*/
+        border-bottom: 1px dashed black;
+      }
     }
+  }
 
-    & thead {
-        & tr {
-            & td {
-                /*&:not(:last-child) {
-                    border-right: 1px dashed black;
-                }*/
-                border-bottom: 1px dashed black;
-            }
-        }
+  & tbody {
+    & tr {
+      & td {
+      }
+
+      &:hover {
+        background-color: lighten(gray, 5%);
+        cursor: pointer;
+      }
     }
-
-    & tbody {
-        & tr {
-            & td {
-            }
-
-            &:hover {
-                background-color: lighten(gray, 5%);
-                cursor: pointer;
-            }
-        }
-    }
+  }
 }
 
 /* general */
 
 .display-inline-block {
-    display: inline-block;
+  display: inline-block;
 }
 
 .float-right {
-    float: right;
+  float: right;
 }
 
 .float-left {
-    float: left;
+  float: left;
 }
 
 .clearboth {
-    float: none;
+  float: none;
 }
 
 .text-not-selectable {
-    -webkit-user-select: none; /* Chrome all / Safari all */
-    -moz-user-select: none; /* Firefox all */
-    -ms-user-select: none; /* IE 10+ */
-    user-select: none; /* Likely future */
+  -webkit-user-select: none; /* Chrome all / Safari all */
+  -moz-user-select: none; /* Firefox all */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Likely future */
 }
+
 /* popup */
 .popup-container {
-    position: fixed;
-    /*top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;*/
-    z-index: 1111;
-    .text-not-selectable;
+  position: fixed;
+  /*top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;*/
+  z-index: 1111;
+  .text-not-selectable;
 
+  & .popup {
+    background-color: gray;
+    width: 300px;
+    height: 200px;
+    //margin: 0 auto;
+  }
 
-    & .popup {
-        background-color: gray;
-        width: 300px;
-        height: 200px;
-        //margin: 0 auto;
+  & .header {
+    padding: 5px;
+    background-color: orangered;
+    cursor: move;
+    border-bottom: 1px solid black;
+
+    &:hover {
+      background-color: lighten(orangered, 5%);
     }
+  }
 
-    & .header {
-        padding: 5px;
-        background-color: orangered;
-        cursor: move;
-        border-bottom: 1px solid black;
-
-        &:hover {
-            background-color: lighten(orangered, 5%);
-        }
-    }
-
-    & .content {
-        padding: 5px;
-        background-color: gray;
-    }
+  & .content {
+    padding: 5px;
+    background-color: gray;
+  }
 }
-
-
 
 /* override bootstrap */
