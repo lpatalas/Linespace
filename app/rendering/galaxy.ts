@@ -1,6 +1,6 @@
-﻿import { Rgb } from './color'
-import { RandomNumberGenerator } from './randomNumberGenerator'
-import { Vec2D, vec } from './vec2D'
+﻿import { Rgb } from '../common/color'
+import { RandomNumberGenerator } from '../common/randomNumberGenerator'
+import { Vec2D, vec } from '../common/vec2D'
 
 const TWO_PI = Math.PI * 2;
 

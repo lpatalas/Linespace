@@ -1,8 +1,6 @@
-﻿///<reference path="definitions.d.ts" />
-    
-import { Galaxy } from './galaxy';
-import { GalaxyRenderer } from './galaxyRenderer';
-import { Vec2D, vec, vcopy, vsub } from './vec2D';
+﻿import { Galaxy } from './rendering/galaxy';
+import { GalaxyRenderer } from './rendering/galaxyRenderer';
+import { Vec2D, vec, vcopy, vsub } from './common/vec2D';
 import {Gui} from './gui/gui';
 
 const getWebGLContext = function(canvas: HTMLCanvasElement): WebGLRenderingContext {
@@ -173,5 +171,10 @@ function runGame(canvas: HTMLCanvasElement) {
     runMainLoop();
 }
 
-const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
-runGame(canvas);
+// const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
+// runGame(canvas);
+
+export function run() : void{
+    const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
+    runGame(canvas);
+}

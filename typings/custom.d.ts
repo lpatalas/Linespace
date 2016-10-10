@@ -1,4 +1,13 @@
-﻿///<reference path="../typings/seedrandom/seedrandom.d.ts" />
+﻿///<reference path="../node_modules/rx/ts/rx.all.d.ts" />
+///<reference path="./seedrandom/seedrandom.d.ts" />
+
+
+declare module Ext {
+    export class EventTargetExt extends EventTarget {
+        id: any;
+    }
+
+}
 
 interface CanvasRenderingContext2D {
     ellipse(x: number, y: number, radiusX: number, radiusY: number, rotation: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;

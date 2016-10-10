@@ -20,17 +20,17 @@ export class Gui {
             mainContainer.insertAdjacentElement('beforeEnd', elem);
             //$('#myModal').modal('show');
 
-            //make draggable
-            var popupHandle = $("#" + popupId);
-            //console.log(popupHandle);
-            popupHandle.draggable({
-                handle: ".header"
-            });
+            // //make draggable
+            // var popupHandle = $("#" + popupId);
+            // //console.log(popupHandle);
+            // popupHandle.draggable({
+            //     handle: ".header"
+            // });
 
-            //set position at cursor
-            popupHandle.css("top", event.clientY + 10);
-            popupHandle.css("left", event.clientX + 10);
-            popupHandle.css("position", "fixed");
+            // //set position at cursor
+            // popupHandle.css("top", event.clientY + 10);
+            // popupHandle.css("left", event.clientX + 10);
+            // popupHandle.css("position", "fixed");
 
             elem.addEventListener("click", (ev:MouseEvent) => {
                 let evExt = <Ext.EventTargetExt>ev.target;
