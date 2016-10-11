@@ -12,6 +12,6 @@ export class AppComponent implements OnInit {
     
     ngOnInit(){
         var r = new lrenderer();
-        r.init();
+        r.render();
     }
  }

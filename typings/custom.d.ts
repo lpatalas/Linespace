@@ -1,5 +1,4 @@
-﻿///<reference path="../node_modules/rx/ts/rx.all.d.ts" />
-///<reference path="./seedrandom/seedrandom.d.ts" />
+﻿///<reference path="./seedrandom/seedrandom.d.ts" />
 
 
 declare module Ext {
