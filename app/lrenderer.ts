@@ -1,13 +1,17 @@
-import * as console from 'console';
-import * as THREE from 'three';
+import * as console from 'console'; 
+import * as THREE from 'three'; 
 
 export class lrenderer {
 	constructor() {
-		const container = <HTMLCanvasElement>document.getElementById('gameCanvas');
+		this.init(); 
+	}
+
+	private init() {
+		var container =  <HTMLCanvasElement> document.getElementById('gameContent'); 
 
 		// var camera = new THREE.Camera();
 		// camera.position.z = 1;
-		this.scene = new THREE.Scene();
+		this.scene = new THREE.Scene(); 
 		//		var geometry = new THREE.PlaneBufferGeometry(2, 2);
 		// 		var uniforms = {
 		// 			time: { value: 1.0 },
@@ -70,44 +74,42 @@ export class lrenderer {
 		// camera.position.z = 30;
 
 
-		this.camera = new THREE.Camera();
-		this.camera.position.z = 1;
+        // And a camera.  Set Field of View, Near and Far clipping planes
+        this.camera = new THREE.PerspectiveCamera(45
+            , 1
+            , 0.1, 1000);
 
-		this.renderer = new THREE.WebGLRenderer({ antialias: true });
-		this.renderer.setPixelRatio(window.devicePixelRatio);
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		this.renderer.setClearColor(0x000000, 1);
-		document.body.appendChild(this.renderer.domElement);
+        // Position is -20 along the Z axis and look at the origin
+        this.camera.position.add(new THREE.Vector3(0,0,-20));
+        this.camera.lookAt(new THREE.Vector3(0,0,0));
 
-		var dotGeometry = new THREE.Geometry();
-		dotGeometry.vertices.push(new THREE.Vector3(10, 10, 0));
-		var dotMaterial = new THREE.PointsMaterial({ size: 100, sizeAttenuation: false, color: 0xff0000 });
-		var dot = new THREE.Points(dotGeometry, dotMaterial);
+		this.renderer = new THREE.WebGLRenderer( {antialias:true }); 
+		this.renderer.setPixelRatio(window.devicePixelRatio); 
+		this.renderer.setSize(window.innerWidth, window.innerHeight); 
+		this.renderer.setClearColor(0x333333, 1); 
+		container.appendChild(this.renderer.domElement); 
 
-		var mesh = new THREE.Mesh(dotGeometry, dotMaterial);
+		var dotGeometry = new THREE.Geometry(); 
+		dotGeometry.vertices.push(new THREE.Vector3(10, 10, 0)); 
+		var dotMaterial = new THREE.PointsMaterial( {size:100, sizeAttenuation:false, color:0xff0000 }); 
+		var dot = new THREE.Points(dotGeometry, dotMaterial); 
+
+		var mesh = new THREE.Mesh(dotGeometry, dotMaterial); 
 		this.scene.add(mesh);
 		this.renderer.render(this.scene, this.camera);
 	}
+
+	scene:THREE.Scene; 
+	camera:THREE.Camera; 
+	renderer:THREE.WebGLRenderer; 
+
+	// geometry; 
+	// material; 
+	// mesh: THREE.Mesh; 	
 	
-	scene: THREE.Scene;
-	camera: THREE.Camera;
-	renderer: THREE.WebGLRenderer;	
-
 	render() {
-
-		requestAnimationFrame(this.render);
-
-		var time = Date.now() * 0.001;
-
-		// if (!options.fixed) {
-
-		// 	mesh.rotation.x += 0.005;
-		// 	mesh.rotation.y += 0.005;
-
-		// }
-
-		this.renderer.render(this.scene, this.camera);
-	};
-
-
+		//requestAnimationFrame(this.render);
+		var time = Date.now() * 0.001; 
+		//this.renderer.render(this.scene, this.camera); 
+	}
 }
