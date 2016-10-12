@@ -2,12 +2,10 @@
 import * as GLUtils from './glUtils'
 import { Vec2D } from '../common/vec2D'
 
-import { ShaderService } from './shaders/shader.service';
+declare var require: (name: string) => any;
 
-//declare var require: (name: string) => any;
-
-//const vertexShaderSource: string = require('./shaders/galaxy.vert');
-//const fragmentShaderSource: string = require('./shaders/galaxy.frag');
+const vertexShaderSource: string = require('./shaders/galaxy.vert');
+const fragmentShaderSource: string = require('./shaders/galaxy.frag');
 
 interface Attributes {
     starParams: number;
@@ -35,13 +33,8 @@ export class GalaxyRenderer {
     private attributes: Attributes;
     private uniforms: Uniforms;
 
-    constructor(gl: WebGLRenderingContext, galaxy: Galaxy, shaderService: ShaderService) {
+    constructor(gl: WebGLRenderingContext, galaxy: Galaxy) {
         this.galaxy = galaxy;
-
-        shaderService.get();
-
-        var vertexShaderSource = "";
-        var fragmentShaderSource = ""
 
         this.program = GLUtils.createProgram(gl, vertexShaderSource, fragmentShaderSource);
 

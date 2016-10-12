@@ -9,8 +9,14 @@ import { lrenderer } from './lrenderer';
 })
 export class AppComponent implements OnInit {
 
+
     ngOnInit() {
         run();
+
+//         this.shaderService.getGalaxyFrag().subscribe(p=> {
+// console.log(p);
+//         });
+        //run();
         //var r = new lrenderer();
         //r.render();
     }

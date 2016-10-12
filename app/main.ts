@@ -44,9 +44,8 @@ function runGame(canvas: HTMLCanvasElement) {
 
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.ONE, gl.ONE);
-        
-        var shaderService = new ShaderService();
-        galaxyRenderer = new GalaxyRenderer(gl, galaxy, shaderService);
+
+        galaxyRenderer = new GalaxyRenderer(gl, galaxy);
     };
 
     const clearCanvas = function() {
