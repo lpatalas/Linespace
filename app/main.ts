@@ -171,10 +171,10 @@ function runGame(canvas: HTMLCanvasElement) {
     runMainLoop();
 }
 
-// const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
-// runGame(canvas);
+const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
+runGame(canvas);
 
-export function run() : void{
-    const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
-    runGame(canvas);
-}
+// export function run() : void{
+//     const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
+//     runGame(canvas);
+// }

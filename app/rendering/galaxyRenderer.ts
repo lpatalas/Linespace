@@ -1,7 +1,6 @@
 ﻿import { Galaxy } from './galaxy'
 import * as GLUtils from './glUtils'
 import { Vec2D } from '../common/vec2D'
-
 declare var require: (name: string) => any;
 
 const vertexShaderSource: string = require('./shaders/galaxy.vert');

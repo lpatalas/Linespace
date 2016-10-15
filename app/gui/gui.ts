@@ -18,7 +18,7 @@ export class Gui {
 
             elem.innerHTML = succ;
             mainContainer.insertAdjacentElement('beforeEnd', elem);
-            //$('#myModal').modal('show');
+            $('#myModal').show(); ///modal('show');
 
             // //make draggable
             // var popupHandle = $("#" + popupId);
