@@ -1,7 +1,4 @@
-﻿///<reference path="./seedrandom/seedrandom.d.ts" />
-
-
-declare module Ext {
+﻿declare module Ext {
     export class EventTargetExt extends EventTarget {
         id: any;
     }

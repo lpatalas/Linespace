@@ -173,3 +173,8 @@ function runGame(canvas: HTMLCanvasElement) {
 
 const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
 runGame(canvas);
+
+// export function run() : void{
+//     const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
+//     runGame(canvas);
+// }
