@@ -21,16 +21,16 @@ export class Gui {
             $('#myModal').show(); ///modal('show');
 
             // //make draggable
-            // var popupHandle = $("#" + popupId);
+            var popupHandle = $("#" + popupId);
             // //console.log(popupHandle);
             // popupHandle.draggable({
             //     handle: ".header"
             // });
 
             // //set position at cursor
-            // popupHandle.css("top", event.clientY + 10);
-            // popupHandle.css("left", event.clientX + 10);
-            // popupHandle.css("position", "fixed");
+            popupHandle.css("top", event.clientY + 10);
+            popupHandle.css("left", event.clientX + 10);
+            popupHandle.css("position", "fixed");
 
             elem.addEventListener("click", (ev:MouseEvent) => {
                 let evExt = <Ext.EventTargetExt>ev.target;
