@@ -16,3 +16,9 @@ Scripts/generated/**
 build/Output/**
 .idea/
 Scripts/
+typings/
+*.css
+
+# ignore exceptions
+!typings/index.d.ts
+!typings/custom.d.ts
