@@ -18,6 +18,7 @@ build/Output/**
 Scripts/
 typings/
 *.css
+.vscode/
 
 # ignore exceptions
 !typings/index.d.ts

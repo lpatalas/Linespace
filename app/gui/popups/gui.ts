@@ -1,6 +1,6 @@
 ﻿//<reference path="../../typings/jquery.d.ts" />
-
-import {Guid} from '../common/guid';
+import {Guid} from '../../common/guid';
+import { GuiUtils } from '../gui-utils';
 
 var counter = 0;
 
@@ -9,7 +9,7 @@ export class Gui {
         counter++;
         var mainContainer:HTMLElement = document.getElementById("main-container");
 
-        LoadFile('/app/gui/popup.html').then((succ:string) => {
+        GuiUtils.LoadFile('/app/gui/popups/popup.html').then((succ:string) => {
             var elem:HTMLElement = document.createElement("div");
             let popupId = Guid.newGuid();
 
@@ -54,29 +54,3 @@ export class Gui {
         //});
     }
 }
-
-function LoadFile(path:string) {
-
-    return new Promise((resolve, reject) => {
-        var req:XMLHttpRequest = new XMLHttpRequest();
-        req.open('GET', path, true);
-
-        req.onreadystatechange = (ev:ProgressEvent) => {
-            if (req.readyState == 4) {
-                if (req.status == 200) {
-                    resolve(req.response);
-                }
-                else {
-                    reject(req.response);
-                }
-            }
-        };
-
-        req.send();
-    });
-}
-
-//function getContent(ev: XMLHttpRequest) {
-//    return ev.responseBody;
-//}
-
