@@ -7,7 +7,12 @@ export class GameUi extends GuiBase {
 
     init() {
 
-        this.LoadElement().then(succ => {
+        const placeholders = {
+            uiId: Guid.newGuid(),
+            title: 'Galactic zoom'
+        }
+
+        this.LoadElement(placeholders).then(succ => {
 
             this.addAction('click', 'zoom_1', () => {
                 this.changeZoom(1);

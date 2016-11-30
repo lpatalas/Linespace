@@ -4,10 +4,10 @@ export abstract class GuiBase {
     protected element: HTMLElement;
     protected get fileName(): string { return null; };
 
-    protected LoadElement(): Promise<string> {
+    protected LoadElement(placeholders: any = null): Promise<string> {
         return new Promise((resolve, reject) => {
             this.LoadFile(this.fileName).then(succ => {
-                this.element = GuiUtils.injectHtml(succ);
+                this.element = GuiUtils.injectHtml(succ, placeholders);
                 resolve(succ);
             }).catch(err => {
                 reject(err);

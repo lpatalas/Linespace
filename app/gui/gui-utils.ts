@@ -1,5 +1,7 @@
 import { StringDictionary } from '../common/infotypes';
 import { Guid } from '../common/guid';
+import * as Mustache from 'mustache';
+
 export class GuiUtils {
 
     private static mainContainer: HTMLElement;
@@ -34,18 +36,14 @@ export class GuiUtils {
         return this.mainContainer;
     }
 
-    static injectHtml(htmlToInject: string, placeholders: StringDictionary = null): HTMLElement {
+    static injectHtml(htmlToInject: string, placeholders: any = null): HTMLElement {
         let mainContainer = GuiUtils.getMainUiContainer();
         var elem: HTMLElement = document.createElement("div");
         let popupId = Guid.newGuid();
 
-        if (placeholders != null && placeholders.count() > 0) {
-            let keys = placeholders.keys;
-            for (let key in keys) {
-                let value = placeholders.get(key);
-                htmlToInject = htmlToInject.replace("{{" + key + "}}", value);
-            }
-        }
+        if(placeholders)
+            htmlToInject = Mustache.render(htmlToInject, placeholders);
+
         elem.innerHTML = htmlToInject;
         mainContainer.insertAdjacentElement('beforeEnd', elem);
 
