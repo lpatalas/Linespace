@@ -1,145 +1,169 @@
 ﻿@import 'reset.css';
 @import 'variables.less';
 #gameCanvas {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
 }
 
 
 /* html elements */
 
 body {
-  background-color: @main-bg-color;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  color: @main-font-color;
+    background-color: @main-bg-color;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    color: @main-font-color;
 }
 
 table {
-  & tr {
-    & td {
-      padding: 5px;
-      box-sizing: border-box;
-    }
-  }
-  & thead {
     & tr {
-      & td {
-        /*&:not(:last-child) {
+        & td {
+            padding: 5px;
+            box-sizing: border-box;
+        }
+    }
+    & thead {
+        & tr {
+            & td {
+                /*&:not(:last-child) {
             border-right: 1px dashed black;
         }*/
-        border-bottom: 1px dashed black;
-      }
+                border-bottom: 1px dashed black;
+            }
+        }
     }
-  }
-  & tbody {
-    & tr {
-      & td {}
-      &:hover {
-        background-color: lighten( @popup-bg, 5%);
-        cursor: pointer;
-      }
+    & tbody {
+        & tr {
+            & td {}
+            &:hover {
+                background-color: lighten( @popup-bg, 5%);
+                cursor: pointer;
+            }
+        }
     }
-  }
 }
 
 
 /* general */
 
 .display-inline-block {
-  display: inline-block;
+    display: inline-block;
 }
 
 .float-right {
-  float: right;
+    float: right;
 }
 
 .float-left {
-  float: left;
+    float: left;
 }
 
 .clearboth {
-  float: none;
+    float: none;
 }
 
 .text-not-selectable {
-  -webkit-user-select: none;
-  /* Chrome all / Safari all */
-  -moz-user-select: none;
-  /* Firefox all */
-  -ms-user-select: none;
-  /* IE 10+ */
-  user-select: none;
-  /* Likely future */
+    -webkit-user-select: none;
+    /* Chrome all / Safari all */
+    -moz-user-select: none;
+    /* Firefox all */
+    -ms-user-select: none;
+    /* IE 10+ */
+    user-select: none;
+    /* Likely future */
 }
 
 
 /* popup */
 
 .popup-container {
-  position: fixed;
-  /*top: 0;
+    position: fixed;
+    /*top: 0;
   right: 0;
   bottom: 0;
   left: 0;*/
-  z-index: 1111;
-  .text-not-selectable;
-  & .popup {
-    background-color: @popup-bg;
-    width: 300px;
-    height: 200px;
-    //margin: 0 auto;
-  }
-  & .header {
-    padding: 5px;
-    background-color: @popup-header;
-    cursor: move;
-    border-bottom: 1px solid black;
-    &:hover {
-      background-color: darken(@popup-header, 5%);
+    z-index: 1111;
+    .text-not-selectable;
+    & .popup {
+        background-color: @popup-bg;
+        width: 300px;
+        height: 200px;
+        //margin: 0 auto;
     }
-  }
-  & .content {
-    padding: 5px;
-    // background-color: @popup-bg;
-  }
+    & .header {
+        padding: 5px;
+        background-color: @popup-header;
+        cursor: move;
+        border-bottom: 1px solid black;
+        &:hover {
+            background-color: darken(@popup-header, 5%);
+        }
+    }
+    & .content {
+        padding: 5px;
+        // background-color: @popup-bg;
+    }
 }
 
 
 /* game ui */
 
 .game-ui {
-  position: relative;
-  & .galactic-zoom {
-    float: right;
-    z-index: 10;
-    margin: 0 10px 0 0;
-
-    & .zoom-header {
-      background: @popup-header;
-      padding: 5px;
-      width: 100px;
-      z-index: 10;
-    }
-    & .zoom-body {
-      width: 30px;
-      z-index: 10;
-      float: right;
-      & a {
-        display: block;
-        background: @popup-bg; //TODO create new variable
-        cursor: pointer;
-        margin: 5px 0;
+    position: relative;
+    & .galactic-zoom {
+        position: relative;
+        float: right;
         z-index: 10;
-      }
+        margin: 0 10px 0 0;
+        & .zoom-header {
+            background: @popup-header;
+            padding: 5px;
+            width: 100px;
+            z-index: 10;
+        }
+        & .zoom-body {
+            width: 30px;
+            z-index: 10;
+            float: right;
+            & a {
+                display: block;
+                background: @popup-bg; //TODO create new variable
+                cursor: pointer;
+                margin: 5px 0;
+                z-index: 10;
+            }
+        }
     }
-  }
-  .main-menu {}
+    & .main-menu {
+        position: relative;
+    }
+    & .aside-menu {
+        position: relative;
+    }
+}
+
+
+/* welcome */
+
+.welcome {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: flex-start;
+    align-items: center;
+    .game-header {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .game-content {
+        margin-top: 50px;
+    }
 }
 
 

@@ -1,6 +1,6 @@
 @import 'reset.css';
 #gameCanvas {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
@@ -91,6 +91,7 @@ table tbody tr:hover {
   position: relative;
 }
 .game-ui .galactic-zoom {
+  position: relative;
   float: right;
   z-index: 10;
   margin: 0 10px 0 0;
@@ -112,5 +113,27 @@ table tbody tr:hover {
   cursor: pointer;
   margin: 5px 0;
   z-index: 10;
+}
+.game-ui .main-menu {
+  position: relative;
+}
+.game-ui .aside-menu {
+  position: relative;
+}
+/* welcome */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: flex-start;
+  align-items: center;
+}
+.welcome .game-header {
+  text-align: center;
+  margin-top: 20px;
+}
+.welcome .game-content {
+  margin-top: 50px;
 }
 /* override bootstrap */

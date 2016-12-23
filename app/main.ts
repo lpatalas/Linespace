@@ -1,8 +1,6 @@
-﻿import { GuiBootstrapper } from './gui/gui-bootstrapper';
-import { Galaxy } from './rendering/galaxy';
+﻿import { Galaxy } from './rendering/galaxy';
 import { GalaxyRenderer } from './rendering/galaxyRenderer';
 import { Vec2D, vec, vcopy, vsub } from './common/vec2D';
-import {Gui} from './gui/popups/gui';
 
 const getWebGLContext = function(canvas: HTMLCanvasElement): WebGLRenderingContext {
     const context = <WebGLRenderingContext>canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -21,7 +19,6 @@ const parseStarCountParam = function() {
 };
 
 const starCountParam = parseStarCountParam();
-const guiBootstrapper = new GuiBootstrapper();
 
 function runGame(canvas: HTMLCanvasElement) {
     const gl = getWebGLContext(canvas);
@@ -142,7 +139,7 @@ function runGame(canvas: HTMLCanvasElement) {
 
         body.addEventListener('click', (event: MouseEvent) => {
             if (event.button == 0 && event.altKey) {
-                Gui.popup(event);
+                // Gui.popup(event);
             }
         });
     };
@@ -171,13 +168,9 @@ function runGame(canvas: HTMLCanvasElement) {
 
     hookMouseEvents();
     runMainLoop();
-    guiBootstrapper.init();
 }
 
-const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
-runGame(canvas);
-
-// export function run() : void{
-//     const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
-//     runGame(canvas);
-// }
+export function run() : void{
+    const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
+    runGame(canvas);
+}
