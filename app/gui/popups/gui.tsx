@@ -8,25 +8,27 @@ export class Resource { name: string; amount: number; volume: string }
 export interface PopupProps { title: string, resources: Resource[] }
 
 export class PopupComponent extends React.Component<PopupProps, undefined> {
-    
-    private generateTable(){
+
+    private generateTable() {
         return (
             <table>
                 <thead>
-                    <td>Resource</td>
-                    <td>Amount</td>
-                    <td>Volume</td>
+                    <tr>
+                        <td>Resource</td>
+                        <td>Amount</td>
+                        <td>Volume</td>
+                    </tr>
                 </thead>
                 <tbody>
-                {
-                    this.props.resources.map((item, index) => (
-                        <tr>
-                            <td key={index}>{item.name}</td>
-                            <td>{item.amount}</td>
-                            <td>{item.volume}</td>
-                        </tr>
-                    ))
-                }
+                    {
+                        this.props.resources.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.name}</td>
+                                <td>{item.amount}</td>
+                                <td>{item.volume}</td>
+                            </tr>
+                        ))
+                    }
                 </tbody>
             </table>
         );
