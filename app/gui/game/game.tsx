@@ -12,19 +12,19 @@ export class GameComponent extends React.Component<GameProps, undefined> {
         run();
     }
 
-    changeZoom(zoom: number){
+    changeZoom = (zoom: number) => {
         console.log(`... Zoom changed to: ${zoom} ...`);
     }
 
-    logout(){
+    logout = () => {
         browserHistory.push('/');
     }
 
-    reports(){
+    reports = () => {
         console.log('... display reports ...');
     }
 
-    messages(){
+    messages = () => {
         console.log('... display messages ...');
     }
 
@@ -53,9 +53,9 @@ export class GameComponent extends React.Component<GameProps, undefined> {
 
                 <aside className="aside-menu">
                     <ul>
-                        <li>- <a href="#" onClick={() => this.messages()}>Messages</a></li>
-                        <li>- <a href="#" onClick={() => this.reports()}>Reports</a></li>
-                        <li>- <a href="#" onClick={() => this.logout()}>Logout</a></li>
+                        <li>- <a href="#" onClick={this.messages}>Messages</a></li>
+                        <li>- <a href="#" onClick={this.reports}>Reports</a></li>
+                        <li>- <a href="#" onClick={this.logout}>Logout</a></li>
                     </ul>
                 </aside>
 
