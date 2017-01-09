@@ -5,8 +5,12 @@ import * as ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router'
 import { run } from '../../main';
 
-export interface GameProps { }
-export interface GameState { }
+export interface GameProps { 
+}
+
+export interface GameState { 
+    isPopupVisible: boolean;
+}
 
 // 'GameProps' describes the shape of props.
 // State is never set so we use the 'undefined' type.
@@ -14,6 +18,8 @@ export class GameComponent extends React.Component<GameProps, GameState> {
 
     constructor() {
         super();
+
+        this.state = { isPopupVisible: false };
     }
 
     componentDidMount() {
@@ -82,19 +88,18 @@ export class GameComponent extends React.Component<GameProps, GameState> {
                         <li><a href="#" onClick={this.register} title="Register for FREE."><i className="fa fa-user-plus fa-2x" aria-hidden="true"></i></a></li>
                     </ul>
                 </aside>
-
-                <div id="popup-placeholder"></div>
+                {
+                    this.state.isPopupVisible && <PopupComponent children={this.props.children} closePopup={this.closePopup} />
+                }
             </div>
         );
     }
 
-    
-
-    private openPopup(){
-        ReactDOM.render((<PopupComponent children={this.props.children} closePopup={this.closePopup} />), document.getElementById('popup-placeholder'));
+    private openPopup = () => {
+        this.setState({ isPopupVisible: true });
     }
 
-    private closePopup(){
-        ReactDOM.unmountComponentAtNode(document.getElementById('popup-placeholder'));
+    private closePopup = () => {
+        this.setState({ isPopupVisible: false });
     }
 }
