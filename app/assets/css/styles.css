@@ -90,6 +90,15 @@ table tbody tr:hover {
 .game-ui {
   position: relative;
 }
+.game-ui a {
+  color: white;
+}
+.game-ui a:visited {
+  color: white;
+}
+.game-ui a:hover {
+  color: grey;
+}
 .game-ui .galactic-zoom {
   position: relative;
   float: right;
@@ -103,22 +112,63 @@ table tbody tr:hover {
   z-index: 10;
 }
 .game-ui .galactic-zoom .zoom-body {
+  background-color: rgba(83, 119, 89, 0.7);
   width: 30px;
   z-index: 10;
   float: right;
 }
 .game-ui .galactic-zoom .zoom-body a {
   display: block;
-  background: rgba(87, 124, 153, 0.9);
   cursor: pointer;
   margin: 5px 0;
   z-index: 10;
 }
 .game-ui .main-menu {
+  background-color: rgba(83, 119, 89, 0.7);
   position: relative;
 }
 .game-ui .aside-menu {
+  background-color: rgba(83, 119, 89, 0.7);
   position: relative;
+  width: 10vh;
+  height: 100vh;
+}
+.game-ui .aside-menu ul li {
+  padding: 10px  10px  10px  10px ;
+}
+.game-ui .popup-container {
+  background-color: transparent;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  width: 100%;
+  padding: 10px;
+  box-sizing: content-box;
+  display: none;
+}
+.game-ui .popup-container.popup-container-sladein {
+  display: block;
+}
+.game-ui .popup-container .popup-container-box {
+  background-color: rgba(83, 119, 89, 0.7);
+  width: 80%;
+  height: 30vh;
+  margin-left: -40%;
+  margin-top: -15vh;
+}
+.game-ui .popup-container .popup-container-box .popup-container__header {
+  position: relative;
+  background-color: magenta;
+  height: 20px;
+  padding: 5px;
+}
+.game-ui .popup-container .popup-container-box .popup-container__body {
+  position: relative;
+}
+.game-ui .popup-container .popup-container-box .popup-container__footer {
+  position: relative;
+  position: fixed;
 }
 /* welcome */
 .welcome {

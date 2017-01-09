@@ -115,6 +115,15 @@ table {
 
 .game-ui {
     position: relative;
+    & a {
+        color: white;
+        &:visited {
+            color: white;
+        }
+        &:hover {
+            color: grey;
+        }
+    }
     & .galactic-zoom {
         position: relative;
         float: right;
@@ -127,12 +136,13 @@ table {
             z-index: 10;
         }
         & .zoom-body {
+            background-color: @menu-background-color;
             width: 30px;
             z-index: 10;
             float: right;
             & a {
                 display: block;
-                background: @popup-bg; //TODO create new variable
+                //background: @popup-bg; //TODO create new variable
                 cursor: pointer;
                 margin: 5px 0;
                 z-index: 10;
@@ -140,10 +150,53 @@ table {
         }
     }
     & .main-menu {
+        background-color: @menu-background-color;
         position: relative;
     }
     & .aside-menu {
+        background-color: @menu-background-color;
         position: relative;
+        width: 10vh;
+        height: 100vh;
+        & ul {
+            & li {
+                padding: 10px  10px  10px  10px ;
+            }
+        }
+    }
+    & .popup-container {
+        background-color: transparent;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 100;
+        width: 100%;
+        padding: 10px;
+        box-sizing: content-box;
+        display: none;
+        &.popup-container-sladein {
+            display: block;
+        }
+        & .popup-container-box {
+            background-color: @menu-background-color;
+            width: 80%;
+            height: 30vh;
+            margin-left: -40%;
+            margin-top: -15vh;
+            & .popup-container__header {
+                position: relative;
+                background-color: magenta;
+                height: 20px;
+                padding: 5px;
+            }
+            & .popup-container__body {
+                position: relative;
+            }
+            & .popup-container__footer {
+                position: relative;
+                position: fixed;
+            }
+        }
     }
 }
 
