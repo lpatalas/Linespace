@@ -133,8 +133,11 @@ table tbody tr:hover {
 .game-ui .aside-menu {
   background-color: rgba(83, 119, 89, 0.7);
   position: relative;
-  width: 6vh;
   height: 100vh;
+  display: inline-block;
+}
+.game-ui .aside-menu ul {
+  box-sizing: border-box;
 }
 .game-ui .aside-menu ul li {
   padding: 10px 10px 10px 10px;
@@ -147,20 +150,13 @@ table tbody tr:hover {
   align-content: stretch;
   align-items: center;
 }
-.game-ui .aside-menu .aside-menu__item a:nth-child(1) {
-  width: 6vh;
-}
 .game-ui .aside-menu .aside-menu__item a:nth-child(2) {
-  width: 8vh;
-}
-.game-ui .aside-menu.aside-menu--extended {
-  width: 14vh;
+  padding: 0px 0px 0px 10px;
 }
 .game-ui .aside-menu .aside-menu__extender {
   border-top: 1px solid black;
   padding-top: 10px;
   display: block;
-  width: 100%;
   text-align: center;
 }
 .game-ui .popup-container {
@@ -186,7 +182,7 @@ table tbody tr:hover {
 }
 .game-ui .popup-container .popup-container-box .popup-container__header {
   position: relative;
-  background-color: magenta;
+  background-color: rgba(255, 79, 39, 0.9);
   height: 20px;
   padding: 5px;
 }

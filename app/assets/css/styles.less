@@ -24,7 +24,6 @@ a {
     text-decoration: none;
 }
 
-
 table {
     & tr {
         & td {
@@ -158,13 +157,13 @@ table {
         background-color: @menu-background-color;
         position: relative;
     }
-
     & .aside-menu {
         background-color: @menu-background-color;
         position: relative;
-        width: @aside-menu-width;
         height: 100vh;
+        display: inline-block;
         & ul {
+            box-sizing: border-box;
             & li {
                 padding: 10px 10px 10px 10px;
             }
@@ -176,21 +175,17 @@ table {
             justify-content: flex-start;
             align-content: stretch;
             align-items: center;
-            a:nth-child(1) {
-                width: @aside-menu-width;
-            }
             a:nth-child(2) {
-                width: @aside-menu-extended-width - @aside-menu-width;
+                padding: 0px 0px 0px 10px;
             }
         }
         &.aside-menu--extended {
-            width: @aside-menu-extended-width;
+            // width: @aside-menu-extended-width;
         }
         .aside-menu__extender {
             border-top: 1px solid black;
             padding-top: 10px;
             display: block;
-            width: 100%;
             text-align: center;
         }
     }
@@ -215,7 +210,7 @@ table {
             height: 50%;
             & .popup-container__header {
                 position: relative;
-                background-color: magenta;
+                background-color: @popup-header;
                 height: 20px;
                 padding: 5px;
             }

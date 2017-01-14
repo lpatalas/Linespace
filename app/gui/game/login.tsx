@@ -20,14 +20,6 @@ export class LoginComponent extends React.Component<LoginProps, LoginState> {
         browserHistory.push('/game');
     }
 
-    // onRegister = () => {
-    //     alert('contact us in case of new account!');
-    // }
-
-    // onPopup = () => {
-    //     this.setState({ isPopupVisible: !this.state.isPopupVisible });
-    // }
-
     render() {
         let resources: Resource[] = [];
 

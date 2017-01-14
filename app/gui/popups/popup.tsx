@@ -24,7 +24,7 @@ export class PopupComponent extends React.Component<PopupProps, PopupState> {
                 <div className={"popup-container " + this.popupSlideInSClass}>
                     <div className="popup-container-box">
                         <div className="popup-container__header">
-                            <a onClick={this.close} href="#">X</a>
+                            <a onClick={this.close} href="#"><i className="fa fa-times" aria-hidden="true"></i></a>
                         </div>
                         <div className="popup-container__body">
                             {this.props.children}
