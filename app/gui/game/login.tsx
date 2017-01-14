@@ -1,3 +1,4 @@
+import { AuthenticationService } from '../../security/authenticationService';
 import * as React from 'react';
 import { browserHistory } from 'react-router'
 
@@ -10,14 +11,21 @@ export interface LoginState { isPopupVisible: boolean }
 // State is never set so we use the 'undefined' type.
 export class LoginComponent extends React.Component<LoginProps, LoginState> {
 
+    private authenticationService: AuthenticationService;
+
     constructor() {
         super();
         this.state = { isPopupVisible: false };
+        this.authenticationService = new AuthenticationService();
     }
 
     onLogin = () => {
-        // if we are logged in redirect to the game
-        browserHistory.push('/game');
+        this.authenticationService.authenticate().then(success => {
+            // if we are logged in redirect to the game
+            browserHistory.push('/game');
+        }).catch(error => {
+            console.log(error);
+        })
     }
 
     render() {
