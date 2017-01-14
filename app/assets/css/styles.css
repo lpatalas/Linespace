@@ -15,6 +15,9 @@ body {
   margin: 0;
   color: #FFFFFF;
 }
+a {
+  text-decoration: none;
+}
 table tr td {
   padding: 5px;
   box-sizing: border-box;
@@ -130,11 +133,35 @@ table tbody tr:hover {
 .game-ui .aside-menu {
   background-color: rgba(83, 119, 89, 0.7);
   position: relative;
-  width: 10vh;
+  width: 6vh;
   height: 100vh;
 }
 .game-ui .aside-menu ul li {
-  padding: 10px  10px  10px  10px ;
+  padding: 10px 10px 10px 10px;
+}
+.game-ui .aside-menu .aside-menu__item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: center;
+}
+.game-ui .aside-menu .aside-menu__item a:nth-child(1) {
+  width: 6vh;
+}
+.game-ui .aside-menu .aside-menu__item a:nth-child(2) {
+  width: 8vh;
+}
+.game-ui .aside-menu.aside-menu--extended {
+  width: 14vh;
+}
+.game-ui .aside-menu .aside-menu__extender {
+  border-top: 1px solid black;
+  padding-top: 10px;
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 .game-ui .popup-container {
   background-color: transparent;
@@ -144,7 +171,9 @@ table tbody tr:hover {
   z-index: 100;
   width: 100%;
   padding: 10px;
-  box-sizing: content-box;
+  margin-left: -25%;
+  margin-top: -15vh;
+  box-sizing: border-box;
   display: none;
 }
 .game-ui .popup-container.popup-container-sladein {
@@ -152,10 +181,8 @@ table tbody tr:hover {
 }
 .game-ui .popup-container .popup-container-box {
   background-color: rgba(83, 119, 89, 0.7);
-  width: 80%;
-  height: 30vh;
-  margin-left: -40%;
-  margin-top: -15vh;
+  width: 50%;
+  height: 50%;
 }
 .game-ui .popup-container .popup-container-box .popup-container__header {
   position: relative;
@@ -165,10 +192,14 @@ table tbody tr:hover {
 }
 .game-ui .popup-container .popup-container-box .popup-container__body {
   position: relative;
+  padding: 5px;
+  height: 90%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .game-ui .popup-container .popup-container-box .popup-container__footer {
   position: relative;
-  position: fixed;
+  height: 20px;
 }
 /* welcome */
 .welcome {

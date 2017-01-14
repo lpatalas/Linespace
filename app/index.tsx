@@ -16,10 +16,10 @@ ReactDOM.render((
     <Router history={browserHistory}>
         <Redirect from="/" to="/game" />
         <Route path="/" component={WelcomeComponent}>
-            <Route path="/login" component={LoginComponent} />
-            <Route path="/about" component={About} />
         </Route>
         <Route path="/game" component={GameComponent} >
+            <Route path="/login" component={LoginComponent} />
+            <Route path="/about" component={About} />
             <Route path="/register" component={RegisterComponent} />
         </Route>
     </Router>

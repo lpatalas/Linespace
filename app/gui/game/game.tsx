@@ -4,12 +4,14 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router'
 import { run } from '../../main';
+import { SideMenuComponent } from '../menu/sideMenu';
 
-export interface GameProps { 
+export interface GameProps {
 }
 
-export interface GameState { 
+export interface GameState {
     isPopupVisible: boolean;
+    isSideMenuCollapsed: boolean;
 }
 
 // 'GameProps' describes the shape of props.
@@ -19,7 +21,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     constructor() {
         super();
 
-        this.state = { isPopupVisible: false };
+        this.state = { isPopupVisible: false, isSideMenuCollapsed: false };
     }
 
     componentDidMount() {
@@ -28,32 +30,6 @@ export class GameComponent extends React.Component<GameProps, GameState> {
 
     changeZoom(zoom: number) {
         console.log(`... Zoom changed to: ${zoom} ...`);
-    }
-
-    logout = () => {
-        console.log('... logout ...');
-        browserHistory.push('/');
-    }
-
-    login = () => {
-        console.log('... login ...');
-        browserHistory.push('/login');
-    }
-
-    reports = () => {
-        console.log('... display reports ...');
-        this.openPopup();        
-    }
-
-    messages = () => {
-        this.openPopup();
-        console.log('... display messages ...');
-    }
-
-    register = () => {
-        console.log('... register ...');
-        browserHistory.push('/register');
-        this.openPopup();
     }
 
     render() {
@@ -79,15 +55,8 @@ export class GameComponent extends React.Component<GameProps, GameState> {
                     </div>
                 </div>
 
-                <aside className="aside-menu">
-                    <ul>
-                        <li><a href="#" onClick={this.messages} title="Messages"><i className="fa fa-envelope fa-2x" aria-hidden="true"></i></a></li>
-                        <li><a href="#" onClick={this.reports} title="Reports"><i className="fa fa-book fa-2x" aria-hidden="true"></i></a></li>
-                        <li><a href="#" onClick={this.login} title="Login"><i className="fa fa-sign-in fa-2x" aria-hidden="true"></i></a></li>
-                        <li><a href="#" onClick={this.logout} title="Logout"><i className="fa fa-sign-out fa-2x" aria-hidden="true"></i></a></li>
-                        <li><a href="#" onClick={this.register} title="Register for FREE."><i className="fa fa-user-plus fa-2x" aria-hidden="true"></i></a></li>
-                    </ul>
-                </aside>
+                <SideMenuComponent executeAction={this.openPopup} />
+
                 {
                     this.state.isPopupVisible && <PopupComponent children={this.props.children} closePopup={this.closePopup} />
                 }
@@ -95,11 +64,18 @@ export class GameComponent extends React.Component<GameProps, GameState> {
         );
     }
 
+    private toggleSideMenu = () => {
+        const newState = Object.assign({}, this.state, { isSideMenuCollapsed: !this.state.isSideMenuCollapsed });
+        this.setState(newState);
+    }
+
     private openPopup = () => {
-        this.setState({ isPopupVisible: true });
+        const newState = Object.assign({}, this.state, { isPopupVisible: true });
+        this.setState(newState);
     }
 
     private closePopup = () => {
-        this.setState({ isPopupVisible: false });
+        const newState = Object.assign({}, this.state, { isPopupVisible: false });
+        this.setState(newState);
     }
 }

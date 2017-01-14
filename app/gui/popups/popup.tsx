@@ -16,24 +16,24 @@ export class PopupComponent extends React.Component<PopupProps, PopupState> {
     close = () => {
         console.log('... closing popup ...');
         this.props.closePopup();
-        // this.props = Object.assign({}, this.props, { isPopupVisible: false });
     }
 
     render() {
         return (
-            <div className={"popup-container " + this.popupSlideInSClass}>
-                <div className="popup-container-box">
-                    <div className="popup-container__header">
-                        <a onClick={this.close} href="#">X</a>
-                    </div>
-                    <div className="popup-container__body">
-                        {this.props.children}
-                    </div>
-                    <div className="popup-container__footer">
+            !this.props.children ? null :
+                <div className={"popup-container " + this.popupSlideInSClass}>
+                    <div className="popup-container-box">
+                        <div className="popup-container__header">
+                            <a onClick={this.close} href="#">X</a>
+                        </div>
+                        <div className="popup-container__body">
+                            {this.props.children}
+                        </div>
+                        <div className="popup-container__footer">
 
+                        </div>
                     </div>
                 </div>
-            </div>
         );
     }
 
