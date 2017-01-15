@@ -5,6 +5,7 @@ import { WelcomeComponent } from "./gui/game/welcome";
 import { LoginComponent } from "./gui/game/login";
 import { GameComponent } from './gui/game/game'
 import { RegisterComponent } from './gui/game/register';
+import { MessagesMenuComponent } from './gui/menu/messagesMenu'
 
 const About = () => (
     <div>
@@ -21,6 +22,7 @@ ReactDOM.render((
             <Route path="/login" component={LoginComponent} />
             <Route path="/about" component={About} />
             <Route path="/register" component={RegisterComponent} />
+            <Route path="/messages" component={MessagesMenuComponent} />
         </Route>
     </Router>
 ), document.getElementById('main-container'))

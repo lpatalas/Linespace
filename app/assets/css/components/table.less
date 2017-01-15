@@ -1,0 +1,54 @@
+@import '../variables.less';
+@header-color: inherited;
+@body-color: inherited;
+@footer-color: inherited;
+@row-color-even: green;
+@row-color-odd: lighten(@row-color-even, 5%);
+
+table {
+    background-color: @elem-bg;
+    width: 100%;
+    margin-top: 10px;
+
+    & tr {
+        & td {
+            padding: 5px;
+            box-sizing: border-box;
+        }
+    }
+    & thead {
+        background-color: @header-color;
+        & tr {
+            & td {
+                /*&:not(:last-child) {
+            border-right: 1px dashed black;
+        }*/
+                border-bottom: 1px dashed black;
+            }
+        }
+    }
+    & tbody {
+        background-color: @body-color;
+        & tr {
+            &:nth-child(odd) {
+                background-color: @row-color-odd;
+            }
+            &:nth-child(even) {
+                background-color: @row-color-even;
+            }
+
+            & td {}
+            &:hover:nth-child(odd) {
+                background-color: lighten( @row-color-odd, 10%);
+                cursor: pointer;
+            }
+            &:hover:nth-child(even) {
+                background-color: lighten( @row-color-even, 10%);
+                cursor: pointer;
+            }
+        }
+    }
+    & tfoot {
+        background-color: @footer-color;
+    }
+}

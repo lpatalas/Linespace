@@ -1,4 +1,53 @@
 @import 'reset.css';
+table {
+  background-color: rgba(117, 60, 255, 0.9);
+  width: 100%;
+  margin-top: 10px;
+}
+table tr td {
+  padding: 5px;
+  box-sizing: border-box;
+}
+table thead {
+  background-color: inherited;
+}
+table thead tr td {
+  /*&:not(:last-child) {
+            border-right: 1px dashed black;
+        }*/
+  border-bottom: 1px dashed black;
+}
+table tbody {
+  background-color: inherited;
+}
+table tbody tr:nth-child(odd) {
+  background-color: #009a00;
+}
+table tbody tr:nth-child(even) {
+  background-color: green;
+}
+table tbody tr:hover:nth-child(odd) {
+  background-color: #00cd00;
+  cursor: pointer;
+}
+table tbody tr:hover:nth-child(even) {
+  background-color: #00b300;
+  cursor: pointer;
+}
+table tfoot {
+  background-color: inherited;
+}
+.button {
+  background-color: rgba(117, 60, 255, 0.9);
+  padding: 5px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  display: inline-block;
+}
+.button:hover {
+  background-color: rgba(135, 86, 255, 0.9);
+  color: #FFFFFF;
+}
 #gameCanvas {
   position: fixed;
   left: 0;
@@ -17,20 +66,13 @@ body {
 }
 a {
   text-decoration: none;
+  color: white;
 }
-table tr td {
-  padding: 5px;
-  box-sizing: border-box;
+a:visited {
+  color: white;
 }
-table thead tr td {
-  /*&:not(:last-child) {
-            border-right: 1px dashed black;
-        }*/
-  border-bottom: 1px dashed black;
-}
-table tbody tr:hover {
-  background-color: rgba(99, 137, 166, 0.9);
-  cursor: pointer;
+a:hover {
+  color: grey;
 }
 /* general */
 .display-inline-block {
@@ -93,15 +135,6 @@ table tbody tr:hover {
 .game-ui {
   position: relative;
 }
-.game-ui a {
-  color: white;
-}
-.game-ui a:visited {
-  color: white;
-}
-.game-ui a:hover {
-  color: grey;
-}
 .game-ui .galactic-zoom {
   position: relative;
   float: right;
@@ -160,12 +193,12 @@ table tbody tr:hover {
   text-align: center;
 }
 .game-ui .popup-container {
-  background-color: transparent;
-  position: fixed;
+  sposition: fixed;
   top: 50%;
   left: 50%;
   z-index: 100;
   width: 100%;
+  max-height: 50vh;
   padding: 10px;
   margin-left: -25%;
   margin-top: -15vh;
@@ -179,23 +212,28 @@ table tbody tr:hover {
   background-color: rgba(83, 119, 89, 0.7);
   width: 50%;
   height: 50%;
+  max-height: 70vh;
 }
 .game-ui .popup-container .popup-container-box .popup-container__header {
   position: relative;
   background-color: rgba(255, 79, 39, 0.9);
   height: 20px;
+  max-height: 5vh;
   padding: 5px;
 }
 .game-ui .popup-container .popup-container-box .popup-container__body {
   position: relative;
   padding: 5px;
   height: 90%;
+  max-height: 45vh;
   overflow-x: hidden;
   overflow-y: auto;
 }
 .game-ui .popup-container .popup-container-box .popup-container__footer {
+  background-color: blueviolet;
   position: relative;
   height: 20px;
+  max-height: 5vh;
 }
 /* welcome */
 .welcome {

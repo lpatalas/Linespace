@@ -7,7 +7,7 @@ import { browserHistory } from 'react-router'
 import { SideMenuItemComponent } from './sideMenuItem';
 
 export interface SideMenuProps { executeAction: any }
-export interface SideMenuState { isSideMenuCollapsed: boolean; }
+export interface SideMenuState { isSideMenuCollapsed: boolean, areNewMessagesAvailable: boolean; }
 
 export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuState>{
 
@@ -17,7 +17,7 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
     constructor() {
         super();
 
-        this.state = { isSideMenuCollapsed: false };
+        this.state = { isSideMenuCollapsed: false, areNewMessagesAvailable: false };
         this.sessionManager = ObjectFactory.createSessionManager();
         this.authenticationService = new AuthenticationService();
     }
@@ -25,6 +25,8 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
 
     messages = () => {
         console.log('... display messages ...');
+        browserHistory.push('/messages');
+        this.props.executeAction();
     }
 
     logout = () => {
@@ -46,7 +48,13 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
 
     render() {
         let menuItems: JSX.Element[] = [];
-        menuItems.push(<SideMenuItemComponent key="1" action={this.messages} title="Messages" icon="fa fa-envelope fa-2x" isSideMenuCollapsed={this.state.isSideMenuCollapsed} />);
+        
+        if(this.state.areNewMessagesAvailable)
+            menuItems.push(<SideMenuItemComponent key="1" action={this.messages} title="Messages" icon="fa fa-envelope-open fa-2x" isSideMenuCollapsed={this.state.isSideMenuCollapsed} />);
+        else
+            menuItems.push(<SideMenuItemComponent key="1" action={this.messages} title="Messages" icon="fa fa-envelope fa-2x" isSideMenuCollapsed={this.state.isSideMenuCollapsed} />);
+
+
         menuItems.push(<SideMenuItemComponent key="2" action={this.reports} title="Reports" icon="fa fa-book fa-2x" isSideMenuCollapsed={this.state.isSideMenuCollapsed} />);
         if (this.sessionManager.isUserLogged)
             menuItems.push(<SideMenuItemComponent key="4" action={this.logout} title="Logout" icon="fa fa-sign-out fa-2x" isSideMenuCollapsed={this.state.isSideMenuCollapsed} />);

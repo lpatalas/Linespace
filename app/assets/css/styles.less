@@ -1,5 +1,7 @@
 ﻿@import 'reset.css';
 @import 'variables.less';
+@import 'components/table.less';
+@import 'components/button.less';
 #gameCanvas {
     position: fixed;
     left: 0;
@@ -22,33 +24,12 @@ body {
 
 a {
     text-decoration: none;
-}
-
-table {
-    & tr {
-        & td {
-            padding: 5px;
-            box-sizing: border-box;
-        }
+    color: white;
+    &:visited {
+        color: white;
     }
-    & thead {
-        & tr {
-            & td {
-                /*&:not(:last-child) {
-            border-right: 1px dashed black;
-        }*/
-                border-bottom: 1px dashed black;
-            }
-        }
-    }
-    & tbody {
-        & tr {
-            & td {}
-            &:hover {
-                background-color: lighten( @popup-bg, 5%);
-                cursor: pointer;
-            }
-        }
+    &:hover {
+        color: grey;
     }
 }
 
@@ -119,15 +100,6 @@ table {
 
 .game-ui {
     position: relative;
-    & a {
-        color: white;
-        &:visited {
-            color: white;
-        }
-        &:hover {
-            color: grey;
-        }
-    }
     & .galactic-zoom {
         position: relative;
         float: right;
@@ -162,9 +134,10 @@ table {
         position: relative;
         height: 100vh;
         display: inline-block;
+        // width: @aside-menu-width;
         // width: fit-content;
-        // -webkit-transition: width 2s; //safari
-        // transition: width 2s;
+        // -webkit-transition: width .5s; //safari
+        // transition: width .5s;
         & ul {
             box-sizing: border-box;
             & li {
@@ -194,17 +167,21 @@ table {
         }
     }
     & .popup-container {
-        background-color: transparent;
+        @popup-max-height: 50vh;
+        s
         position: fixed;
         top: 50%;
         left: 50%;
         z-index: 100;
         width: 100%;
+        max-height: @popup-max-height;
         padding: 10px;
         margin-left: -25%;
         margin-top: -15vh;
         box-sizing: border-box;
         display: none;
+        // backface-visibility: hidden;
+        // will-change: overflow;
         &.popup-container-sladein {
             display: block;
         }
@@ -212,23 +189,28 @@ table {
             background-color: @menu-background-color;
             width: 50%;
             height: 50%;
+            max-height: 70vh;
             & .popup-container__header {
                 position: relative;
                 background-color: @popup-header;
                 height: 20px;
+                max-height: 5vh;
                 padding: 5px;
             }
             & .popup-container__body {
                 position: relative;
                 padding: 5px;
                 height: 90%;
+                max-height: @popup-max-height - 5vh;
                 overflow-x: hidden;
                 overflow-y: auto;
             }
             & .popup-container__footer {
+            background-color: blueviolet;
                 position: relative;
                 //position: fixed;
                 height: 20px;
+                max-height: 5vh;
             }
         }
     }
