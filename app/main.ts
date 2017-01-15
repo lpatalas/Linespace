@@ -104,7 +104,7 @@ function runGame(canvas: HTMLCanvasElement) {
         let mousePressed = false;
         let initialPosition: Vec2D;
 
-        body.addEventListener('mousedown', (event: MouseEvent) => {
+        canvas.addEventListener('mousedown', (event: MouseEvent) => {
             if (event.button == 0) {
                 mousePressed = true;
                 initialMousePos = vec(event.pageX, event.pageY);
@@ -112,13 +112,13 @@ function runGame(canvas: HTMLCanvasElement) {
             }
         });
 
-        body.addEventListener('mouseup', (event: MouseEvent) => {
+        canvas.addEventListener('mouseup', (event: MouseEvent) => {
             if (event.button == 0) {
                 mousePressed = false;
             }
         });
 
-        body.addEventListener('mousemove', (event: MouseEvent) => {
+        canvas.addEventListener('mousemove', (event: MouseEvent) => {
             if (mousePressed) {
                 const currentMousePos = vec(event.pageX, event.pageY);
                 const offset = vsub(currentMousePos, initialMousePos);
@@ -128,7 +128,7 @@ function runGame(canvas: HTMLCanvasElement) {
             }
         });
 
-        body.addEventListener('wheel', (event: WheelEvent) => {
+        canvas.addEventListener('wheel', (event: WheelEvent) => {
             worldScale -= event.deltaY * 0.001;
             if (worldScale < 0.0001) {
                 worldScale = 0.0001;
@@ -136,8 +136,7 @@ function runGame(canvas: HTMLCanvasElement) {
         });
 
 
-
-        body.addEventListener('click', (event: MouseEvent) => {
+        canvas.addEventListener('click', (event: MouseEvent) => {
             if (event.button == 0 && event.altKey) {
                 // Gui.popup(event);
             }
