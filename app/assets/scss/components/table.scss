@@ -1,12 +1,12 @@
-@import '../variables.less';
-@header-color: inherited;
-@body-color: inherited;
-@footer-color: inherited;
-@row-color-even: green;
-@row-color-odd: lighten(@row-color-even, 5%);
+@import '../variables.scss';
+$header-color: inherited;
+$body-color: inherited;
+$footer-color: inherited;
+$row-color-even: green;
+$row-color-odd: lighten($row-color-even, 5%);
 
 table {
-    background-color: @elem-bg;
+    background-color: $elem-bg;
     width: 100%;
     margin-top: 10px;
 
@@ -17,7 +17,7 @@ table {
         }
     }
     & thead {
-        background-color: @header-color;
+        background-color: $header-color;
         & tr {
             & td {
                 /*&:not(:last-child) {
@@ -28,27 +28,27 @@ table {
         }
     }
     & tbody {
-        background-color: @body-color;
+        background-color: $body-color;
         & tr {
             &:nth-child(odd) {
-                background-color: @row-color-odd;
+                background-color: $row-color-odd;
             }
             &:nth-child(even) {
-                background-color: @row-color-even;
+                background-color: $row-color-even;
             }
 
             & td {}
             &:hover:nth-child(odd) {
-                background-color: lighten( @row-color-odd, 10%);
+                background-color: lighten( $row-color-odd, 10%);
                 cursor: pointer;
             }
             &:hover:nth-child(even) {
-                background-color: lighten( @row-color-even, 10%);
+                background-color: lighten( $row-color-even, 10%);
                 cursor: pointer;
             }
         }
     }
     & tfoot {
-        background-color: @footer-color;
+        background-color: $footer-color;
     }
 }

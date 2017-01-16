@@ -5,6 +5,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router'
 import { SideMenuItemComponent } from './sideMenuItem';
+import { SimplePopupComponent } from '../popups/simplePopup';
 
 export interface SideMenuProps { executeAction: any }
 export interface SideMenuState { isSideMenuCollapsed: boolean, areNewMessagesAvailable: boolean; }
@@ -12,7 +13,7 @@ export interface SideMenuState { isSideMenuCollapsed: boolean, areNewMessagesAva
 export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuState>{
 
     private sessionManager: SessionManager;
-    private authenticationService:  AuthenticationService;
+    private authenticationService: AuthenticationService;
 
     constructor() {
         super();
@@ -46,10 +47,15 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
         this.props.executeAction();
     }
 
+    toggleSinglePopup = () => {
+        let newState = Object.assign({}, this.state, { areNewMessagesAvailable: !this.state.areNewMessagesAvailable });
+        this.setState(newState);
+    }
+
     render() {
         let menuItems: JSX.Element[] = [];
-        
-        if(this.state.areNewMessagesAvailable)
+
+        if (this.state.areNewMessagesAvailable)
             menuItems.push(<SideMenuItemComponent key="1" action={this.messages} title="Messages" icon="fa fa-envelope-open fa-2x" isSideMenuCollapsed={this.state.isSideMenuCollapsed} />);
         else
             menuItems.push(<SideMenuItemComponent key="1" action={this.messages} title="Messages" icon="fa fa-envelope fa-2x" isSideMenuCollapsed={this.state.isSideMenuCollapsed} />);
@@ -68,6 +74,10 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
                 <ul>
                     {menuItems}
                 </ul>
+                <a href="#" onClick={this.toggleSinglePopup}>single popup</a>
+                {
+                    this.state.areNewMessagesAvailable ? <SimplePopupComponent /> : null
+                }
                 {
                     this.state.isSideMenuCollapsed ?
                         <a className="aside-menu__extender" href="#" onClick={this.toggleSideMenu}><i className="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a> :
@@ -78,7 +88,8 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
     }
 
     private toggleSideMenu = () => {
-        this.setState({ isSideMenuCollapsed: !this.state.isSideMenuCollapsed });
+        let newState = Object.assign({}, this.state, { isSideMenuCollapsed: !this.state.isSideMenuCollapsed });
+        this.setState(newState);
     }
 
     // private togglePopup = () => {
