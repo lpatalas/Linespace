@@ -15,11 +15,13 @@ interface Uniforms {
     scale: WebGLUniformLocation,
     rotationSpeed: WebGLUniformLocation;
     time: WebGLUniformLocation;
+    translation: WebGLUniformLocation;
     viewportSize: WebGLUniformLocation;
 }
 
 export interface ViewParameters {
     scale: number,
+    translation: Vec2D,
     viewportSize: Vec2D
 }
 
@@ -50,6 +52,7 @@ export class GalaxyRenderer {
             scale: gl.getUniformLocation(this.program, 'scale'),
             rotationSpeed: gl.getUniformLocation(this.program, 'rotationSpeed'),
             time: gl.getUniformLocation(this.program, 'time'),
+            translation: gl.getUniformLocation(this.program, 'translation'),
             viewportSize: gl.getUniformLocation(this.program, 'viewportSize')
         };
 
@@ -76,6 +79,7 @@ export class GalaxyRenderer {
         gl.uniform1f(this.uniforms.scale, view.scale);
         gl.uniform1f(this.uniforms.rotationSpeed, this.galaxy.rotationSpeed);
         gl.uniform1f(this.uniforms.time, time);
+        gl.uniform2f(this.uniforms.translation, view.translation.x, view.translation.y);
         gl.uniform2f(this.uniforms.viewportSize, view.viewportSize.x, view.viewportSize.y);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);

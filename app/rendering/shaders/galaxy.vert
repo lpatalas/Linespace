@@ -3,7 +3,8 @@ precision mediump float;
 uniform float scale;
 uniform float rotationSpeed;
 uniform float time;
-uniform vec2 viewportSize;            
+uniform vec2 translation;
+uniform vec2 viewportSize;
 
 attribute vec4 starParams;
 attribute vec3 color;
@@ -23,7 +24,7 @@ void main() {
     float xx = x * cos(orbitRotation) - y * sin(orbitRotation);
     float yy = x * sin(orbitRotation) + y * cos(orbitRotation);
 
-    vec2 vpos = vec2(xx, yy);
+    vec2 vpos = vec2(xx, yy) + translation;
     vec2 screenPos = vpos / (viewportSize * 0.5);
 
     gl_Position = vec4(screenPos.x, screenPos.y, 0, 1);

@@ -27,9 +27,23 @@ function runGame(canvas: HTMLCanvasElement) {
         return { x: canvas.width / 2, y: canvas.height / 2 };
     };
 
+    const canvasToWorld = function(canvasPos: Vec2D): Vec2D {
+        const halfWidth = canvas.width / 2;
+        const halfHeight = canvas.height / 2;
+
+        return vec(canvasPos.x - halfWidth, -canvasPos.y + halfHeight);
+    }
+
+    const worldToCanvas = function(worldPos: Vec2D): Vec2D {
+        const halfWidth = canvas.width / 2;
+        const halfHeight = canvas.height / 2;
+
+        return vec(worldPos.x + halfWidth, -worldPos.y + halfHeight);
+    }
+
     const galaxy = new Galaxy({
         center: vec(0, 0),
-        rotationSpeed: 0.05,
+        rotationSpeed: 0.0,
         size: 400,
         sizeRatio: 0.875,
         starCount: starCountParam
@@ -74,17 +88,21 @@ function runGame(canvas: HTMLCanvasElement) {
 
     let worldPosition: Vec2D;
     let worldScale = 1;
+    let worldTranslation = vec(0, 0);
 
     //const getScreenTopLeftPosition = function(scale?: number) {
     //    scale = scale || worldScale;
     //    return vec(worldPosition.x * scale - (canvas.width / 2), worldPosition.y * scale - canvas.height / 2);
     //};
 
+    let currentTime = 0;
+
     const drawObjects = function(time: number) {
         worldPosition = worldPosition || getCenter();
 
         galaxyRenderer.render(gl, time, {
             scale: worldScale,
+            translation: worldTranslation,
             viewportSize: vec(canvas.width, canvas.height)
         });
         //const topLeft = getScreenTopLeftPosition();
@@ -93,6 +111,8 @@ function runGame(canvas: HTMLCanvasElement) {
     };
 
     const processFrame = function(dt: number, time: number) {
+        currentTime = time;
+
         fitCanvasToWindow();
         clearCanvas();
         drawObjects(time);
@@ -107,8 +127,6 @@ function runGame(canvas: HTMLCanvasElement) {
         canvas.addEventListener('mousedown', (event: MouseEvent) => {
             if (event.button == 0) {
                 mousePressed = true;
-                initialMousePos = vec(event.pageX, event.pageY);
-                initialPosition = vcopy(worldPosition);
             }
         });
 
@@ -119,22 +137,28 @@ function runGame(canvas: HTMLCanvasElement) {
         });
 
         canvas.addEventListener('mousemove', (event: MouseEvent) => {
-            if (mousePressed) {
-                const currentMousePos = vec(event.pageX, event.pageY);
-                const offset = vsub(currentMousePos, initialMousePos);
-                offset.x /= worldScale;
-                offset.y /= worldScale;
-                worldPosition = vsub(initialPosition, offset);
+            const markerElem = document.getElementById('selectionMarker');
+            const clickPos = canvasToWorld(vec(event.offsetX, event.offsetY));
+            const nearestStarPos = galaxy.getNearestStarPosition(clickPos, currentTime, 10);
+            console.log(`nearestStarPos = ${JSON.stringify(nearestStarPos)}`)
+            if (nearestStarPos) {
+                const markerPos = worldToCanvas(nearestStarPos);
+                console.log(`markerPos = ${JSON.stringify(markerPos)}`);
+                markerElem.style.left = `${markerPos.x}px`;
+                markerElem.style.top = `${markerPos.y}px`;
+                markerElem.style.display = 'block';
+            }
+            else {
+                markerElem.style.display = 'none';
             }
         });
 
-        canvas.addEventListener('wheel', (event: WheelEvent) => {
-            worldScale -= event.deltaY * 0.001;
-            if (worldScale < 0.0001) {
-                worldScale = 0.0001;
-            }
-        });
-
+        // canvas.addEventListener('wheel', (event: WheelEvent) => {
+        //     worldScale -= event.deltaY * 0.001;
+        //     if (worldScale < 0.0001) {
+        //         worldScale = 0.0001;
+        //     }
+        // });
 
         canvas.addEventListener('click', (event: MouseEvent) => {
             if (event.button == 0 && event.altKey) {

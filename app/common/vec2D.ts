@@ -26,3 +26,9 @@ export function vmul(a: Vec2D, b: Vec2D): Vec2D {
 export function vsqrt(v: Vec2D): Vec2D {
     return { x: Math.sqrt(v.x), y: Math.sqrt(v.y) };
 }
+
+export function vdist(a: Vec2D, b: Vec2D): number {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    return Math.sqrt(dx*dx + dy*dy);
+}

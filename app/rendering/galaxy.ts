@@ -1,6 +1,6 @@
 ﻿import { Rgb } from '../common/color'
 import { RandomNumberGenerator } from '../common/randomNumberGenerator'
-import { Vec2D, vec } from '../common/vec2D'
+import { Vec2D, vec, vdist } from '../common/vec2D'
 
 const TWO_PI = Math.PI * 2;
 
@@ -87,6 +87,21 @@ export class Galaxy {
 
     getStarPositions() {
         return this.stars.map(star => this.calculateStarPosition(star, 0));
+    }
+
+    getNearestStarPosition(position: Vec2D, time: number, maxDistance: number): Vec2D {
+        const starsInRange = this.stars
+            .map(star => this.calculateStarPosition(star, time))
+            .filter(starPos => vdist(position, starPos) <= maxDistance);
+
+        starsInRange.sort((a, b) => {
+            const aDist = vdist(position, a);
+            const bDist = vdist(position, b);
+            return aDist - bDist;
+        });
+
+        console.log(`${starsInRange.length} in range; first = ${JSON.stringify(starsInRange[0])}`);
+        return starsInRange[0];
     }
 
     private calculateStarPosition(star: StarDefinition, time: number): Vec2D {

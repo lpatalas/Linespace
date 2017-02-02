@@ -36,7 +36,10 @@ export class GameComponent extends React.Component<GameProps, GameState> {
         return (
             <div className="game-ui">
 
-                <canvas id="gameCanvas"></canvas>
+                <canvas id="gameCanvas">
+                </canvas>
+                
+                <div id="selectionMarker"></div>
 
                 <div className="galactic-zoom">
                     <div>
