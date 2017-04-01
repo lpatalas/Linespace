@@ -7,6 +7,9 @@ $window-open-time: .5s;
 $window-circle-rotation-time: 17s;
 $window-circle-appear-time: .25s;
 
+$window-horizontal-line-appear-time: 0s;
+$window-content-appear-time: $window-open-time/2;
+
 p {
     margin: 0;
 }
@@ -104,11 +107,14 @@ body {
           width: 0;
           height: 0;
           border-radius: 25px;
-          .container__body__content__inner-content{
+          opacity: 0;
+          .container__body__content__inner-content {
             //@extend .debug;
-            padding: 7px;
+            // display: none;
+            // padding: 7px;
             width: 100%;
             height: 100%;
+            transform: scale(.95);
           }
         }
     }
@@ -119,7 +125,7 @@ body {
     & .extend-horizontal {
         animation-name: extend-horizontal-frames;
         animation-duration: $window-open-time/2;
-        animation-delay: $window-circle-appear-time;
+        animation-delay: $window-horizontal-line-appear-time;
         animation-iteration-count: 1;
         animation-timing-function: linear;
         animation-fill-mode: forwards;
@@ -127,7 +133,7 @@ body {
     & .extend > * {
         animation-name: extend-body-frames;
         animation-duration: $window-open-time/1.2;
-        animation-delay: $window-circle-appear-time;
+        animation-delay: $window-content-appear-time;
         animation-iteration-count: 1;
         animation-timing-function: linear;
         animation-fill-mode: forwards;
@@ -194,7 +200,7 @@ body {
     100%{
         height: 90%;
         width: 100%;   
-        opacity: 1; 
+        opacity: 1;
     }
 }
 

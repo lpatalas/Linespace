@@ -7,9 +7,9 @@ export class SimplePopupComponent extends React.Component<undefined, undefined> 
 
                 <div className="container__header appear-animation">
                     <div className="circle__box">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="header-icon">
+                        {/*<svg xmlns="http://www.w3.org/2000/svg" className="header-icon">
                             <circle className="circle rotate" cx="21" cy="21" r="20" strokeLinecap="round" strokeDasharray="5,5" fill="none" />
-                        </svg>
+                        </svg>*/}
                     </div>
                     <div className="horizontal-line__block"><span className="horizontal-line extend-horizontal"></span></div>
                 </div>

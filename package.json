@@ -8,7 +8,7 @@
   "private": true,
   "homepage": "https://bitbucket.org/lpatalas/linespace#readme",
   "scripts": {
-    "start": "concurrently \"npm run webpack:w\" \"npm run lite\" ",
+    "start": "concurrently \"npm run webpack:w\" \"npm run lite\" \"npm run scss-compile\" ",
     "lite": "lite-server -c lite-server.config.json",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
@@ -21,9 +21,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@types/react": "^0.14.55",
-    "@types/react-dom": "^0.14.19",
-    "@types/react-router": "^2.0.41",
     "jquery": "^3.1.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
@@ -32,6 +29,9 @@
     "ts-promise": "^0.3.0"
   },
   "devDependencies": {
+    "@types/react": "^0.14.55",
+    "@types/react-dom": "^0.14.19",
+    "@types/react-router": "^2.0.41",
     "awesome-typescript-loader": "^3.0.0-beta.17",
     "concurrently": "^3.0.0",
     "less": "^2.7.1",
