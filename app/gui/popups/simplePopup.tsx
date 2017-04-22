@@ -1,9 +1,17 @@
 import * as React from 'react';
 
-export class SimplePopupComponent extends React.Component<undefined, undefined> {
+export interface SimplePopupProps { closePopup: any, header: string, isDialog: boolean }
+
+export class SimplePopupComponent extends React.Component<SimplePopupProps, undefined> {
+
+    close = () => {
+        console.log('... closing popup ...');
+        this.props.closePopup();
+    }
+
     render() {
         return (
-            <div className="single-popup-container">
+            <div className={this.props.isDialog ? "single-popup-container single-popup-container__dialog" : "single-popup-container" }>
 
                 <div className="container__header appear-animation">
                     <div className="circle__box">
@@ -11,7 +19,11 @@ export class SimplePopupComponent extends React.Component<undefined, undefined> 
                             <circle className="circle rotate" cx="21" cy="21" r="20" strokeLinecap="round" strokeDasharray="5,5" fill="none" />
                         </svg>*/}
                     </div>
-                    <div className="horizontal-line__block"><span className="horizontal-line extend-horizontal"></span></div>
+                    <div className="horizontal-line__block extend-horizontal">
+                        <p className="horizontal-line__block__caption" title={this.props.header}>{this.props.header}</p>
+                        <span className="horizontal-line"></span>
+                        <a onClick={this.close}><span className="close-button fa fa-times fa-lg"></span></a>
+                    </div>
                 </div>
 
                 <div className="container__body extend">
@@ -19,28 +31,29 @@ export class SimplePopupComponent extends React.Component<undefined, undefined> 
                     <div className="container__body__content">
                         <div className="container__body__content__inner-content">
 
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                            <td>Amount</td>
-                                            <td>volume</td>
-                                        </tr>
-                                    </thead>
+                        {this.props.children}
+                            {/*<table>
+                                <thead>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>Amount</td>
+                                        <td>volume</td>
+                                    </tr>
+                                </thead>
 
-                                    <tbody>
-                                        <tr>
-                                            <td>Iron</td>
-                                            <td>1 000 000</td>
-                                            <td>m^3</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Coal</td>
-                                            <td>13 000 000</td>
-                                            <td>m^3</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <tbody>
+                                    <tr>
+                                        <td>Iron</td>
+                                        <td>1 000 000</td>
+                                        <td>m^3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Coal</td>
+                                        <td>13 000 000</td>
+                                        <td>m^3</td>
+                                    </tr>
+                                </tbody>
+                            </table>*/}
                         </div>
                     </div>
 

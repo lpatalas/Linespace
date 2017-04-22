@@ -1,15 +1,13 @@
 $circle-size: 20px;
 $border-color: red;
 $window-main-color: rgba(83, 119, 89, 0.7);
-$window-blur-color: rgba(255, 255, 255 , 0.5);
+$window-blur-color: rgba(255, 255, 255, 0.5);
 $window-blur-radius: 1px;
 $window-open-time: .5s;
 $window-circle-rotation-time: 17s;
 $window-circle-appear-time: .25s;
-
 $window-horizontal-line-appear-time: 0s;
 $window-content-appear-time: $window-open-time/2;
-
 p {
     margin: 0;
 }
@@ -18,8 +16,8 @@ body {
     background-color: black;
 }
 
-.debug{
-  border: 1px solid red;
+.debug {
+    border: 1px solid red;
 }
 
 .single-popup-container {
@@ -28,61 +26,91 @@ body {
     position: fixed;
     left: 300px;
     top: 70px;
+    &.single-popup-container__dialog {
+        top: 50%;
+        left: 50%;
+        z-index: 100;
+        width: 50%;
+        min-height: 60vh;
+        max-height: 75vh;
+        padding: 10px;
+        margin-left: -25%;
+        margin-top: -15vh;
+        box-sizing: border-box;
+        ;
+    }
     .container__header {
         display: flex;
         min-height: 20px;
         height: 5%;
         .circle__box {
-          //@extend .debug;
-          display: inline-block;
-          position: fixed;
-          width: 50px;
-          height: 50px;
-          margin-left: -$circle-size - 20;
-          margin-top: -$circle-size;
-          //left: -2px;
-          .header-icon{
-             viewBox: 0 0 20 20;
-             height: 50px;
-             width: 50px;
-            .circle {
-               stroke: $window-main-color;
-               stroke-width: 2;
-               cx: $circle-size+1;
-               cy: $circle-size+1;
-               r: $circle-size;
-               fill: none;
-               &.rotate {
-                -webkit-animation-name: rotate;
-                -webkit-animation-duration: $window-circle-rotation-time;
-                -webkit-animation-iteration-count: infinite;
-                -webkit-animation-timing-function: linear;
-                -moz-animation-name: rotate;
-                -moz-animation-duration: $window-circle-rotation-time;
-                -moz-animation-iteration-count: infinite;
-                -moz-animation-timing-function: linear;
-                animation-name: rotate;
-                animation-duration: $window-circle-rotation-time;
-                animation-iteration-count: infinite;
-                animation-timing-function: linear;
-                transform-origin: 50% 50% 0;
+            //@extend .debug;
+            display: inline-block;
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            margin-left: -$circle-size - 20;
+            margin-top: -$circle-size; //left: -2px;
+            .header-icon {
+                viewBox: 0 0 20 20;
+                height: 50px;
+                width: 50px;
+                .circle {
+                    stroke: $window-main-color;
+                    stroke-width: 2;
+                    cx: $circle-size+1;
+                    cy: $circle-size+1;
+                    r: $circle-size;
+                    fill: none;
+                    &.rotate {
+                        -webkit-animation-name: rotate;
+                        -webkit-animation-duration: $window-circle-rotation-time;
+                        -webkit-animation-iteration-count: infinite;
+                        -webkit-animation-timing-function: linear;
+                        -moz-animation-name: rotate;
+                        -moz-animation-duration: $window-circle-rotation-time;
+                        -moz-animation-iteration-count: infinite;
+                        -moz-animation-timing-function: linear;
+                        animation-name: rotate;
+                        animation-duration: $window-circle-rotation-time;
+                        animation-iteration-count: infinite;
+                        animation-timing-function: linear;
+                        transform-origin: 50% 50% 0;
+                    }
+                }
             }
-            }
-          }
-            
         }
         .horizontal-line__block {
             width: 100%;
             height: 30px;
-            display: inline-block;          
-            //@extend .debug;
+            display: inline-block; //@extend .debug;
+            .horizontal-line__block__caption {
+                margin: 0;
+                position: absolute;
+                top: -5px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: 90%;
+            }
             .horizontal-line {
                 background-color: $window-main-color;
                 height: 0px;
-                width: 100%;
+                width: 90%;
                 display: inline-block;
                 filter: blur($window-blur-radius);
-                //box-shadow: 110px 110px 51px $window-blur-radius;
+                height: 2px; //box-shadow: 110px 110px 51px $window-blur-radius;
+            }
+            .close-button {
+                width: 10%;
+                display: inline-block;
+                text-align: right;
+                color: $window-main-color;
+                padding-top: 0px;
+                &:hover {
+                    cursor: pointer;
+                    color: lighten($window-main-color, 10%);
+                }
             }
         }
     }
@@ -92,9 +120,9 @@ body {
         margin-top: 0px;
         border-radius: 25px;
         .container__body-blurred {
-            background-color: $window-blur-color; 
+            background-color: $window-blur-color;
             filter: blur(5px);
-/*             width: 100%;
+            /*             width: 100%;
             height: 90%; */
             width: 0;
             height: 0;
@@ -102,20 +130,22 @@ body {
             border-radius: 25px;
         }
         .container__body__content {
-          background-color: $window-main-color;
-          position: absolute;
-          width: 0;
-          height: 0;
-          border-radius: 25px;
-          opacity: 0;
-          .container__body__content__inner-content {
-            //@extend .debug;
-            // display: none;
-            // padding: 7px;
+            background-color: $window-main-color;
+            position: absolute;
             width: 100%;
-            height: 100%;
-            transform: scale(.95);
-          }
+            height: 0;
+            border-radius: 25px;
+            opacity: 0;
+            .container__body__content__inner-content {
+                //@extend .debug;
+                // display: none;
+                // padding: 7px;
+                width: 100%;
+                height: 100%;
+                transform: scale(.95);
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
         }
     }
     .container__footer {
@@ -130,7 +160,7 @@ body {
         animation-timing-function: linear;
         animation-fill-mode: forwards;
     }
-    & .extend > * {
+    & .extend>* {
         animation-name: extend-body-frames;
         animation-duration: $window-open-time/1.2;
         animation-delay: $window-content-appear-time;
@@ -178,28 +208,21 @@ body {
 @keyframes extend-horizontal-frames {
     from {
         width: 0px;
-        height: 2px;
         opacity: .4;
     }
     to {
         width: 100%;
-        height: 2px;
         opacity: 1;
     }
 }
 
 @keyframes extend-body-frames {
     0% {
-        width: 0px;
-    }
-    50% {
-        width: 100%;
         height: 0px;
         opacity: .2;
     }
-    100%{
+    100% {
         height: 90%;
-        width: 100%;   
         opacity: 1;
     }
 }
@@ -212,6 +235,7 @@ body {
         transform: scale(1);
     }
 }
+
 
 /* @keyframes extend-vertical {
     from { transform: scale(0); }

@@ -1,3 +1,4 @@
+import { SimplePopupComponent } from '../popups/simplePopup';
 import { RegisterComponent } from './register';
 import { PopupComponent } from '../popups/popup';
 import * as React from 'react';
@@ -61,7 +62,8 @@ export class GameComponent extends React.Component<GameProps, GameState> {
                 <SideMenuComponent executeAction={this.openPopup} />
 
                 {
-                    this.state.isPopupVisible && <PopupComponent children={this.props.children} closePopup={this.closePopup} />
+                    //this.state.isPopupVisible && <PopupComponent children={this.props.children} closePopup={this.closePopup} />
+                    this.state.isPopupVisible && <SimplePopupComponent header="header" children={this.props.children}  closePopup={this.closePopup} isDialog={true} />
                 }
             </div>
         );

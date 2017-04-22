@@ -76,7 +76,7 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
                 </ul>
                 <a href="#" onClick={this.toggleSinglePopup}>single popup</a>
                 {
-                    this.state.areNewMessagesAvailable ? <SimplePopupComponent /> : null
+                    this.state.areNewMessagesAvailable ? <SimplePopupComponent closePopup={this.toggleSinglePopup} header="header" isDialog={false} /> : null
                 }
                 {
                     this.state.isSideMenuCollapsed ?
