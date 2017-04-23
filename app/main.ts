@@ -2,12 +2,12 @@
 import { GalaxyRenderer } from './rendering/galaxyRenderer';
 import { Vec2D, vec, vcopy, vsub } from './common/vec2D';
 
-const getWebGLContext = function(canvas: HTMLCanvasElement): WebGLRenderingContext {
+const getWebGLContext = function (canvas: HTMLCanvasElement): WebGLRenderingContext {
     const context = <WebGLRenderingContext>canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    return context;    
+    return context;
 };
 
-const parseStarCountParam = function() {
+const parseStarCountParam = function () {
     const regex = /starCount=([0-9]+)/;
     const matches = window.location.search.match(regex);
     if (matches && matches.length > 1) {
@@ -22,19 +22,19 @@ const starCountParam = parseStarCountParam();
 
 function runGame(canvas: HTMLCanvasElement) {
     const gl = getWebGLContext(canvas);
-    
-    const getCenter = function(): Vec2D {
+
+    const getCenter = function (): Vec2D {
         return { x: canvas.width / 2, y: canvas.height / 2 };
     };
 
-    const canvasToWorld = function(canvasPos: Vec2D): Vec2D {
+    const canvasToWorld = function (canvasPos: Vec2D): Vec2D {
         const halfWidth = canvas.width / 2;
         const halfHeight = canvas.height / 2;
 
         return vec(canvasPos.x - halfWidth, -canvasPos.y + halfHeight);
     }
 
-    const worldToCanvas = function(worldPos: Vec2D): Vec2D {
+    const worldToCanvas = function (worldPos: Vec2D): Vec2D {
         const halfWidth = canvas.width / 2;
         const halfHeight = canvas.height / 2;
 
@@ -51,7 +51,7 @@ function runGame(canvas: HTMLCanvasElement) {
 
     let galaxyRenderer: GalaxyRenderer;
 
-    const setupWebGL = function() {
+    const setupWebGL = function () {
         gl.clearColor(0.0, 0.0, 0, 0);
         gl.disable(gl.DEPTH_TEST);
 
@@ -61,15 +61,15 @@ function runGame(canvas: HTMLCanvasElement) {
         galaxyRenderer = new GalaxyRenderer(gl, galaxy);
     };
 
-    const clearCanvas = function() {
+    const clearCanvas = function () {
         gl.clear(gl.COLOR_BUFFER_BIT);
     };
 
-    const setupViewport = function() {
+    const setupViewport = function () {
         gl.viewport(0, 0, canvas.width, canvas.height);
     };
 
-    const fitCanvasToWindow = function() {
+    const fitCanvasToWindow = function () {
         let sizeChanged = false;
 
         if (canvas.width != window.innerHeight) {
@@ -97,7 +97,7 @@ function runGame(canvas: HTMLCanvasElement) {
 
     let currentTime = 0;
 
-    const drawObjects = function(time: number) {
+    const drawObjects = function (time: number) {
         worldPosition = worldPosition || getCenter();
 
         galaxyRenderer.render(gl, time, {
@@ -110,7 +110,7 @@ function runGame(canvas: HTMLCanvasElement) {
         //galaxy.draw(context, time);
     };
 
-    const processFrame = function(dt: number, time: number) {
+    const processFrame = function (dt: number, time: number) {
         currentTime = time;
 
         fitCanvasToWindow();
@@ -118,7 +118,7 @@ function runGame(canvas: HTMLCanvasElement) {
         drawObjects(time);
     };
 
-    const hookMouseEvents = function() {
+    const hookMouseEvents = function () {
         const body = document.getElementsByTagName('body')[0];
         let initialMousePos: Vec2D = null;
         let mousePressed = false;
@@ -165,9 +165,26 @@ function runGame(canvas: HTMLCanvasElement) {
                 // Gui.popup(event);
             }
         });
+
+        canvas.addEventListener('mousemove', (event: MouseEvent) => {
+
+            //TODO this should fire event only when celestial body is under the cursor
+            const isCelestialBody = Math.round((Math.random()*100)) % 10  === 0;
+
+            if (isCelestialBody) {
+                let ce: CustomEvent = new CustomEvent('celestialBodyEvent');
+                ce.initCustomEvent('celestialBodyEvent', true, true, { event: event });
+                canvas.dispatchEvent(ce);
+            }
+            else{                
+                let ce: CustomEvent = new CustomEvent('celestialBodyLeaveEvent');
+                ce.initCustomEvent('celestialBodyLeaveEvent', true, true, { event: event });
+                canvas.dispatchEvent(ce);
+            }
+        });
     };
 
-    const runMainLoop = function() {
+    const runMainLoop = function () {
         const getCurrentTime = () => new Date().getTime() / 1000;
         let lastTime = getCurrentTime();
         let elapsedTime = 0;
@@ -175,7 +192,7 @@ function runGame(canvas: HTMLCanvasElement) {
         setupWebGL();
         setupViewport();
 
-        const mainLoopStep = function() {
+        const mainLoopStep = function () {
             const currentTime = getCurrentTime();
             const deltaTime = currentTime - lastTime;
 
@@ -193,7 +210,7 @@ function runGame(canvas: HTMLCanvasElement) {
     runMainLoop();
 }
 
-export function run() : void{
+export function run(): void {
     const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
     runGame(canvas);
 }

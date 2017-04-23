@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export interface SimplePopupProps { closePopup: any, header: string, isDialog: boolean }
+export interface SimplePopupProps { closePopup: any, header: string, body?: string, isDialog: boolean }
 
 export class SimplePopupComponent extends React.Component<SimplePopupProps, undefined> {
 
@@ -10,6 +10,9 @@ export class SimplePopupComponent extends React.Component<SimplePopupProps, unde
     }
 
     render() {
+
+        let popupBody = this.props.body ? this.props.body : this.props.children;
+
         return (
             <div className={this.props.isDialog ? "single-popup-container single-popup-container__dialog" : "single-popup-container" }>
 
@@ -30,8 +33,8 @@ export class SimplePopupComponent extends React.Component<SimplePopupProps, unde
                     <div className="container__body-blurred"></div>
                     <div className="container__body__content">
                         <div className="container__body__content__inner-content">
-
-                        {this.props.children}
+                        
+                        {popupBody}
                             {/*<table>
                                 <thead>
                                     <tr>

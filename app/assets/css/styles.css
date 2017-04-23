@@ -96,13 +96,12 @@ body {
   left: 300px;
   top: 70px; }
   .single-popup-container.single-popup-container__dialog {
-    top: 50%;
+    top: calc(100% - 70vh);
     left: 50%;
     z-index: 100;
     width: 50%;
     min-height: 60vh;
     max-height: 75vh;
-    padding: 10px;
     margin-left: -25%;
     margin-top: -15vh;
     box-sizing: border-box; }
@@ -202,15 +201,15 @@ body {
     height: 5%; }
   .single-popup-container .extend-horizontal {
     animation-name: extend-horizontal-frames;
-    animation-duration: 0.25s;
+    animation-duration: 0.15s;
     animation-delay: 0s;
     animation-iteration-count: 1;
     animation-timing-function: linear;
     animation-fill-mode: forwards; }
   .single-popup-container .extend > * {
     animation-name: extend-body-frames;
-    animation-duration: 0.41667s;
-    animation-delay: 0.25s;
+    animation-duration: 0.25s;
+    animation-delay: 0.15s;
     animation-iteration-count: 1;
     animation-timing-function: linear;
     animation-fill-mode: forwards; }

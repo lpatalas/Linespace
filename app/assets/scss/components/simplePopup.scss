@@ -3,7 +3,7 @@ $border-color: red;
 $window-main-color: rgba(83, 119, 89, 0.7);
 $window-blur-color: rgba(255, 255, 255, 0.5);
 $window-blur-radius: 1px;
-$window-open-time: .5s;
+$window-open-time: .3s;
 $window-circle-rotation-time: 17s;
 $window-circle-appear-time: .25s;
 $window-horizontal-line-appear-time: 0s;
@@ -27,17 +27,15 @@ body {
     left: 300px;
     top: 70px;
     &.single-popup-container__dialog {
-        top: 50%;
+        top: calc(100% - 70vh);
         left: 50%;
         z-index: 100;
         width: 50%;
         min-height: 60vh;
         max-height: 75vh;
-        padding: 10px;
         margin-left: -25%;
         margin-top: -15vh;
         box-sizing: border-box;
-        ;
     }
     .container__header {
         display: flex;

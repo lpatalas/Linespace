@@ -12,6 +12,7 @@ export interface GameProps {
 
 export interface GameState {
     isPopupVisible: boolean;
+    isMenuDialogVisible: boolean;
     isSideMenuCollapsed: boolean;
 }
 
@@ -22,11 +23,23 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     constructor() {
         super();
 
-        this.state = { isPopupVisible: false, isSideMenuCollapsed: false };
+        this.state = { isPopupVisible: false, isSideMenuCollapsed: false, isMenuDialogVisible: false };
     }
 
     componentDidMount() {
         run();
+        
+        let canvas = document.getElementById('gameCanvas');
+        canvas.addEventListener('celestialBodyEvent', (event: Event) => {
+            // TODO add popup position
+            // event.detail.event.screenX
+            this.openPopup();
+        });
+        
+        canvas.addEventListener('celestialBodyLeaveEvent', (event: Event) => {
+            this.closePopup();
+        });
+
     }
 
     changeZoom(zoom: number) {
@@ -59,11 +72,15 @@ export class GameComponent extends React.Component<GameProps, GameState> {
                     </div>
                 </div>
 
-                <SideMenuComponent executeAction={this.openPopup} />
+                <SideMenuComponent executeAction={this.openDialog} />
 
                 {
                     //this.state.isPopupVisible && <PopupComponent children={this.props.children} closePopup={this.closePopup} />
-                    this.state.isPopupVisible && <SimplePopupComponent header="header" children={this.props.children}  closePopup={this.closePopup} isDialog={true} />
+                    this.state.isPopupVisible && <SimplePopupComponent header="header" body="popup body"  closePopup={this.closePopup} isDialog={false} />
+                }
+
+                {                    
+                    this.state.isMenuDialogVisible && <SimplePopupComponent header="menu" children={this.props.children}  closePopup={this.closeDialog} isDialog={true} />
                 }
             </div>
         );
@@ -74,7 +91,17 @@ export class GameComponent extends React.Component<GameProps, GameState> {
         this.setState(newState);
     }
 
-    private openPopup = () => {
+    private openDialog = () => {
+        const newState = Object.assign({}, this.state, { isMenuDialogVisible: true });
+        this.setState(newState);
+    }
+
+    private closeDialog = () => {
+        const newState = Object.assign({}, this.state, { isMenuDialogVisible: false });
+        this.setState(newState);
+    }
+
+    private openPopup = () =>{
         const newState = Object.assign({}, this.state, { isPopupVisible: true });
         this.setState(newState);
     }
