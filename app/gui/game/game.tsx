@@ -42,13 +42,17 @@ export class GameComponent extends React.Component<GameProps, GameState> {
             this._popupX = event.detail.event.x + 10;
             this._popupY = event.detail.event.y + 20;
 
-            if (event.detail.id <=0) {
+            if(event.detail.id == this._popupId)
+                return;
+
+            if (event.detail.id <=0 ) {
                 this._popupId = event.detail.id;
             }
 
             this.closePopup();
             this.openPopup();
 
+            this._popupId = event.detail.id;
         });
 
         canvas.addEventListener('celestialBodyLeaveEvent', (event: Event) => {
@@ -90,8 +94,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
                 <SideMenuComponent executeAction={this.openDialog} />
 
                 {
-                    //this.state.isPopupVisible && <PopupComponent children={this.props.children} closePopup={this.closePopup} />
-                    (this.state.isPopupVisible && !this.state.isMenuDialogVisible ) && <SimplePopupComponent header="header" body="popup body" closePopup={this.closePopup} isDialog={false} x={this._popupX} y={this._popupY} />
+                    (this.state.isPopupVisible && !this.state.isMenuDialogVisible ) && <SimplePopupComponent header={"celestial body id: " + this._popupId} body="popup body" closePopup={this.closePopup} isDialog={false} x={this._popupX} y={this._popupY} />
                 }
 
                 {

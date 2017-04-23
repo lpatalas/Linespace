@@ -47,11 +47,6 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
         this.props.executeAction();
     }
 
-    toggleSinglePopup = () => {
-        let newState = Object.assign({}, this.state, { areNewMessagesAvailable: !this.state.areNewMessagesAvailable });
-        this.setState(newState);
-    }
-
     render() {
         let menuItems: JSX.Element[] = [];
 
@@ -74,10 +69,6 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
                 <ul>
                     {menuItems}
                 </ul>
-                <a href="#" onClick={this.toggleSinglePopup}>single popup</a>
-                {
-                    this.state.areNewMessagesAvailable ? <SimplePopupComponent closePopup={this.toggleSinglePopup} header="header" isDialog={false} /> : null
-                }
                 {
                     this.state.isSideMenuCollapsed ?
                         <a className="aside-menu__extender" href="#" onClick={this.toggleSideMenu}><i className="fa fa-angle-double-right fa-2x" aria-hidden="true"></i></a> :
@@ -92,8 +83,4 @@ export class SideMenuComponent extends React.Component<SideMenuProps, SideMenuSt
         this.setState(newState);
     }
 
-    // private togglePopup = () => {
-    //     const newState = Object.assign({}, this.state, { isPopupVisible: !this.state.isPopupVisible });
-    //     this.setState(newState);
-    // }
 }
