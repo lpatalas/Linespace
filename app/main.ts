@@ -137,19 +137,29 @@ function runGame(canvas: HTMLCanvasElement) {
         });
 
         canvas.addEventListener('mousemove', (event: MouseEvent) => {
-            const markerElem = document.getElementById('selectionMarker');
+            // const markerElem = document.getElementById('selectionMarker');
             const clickPos = canvasToWorld(vec(event.offsetX, event.offsetY));
             const nearestStarPos = galaxy.getNearestStarPosition(clickPos, currentTime, 10);
             console.log(`nearestStarPos = ${JSON.stringify(nearestStarPos)}`)
+
             if (nearestStarPos) {
+                const celestialBodyId = nearestStarPos.x ^ nearestStarPos.y;
                 const markerPos = worldToCanvas(nearestStarPos);
                 console.log(`markerPos = ${JSON.stringify(markerPos)}`);
-                markerElem.style.left = `${markerPos.x}px`;
-                markerElem.style.top = `${markerPos.y}px`;
-                markerElem.style.display = 'block';
+                // markerElem.style.left = `${markerPos.x}px`;
+                // markerElem.style.top = `${markerPos.y}px`;
+                // markerElem.style.display = 'block';
+
+                let ce: CustomEvent = new CustomEvent('celestialBodyEvent');
+                ce.initCustomEvent('celestialBodyEvent', true, true, { event: event, id: celestialBodyId });
+                canvas.dispatchEvent(ce);
             }
             else {
-                markerElem.style.display = 'none';
+                // markerElem.style.display = 'none';
+
+                let ce: CustomEvent = new CustomEvent('celestialBodyLeaveEvent');
+                ce.initCustomEvent('celestialBodyLeaveEvent', true, true, { event: event, id: -1 });
+                canvas.dispatchEvent(ce);
             }
         });
 
@@ -161,27 +171,12 @@ function runGame(canvas: HTMLCanvasElement) {
         // });
 
         canvas.addEventListener('click', (event: MouseEvent) => {
+            console.log(`x: ${event.x} y: ${event.y}`);
             if (event.button == 0 && event.altKey) {
                 // Gui.popup(event);
             }
         });
 
-        canvas.addEventListener('mousemove', (event: MouseEvent) => {
-
-            //TODO this should fire event only when celestial body is under the cursor
-            const isCelestialBody = Math.round((Math.random()*100)) % 10  === 0;
-
-            if (isCelestialBody) {
-                let ce: CustomEvent = new CustomEvent('celestialBodyEvent');
-                ce.initCustomEvent('celestialBodyEvent', true, true, { event: event });
-                canvas.dispatchEvent(ce);
-            }
-            else{                
-                let ce: CustomEvent = new CustomEvent('celestialBodyLeaveEvent');
-                ce.initCustomEvent('celestialBodyLeaveEvent', true, true, { event: event });
-                canvas.dispatchEvent(ce);
-            }
-        });
     };
 
     const runMainLoop = function () {

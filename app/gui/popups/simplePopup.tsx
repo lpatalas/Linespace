@@ -1,20 +1,32 @@
 import * as React from 'react';
+import { CSSProperties } from "react";
 
-export interface SimplePopupProps { closePopup: any, header: string, body?: string, isDialog: boolean }
+export interface SimplePopupProps { closePopup: any, header: string, body?: string, isDialog: boolean, x?: number, y?: number }
+export interface SimplePopupState { popupPosition: any }
 
-export class SimplePopupComponent extends React.Component<SimplePopupProps, undefined> {
+export class SimplePopupComponent extends React.Component<SimplePopupProps, SimplePopupState> {
+
+    // private popupPosition = (this.props) ? { top: this.props.y, left: this.props.x, position: 'absolute' } : null;
+
+    constructor() {
+        super();
+
+        this.state = { popupPosition: null };
+    }
 
     close = () => {
         console.log('... closing popup ...');
         this.props.closePopup();
     }
-
     render() {
 
         let popupBody = this.props.body ? this.props.body : this.props.children;
+        this.state = this.props.x && this.props.y ?
+            Object.assign({}, this.state, { popupPosition: { top: this.props.y, left: this.props.x, position: 'absolute' } })
+            : Object.assign({}, this.state, { popupPosition: null })
 
         return (
-            <div className={this.props.isDialog ? "single-popup-container single-popup-container__dialog" : "single-popup-container" }>
+            <div style={this.state.popupPosition} className={this.props.isDialog ? "single-popup-container single-popup-container__dialog" : "single-popup-container"}>
 
                 <div className="container__header appear-animation">
                     <div className="circle__box">
@@ -33,8 +45,8 @@ export class SimplePopupComponent extends React.Component<SimplePopupProps, unde
                     <div className="container__body-blurred"></div>
                     <div className="container__body__content">
                         <div className="container__body__content__inner-content">
-                        
-                        {popupBody}
+
+                            {popupBody}
                             {/*<table>
                                 <thead>
                                     <tr>
