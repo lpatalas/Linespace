@@ -41,6 +41,7 @@ body {
         display: flex;
         min-height: 20px;
         height: 5%;
+        cursor: default;
         .circle__box {
             //@extend .debug;
             display: inline-block;

@@ -108,7 +108,8 @@ body {
   .single-popup-container .container__header {
     display: flex;
     min-height: 20px;
-    height: 5%; }
+    height: 5%;
+    cursor: default; }
     .single-popup-container .container__header .circle__box {
       display: inline-block;
       position: fixed;
@@ -279,7 +280,8 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  color: #FFFFFF; }
+  color: #FFFFFF;
+  overflow: hidden; }
 
 a {
   text-decoration: none;

@@ -39,13 +39,12 @@ export class GameComponent extends React.Component<GameProps, GameState> {
             if (!event.detail)
                 return;
 
-            this._popupX = event.detail.event.x;
-            this._popupY = event.detail.event.y;
+            this._popupX = event.detail.event.x + 10;
+            this._popupY = event.detail.event.y + 20;
 
             if (event.detail.id <=0) {
                 this._popupId = event.detail.id;
             }
-
 
             this.closePopup();
             this.openPopup();
@@ -92,7 +91,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
 
                 {
                     //this.state.isPopupVisible && <PopupComponent children={this.props.children} closePopup={this.closePopup} />
-                    this.state.isPopupVisible && <SimplePopupComponent header="header" body="popup body" closePopup={this.closePopup} isDialog={false} x={this._popupX} y={this._popupY} />
+                    (this.state.isPopupVisible && !this.state.isMenuDialogVisible ) && <SimplePopupComponent header="header" body="popup body" closePopup={this.closePopup} isDialog={false} x={this._popupX} y={this._popupY} />
                 }
 
                 {
