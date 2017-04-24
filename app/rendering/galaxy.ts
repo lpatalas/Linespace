@@ -100,7 +100,7 @@ export class Galaxy {
             return aDist - bDist;
         });
 
-        console.log(`${starsInRange.length} in range; first = ${JSON.stringify(starsInRange[0])}`);
+        //console.log(`${starsInRange.length} in range; first = ${JSON.stringify(starsInRange[0])}`);
         return starsInRange[0];
     }
 

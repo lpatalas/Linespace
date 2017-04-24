@@ -2,6 +2,7 @@
 import { GalaxyRenderer } from './rendering/galaxyRenderer';
 import { Vec2D, vec, vcopy, vsub } from './common/vec2D';
 import { Game } from './game'
+import { createTestSolarSystem } from "./rendering/solarSystem";
 
 const parseStarCountParam = function () {
     const regex = /starCount=([0-9]+)/;
@@ -40,12 +41,12 @@ function runGame(canvas: HTMLCanvasElement) {
             // const markerElem = document.getElementById('selectionMarker');
             const clickPos = game.canvasToWorld(vec(event.offsetX, event.offsetY));
             const nearestStarPos = galaxy.getNearestStarPosition(clickPos, game.getGameTime(), 10);
-            console.log(`nearestStarPos = ${JSON.stringify(nearestStarPos)}`)
+            //console.log(`nearestStarPos = ${JSON.stringify(nearestStarPos)}`)
 
             if (nearestStarPos) {
                 const celestialBodyId = nearestStarPos.x ^ nearestStarPos.y;
                 const markerPos = game.worldToCanvas(nearestStarPos);
-                console.log(`markerPos = ${JSON.stringify(markerPos)}`);
+                //console.log(`markerPos = ${JSON.stringify(markerPos)}`);
                 // markerElem.style.left = `${markerPos.x}px`;
                 // markerElem.style.top = `${markerPos.y}px`;
                 // markerElem.style.display = 'block';
@@ -64,7 +65,7 @@ function runGame(canvas: HTMLCanvasElement) {
         });
 
         canvas.addEventListener('click', (event: MouseEvent) => {
-            console.log(`x: ${event.x} y: ${event.y}`);
+            //console.log(`x: ${event.x} y: ${event.y}`);
             if (event.button == 0 && event.altKey) {
                 // Gui.popup(event);
             }
@@ -84,7 +85,14 @@ function runGame(canvas: HTMLCanvasElement) {
 
     const runMainLoop = function () {
         game.setup();
-		game.showGalaxy(galaxy);
+
+		if (window.location.search.indexOf('mode=ss') >= 0) {
+			const solarSystem = createTestSolarSystem();
+			game.showSolarSystem(solarSystem);
+		}
+		else {
+			game.showGalaxy(galaxy);
+		}
 
         const mainLoopStep = function () {
 			game.update();

@@ -1,15 +1,19 @@
 import { Galaxy } from './rendering/galaxy'
 import { GalaxyRenderer } from './rendering/galaxyRenderer'
 import { vec, Vec2D } from './common/vec2D'
+import { SolarSystem } from "./rendering/solarSystem";
+import { Renderer } from "./rendering/renderer";
+import { SolarSystemRenderer } from "./rendering/solarSystemRenderer";
 
 const getWebGLContext = function (canvas: HTMLCanvasElement): WebGLRenderingContext {
     const context = <WebGLRenderingContext>canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+	//return WebGLDebugUtils.makeDebugContext(context);
     return context;
 };
 
 export class Game {
 	private canvas: HTMLCanvasElement;
-	private galaxyRenderer: GalaxyRenderer;
+	private activeRenderer: Renderer;
 	private gl: WebGLRenderingContext;
 	private window: Window;
 	private gameTime: number = 0;
@@ -44,14 +48,14 @@ export class Game {
 			const deltaTime = currentTime - this.lastTime;
 			this.gameTime += deltaTime;
 
-			const view = {
-				scale: 1,
-				translation: vec(0, 0),
-				viewportSize: vec(this.canvas.width, this.canvas.height)
-			};
+			if (this.activeRenderer) {
+				const view = {
+					scale: 1,
+					translation: vec(0, 0),
+					viewportSize: vec(this.canvas.width, this.canvas.height)
+				};
 
-			if (this.galaxyRenderer) {
-				this.galaxyRenderer.render(this.gl, this.gameTime, view);
+				this.activeRenderer.render(this.gameTime, view);
 			}
 		}
 
@@ -59,7 +63,11 @@ export class Game {
 	}
 
 	showGalaxy(galaxy: Galaxy) {
-		this.galaxyRenderer = new GalaxyRenderer(this.gl, galaxy);
+		this.activeRenderer = new GalaxyRenderer(this.gl, galaxy);
+	}
+
+	showSolarSystem(solarSystem: SolarSystem) {
+		this.activeRenderer = new SolarSystemRenderer(this.gl, solarSystem);
 	}
 
 	canvasToWorld(canvasPos: Vec2D): Vec2D {

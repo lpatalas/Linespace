@@ -1,6 +1,7 @@
 ﻿import { Galaxy } from './galaxy'
 import * as GLUtils from './glUtils'
 import { Vec2D } from '../common/vec2D'
+import { Renderer, ViewParameters } from "./renderer";
 declare var require: (name: string) => any;
 
 const vertexShaderSource: string = require('./shaders/galaxy.vert');
@@ -19,14 +20,8 @@ interface Uniforms {
     viewportSize: WebGLUniformLocation;
 }
 
-export interface ViewParameters {
-    scale: number,
-    translation: Vec2D,
-    viewportSize: Vec2D
-}
-
-export class GalaxyRenderer {
-
+export class GalaxyRenderer implements Renderer {
+	private gl: WebGLRenderingContext;
     private galaxy: Galaxy;
     private program: WebGLProgram;
     private vertexBuffer: WebGLBuffer;
@@ -35,6 +30,7 @@ export class GalaxyRenderer {
     private uniforms: Uniforms;
 
     constructor(gl: WebGLRenderingContext, galaxy: Galaxy) {
+		this.gl = gl;
         this.galaxy = galaxy;
 
         this.program = GLUtils.createProgram(gl, vertexShaderSource, fragmentShaderSource);
@@ -74,18 +70,18 @@ export class GalaxyRenderer {
         this.vertexCount = stars.length;
     }
 
-    render(gl: WebGLRenderingContext, time: number, view: ViewParameters) {
-        gl.useProgram(this.program);
-        gl.uniform1f(this.uniforms.scale, view.scale);
-        gl.uniform1f(this.uniforms.rotationSpeed, this.galaxy.rotationSpeed);
-        gl.uniform1f(this.uniforms.time, time);
-        gl.uniform2f(this.uniforms.translation, view.translation.x, view.translation.y);
-        gl.uniform2f(this.uniforms.viewportSize, view.viewportSize.x, view.viewportSize.y);
+    render(time: number, view: ViewParameters) {
+        this.gl.useProgram(this.program);
+        this.gl.uniform1f(this.uniforms.scale, view.scale);
+        this.gl.uniform1f(this.uniforms.rotationSpeed, this.galaxy.rotationSpeed);
+        this.gl.uniform1f(this.uniforms.time, time);
+        this.gl.uniform2f(this.uniforms.translation, view.translation.x, view.translation.y);
+        this.gl.uniform2f(this.uniforms.viewportSize, view.viewportSize.x, view.viewportSize.y);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-        gl.vertexAttribPointer(this.attributes.starParams, 4, gl.FLOAT, false, 7 * 4, 0);
-        gl.vertexAttribPointer(this.attributes.color, 3, gl.FLOAT, false, 7 * 4, 4 * 4);
-        gl.drawArrays(gl.POINTS, 0, this.vertexCount);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
+        this.gl.vertexAttribPointer(this.attributes.starParams, 4, this.gl.FLOAT, false, 7 * 4, 0);
+        this.gl.vertexAttribPointer(this.attributes.color, 3, this.gl.FLOAT, false, 7 * 4, 4 * 4);
+        this.gl.drawArrays(this.gl.POINTS, 0, this.vertexCount);
     }
 
 }
