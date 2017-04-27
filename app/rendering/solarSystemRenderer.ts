@@ -16,8 +16,8 @@ export class SolarSystemRenderer implements Renderer {
 	}
 
 	render(time: number, view: ViewParameters) {
-		this.clearCanvas();
-		this.solarSystem.planets.forEach(planet => this.drawPlanet(planet, time));
+		this.solarSystem.planets.forEach(
+			planet => this.drawPlanet(planet, time));
 	}
 
 	private drawPlanet(planet: Planet, time: number) {
@@ -31,11 +31,5 @@ export class SolarSystemRenderer implements Renderer {
 		this.context.beginPath();
       	this.context.arc(xx, yy, 10, 0, TWO_PI);
       	this.context.fill();
-	}
-
-	private clearCanvas() {
-		const { width, height } = this.context.canvas;
-		this.context.fillStyle = 'rgba(0,0,0,0)';
-		this.context.clearRect(0, 0, width, height);
 	}
 }

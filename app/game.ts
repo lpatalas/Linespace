@@ -94,6 +94,9 @@ export class Game {
 
 	private clearCanvas() {
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+		const { width, height } = this.context2d.canvas;
+		this.context2d.fillStyle = 'rgba(0,0,0,0)';
+		this.context2d.clearRect(0, 0, width, height);
 	};
 
 	private setupViewport() {
