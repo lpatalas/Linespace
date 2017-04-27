@@ -27,18 +27,18 @@ export function createTestSolarSystem(): SolarSystem {
 				initialPosition: 0,
 				orbitalPeriod: 6,
 				semiMajorAxis: 40,
-				semiMinorAxis: 30
+				semiMinorAxis: 35
 			},
 			{
-				argumentOfPeriapsis: Math.PI * 0.25,
+				argumentOfPeriapsis: Math.PI * 0.1,
 				color: { r: 0.3, g: 1, b: 1 },
 				initialPosition: 0,
 				orbitalPeriod: 8,
-				semiMinorAxis: 90,
+				semiMinorAxis: 97,
 				semiMajorAxis: 110
 			},
 			{
-				argumentOfPeriapsis: Math.PI * 0.7,
+				argumentOfPeriapsis: Math.PI * 0.2,
 				color: { r: 0.11, g: 0.5, b: 1 },
 				initialPosition: 0,
 				orbitalPeriod: 10,

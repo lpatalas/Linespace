@@ -17,6 +17,8 @@ export class SolarSystemRenderer implements Renderer {
 
 	render(time: number, view: ViewParameters) {
 		this.solarSystem.planets.forEach(
+			planet => this.drawOrbit(planet));
+		this.solarSystem.planets.forEach(
 			planet => this.drawPlanet(planet, time));
 	}
 
@@ -31,5 +33,12 @@ export class SolarSystemRenderer implements Renderer {
 		this.context.beginPath();
       	this.context.arc(xx, yy, 10, 0, TWO_PI);
       	this.context.fill();
+	}
+
+	private drawOrbit(planet: Planet) {
+		this.context.strokeStyle = 'rgb(64,64,64)';
+		this.context.beginPath();
+		this.context.ellipse(0, 0, planet.semiMajorAxis, planet.semiMinorAxis, planet.argumentOfPeriapsis, 0, TWO_PI);
+		this.context.stroke();
 	}
 }
