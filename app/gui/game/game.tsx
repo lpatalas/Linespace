@@ -4,7 +4,7 @@ import { PopupComponent } from '../popups/popup';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router'
-import { run } from '../../main';
+import { runGame } from '../../main';
 import { SideMenuComponent } from '../menu/sideMenu';
 
 export interface GameProps {
@@ -16,10 +16,16 @@ export interface GameState {
     isSideMenuCollapsed: boolean;
 }
 
+function getCanvas(id: string) {
+	return document.getElementById(id) as HTMLCanvasElement;
+}
+
 // 'GameProps' describes the shape of props.
 // State is never set so we use the 'undefined' type.
 export class GameComponent extends React.Component<GameProps, GameState> {
 
+	private _canvas2d: HTMLCanvasElement;
+	private _canvas3d: HTMLCanvasElement;
     private _popupId: number;
     private _popupX: number;
     private _popupY: number;
@@ -31,10 +37,9 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     }
 
     componentDidMount() {
-        run();
+        runGame(this._canvas2d, this._canvas3d);
 
-        let canvas = document.getElementById('gameCanvas');
-        canvas.addEventListener('celestialBodyEvent', (event: CustomEvent) => {
+        this._canvas2d.addEventListener('celestialBodyEvent', (event: CustomEvent) => {
 
             if (!event.detail)
                 return;
@@ -55,7 +60,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
             this._popupId = event.detail.id;
         });
 
-        canvas.addEventListener('celestialBodyLeaveEvent', (event: Event) => {
+        this._canvas2d.addEventListener('celestialBodyLeaveEvent', (event: Event) => {
             this.closePopup();
         });
 
@@ -69,8 +74,10 @@ export class GameComponent extends React.Component<GameProps, GameState> {
         return (
             <div className="game-ui">
 
-                <canvas id="gameCanvas">
-                </canvas>
+				<div className="canvas-container">
+					<canvas className="game-canvas" ref={elem => this._canvas3d = elem}></canvas>
+					<canvas className="game-canvas" ref={elem => this._canvas2d = elem}></canvas>
+				</div>
 
                 <div id="selectionMarker"></div>
 

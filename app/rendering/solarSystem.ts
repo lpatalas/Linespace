@@ -23,7 +23,7 @@ export function createTestSolarSystem(): SolarSystem {
 		planets: [
 			{
 				argumentOfPeriapsis: 0,
-				color: { r: 1, g: 0, b: 0 },
+				color: { r: 0, g: 0.8, b: 0.2 },
 				initialPosition: 0,
 				orbitalPeriod: 6,
 				semiMajorAxis: 40,
@@ -31,7 +31,7 @@ export function createTestSolarSystem(): SolarSystem {
 			},
 			{
 				argumentOfPeriapsis: Math.PI * 0.25,
-				color: { r: 1, g: 1, b: 0 },
+				color: { r: 0.3, g: 1, b: 1 },
 				initialPosition: 0,
 				orbitalPeriod: 8,
 				semiMinorAxis: 90,
@@ -39,7 +39,7 @@ export function createTestSolarSystem(): SolarSystem {
 			},
 			{
 				argumentOfPeriapsis: Math.PI * 0.7,
-				color: { r: 1, g: 0.5, b: 1 },
+				color: { r: 0.11, g: 0.5, b: 1 },
 				initialPosition: 0,
 				orbitalPeriod: 10,
 				semiMinorAxis: 230,

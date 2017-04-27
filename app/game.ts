@@ -12,16 +12,20 @@ const getWebGLContext = function (canvas: HTMLCanvasElement): WebGLRenderingCont
 };
 
 export class Game {
-	private canvas: HTMLCanvasElement;
+	private canvas2d: HTMLCanvasElement;
+	private canvas3d: HTMLCanvasElement;
 	private activeRenderer: Renderer;
 	private gl: WebGLRenderingContext;
+	private context2d: CanvasRenderingContext2D;
 	private window: Window;
 	private gameTime: number = 0;
 	private lastTime: number;
 
-	constructor(canvas: HTMLCanvasElement, window: Window) {
-		this.canvas = canvas;
-    	this.gl = getWebGLContext(canvas);
+	constructor(canvas2d: HTMLCanvasElement, canvas3d: HTMLCanvasElement, window: Window) {
+		this.canvas2d = canvas2d;
+		this.canvas3d = canvas3d;
+    	this.gl = getWebGLContext(canvas3d);
+		this.context2d = this.canvas2d.getContext('2d');
 		this.window = window;
 	}
 
@@ -52,7 +56,7 @@ export class Game {
 				const view = {
 					scale: 1,
 					translation: vec(0, 0),
-					viewportSize: vec(this.canvas.width, this.canvas.height)
+					viewportSize: vec(this.canvas3d.width, this.canvas3d.height)
 				};
 
 				this.activeRenderer.render(this.gameTime, view);
@@ -67,25 +71,25 @@ export class Game {
 	}
 
 	showSolarSystem(solarSystem: SolarSystem) {
-		this.activeRenderer = new SolarSystemRenderer(this.gl, solarSystem);
+		this.activeRenderer = new SolarSystemRenderer(this.context2d, solarSystem);
 	}
 
 	canvasToWorld(canvasPos: Vec2D): Vec2D {
-        const halfWidth = this.canvas.width / 2;
-        const halfHeight = this.canvas.height / 2;
+        const halfWidth = this.canvas3d.width / 2;
+        const halfHeight = this.canvas3d.height / 2;
 
         return vec(canvasPos.x - halfWidth, -canvasPos.y + halfHeight);
     }
 
     worldToCanvas(worldPos: Vec2D): Vec2D {
-        const halfWidth = this.canvas.width / 2;
-        const halfHeight = this.canvas.height / 2;
+        const halfWidth = this.canvas3d.width / 2;
+        const halfHeight = this.canvas3d.height / 2;
 
         return vec(worldPos.x + halfWidth, -worldPos.y + halfHeight);
     }
 
 	private getCenter(): Vec2D {
-		return { x: this.canvas.width / 2, y: this.canvas.height / 2 };
+		return { x: this.canvas3d.width / 2, y: this.canvas3d.height / 2 };
 	};
 
 	private clearCanvas() {
@@ -93,18 +97,23 @@ export class Game {
 	};
 
 	private setupViewport() {
-		this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+		this.gl.viewport(0, 0, this.canvas3d.width, this.canvas3d.height);
+
+		const { x, y } = this.getCenter();
+		this.context2d.setTransform(1, 0, 0, 1, x, y);
 	};
 
 	private fitCanvasToWindow() {
 		let sizeChanged = false;
 
-		if (this.canvas.width != this.window.innerHeight) {
-			this.canvas.width = this.window.innerWidth;
+		if (this.canvas3d.width != this.window.innerHeight) {
+			this.canvas2d.width = this.window.innerWidth;
+			this.canvas3d.width = this.window.innerWidth;
 			sizeChanged = true;
 		}
-		if (this.canvas.height != this.window.innerHeight) {
-			this.canvas.height = this.window.innerHeight;
+		if (this.canvas3d.height != this.window.innerHeight) {
+			this.canvas2d.height = this.window.innerHeight;
+			this.canvas3d.height = this.window.innerHeight;
 			sizeChanged = true;
 		}
 

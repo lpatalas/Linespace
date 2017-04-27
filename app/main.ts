@@ -17,7 +17,7 @@ const parseStarCountParam = function () {
 
 const starCountParam = parseStarCountParam();
 
-function runGame(canvas: HTMLCanvasElement) {
+export function runGame(canvas2d: HTMLCanvasElement, canvas3d: HTMLCanvasElement) {
 
     const hookMouseEvents = function (game: Game, galaxy: Galaxy) {
         const body = document.getElementsByTagName('body')[0];
@@ -25,19 +25,19 @@ function runGame(canvas: HTMLCanvasElement) {
         let mousePressed = false;
         let initialPosition: Vec2D;
 
-        canvas.addEventListener('mousedown', (event: MouseEvent) => {
+        canvas3d.addEventListener('mousedown', (event: MouseEvent) => {
             if (event.button == 0) {
                 mousePressed = true;
             }
         });
 
-        canvas.addEventListener('mouseup', (event: MouseEvent) => {
+        canvas3d.addEventListener('mouseup', (event: MouseEvent) => {
             if (event.button == 0) {
                 mousePressed = false;
             }
         });
 
-        canvas.addEventListener('mousemove', (event: MouseEvent) => {
+        canvas3d.addEventListener('mousemove', (event: MouseEvent) => {
             // const markerElem = document.getElementById('selectionMarker');
             const clickPos = game.canvasToWorld(vec(event.offsetX, event.offsetY));
             const nearestStarPos = galaxy.getNearestStarPosition(clickPos, game.getGameTime(), 10);
@@ -53,18 +53,18 @@ function runGame(canvas: HTMLCanvasElement) {
 
                 let ce: CustomEvent = new CustomEvent('celestialBodyEvent');
                 ce.initCustomEvent('celestialBodyEvent', true, true, { event: event, id: celestialBodyId });
-                canvas.dispatchEvent(ce);
+                canvas3d.dispatchEvent(ce);
             }
             else {
                 // markerElem.style.display = 'none';
 
                 let ce: CustomEvent = new CustomEvent('celestialBodyLeaveEvent');
                 ce.initCustomEvent('celestialBodyLeaveEvent', true, true, { event: event, id: -1 });
-                canvas.dispatchEvent(ce);
+                canvas3d.dispatchEvent(ce);
             }
         });
 
-        canvas.addEventListener('click', (event: MouseEvent) => {
+        canvas3d.addEventListener('click', (event: MouseEvent) => {
             //console.log(`x: ${event.x} y: ${event.y}`);
             if (event.button == 0 && event.altKey) {
                 // Gui.popup(event);
@@ -73,11 +73,11 @@ function runGame(canvas: HTMLCanvasElement) {
 
     };
 
-	const game = new Game(canvas, window);
+	const game = new Game(canvas2d, canvas3d, window);
 
     const galaxy = new Galaxy({
         center: vec(0, 0),
-        rotationSpeed: 0.01,
+        rotationSpeed: 0.03,
         size: 400,
         sizeRatio: 0.875,
         starCount: starCountParam
@@ -104,9 +104,5 @@ function runGame(canvas: HTMLCanvasElement) {
 
     hookMouseEvents(game, galaxy);
     runMainLoop();
-}
 
-export function run(): void {
-    const canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
-    runGame(canvas);
 }
