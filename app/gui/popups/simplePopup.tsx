@@ -14,10 +14,20 @@ export class SimplePopupComponent extends React.Component<SimplePopupProps, Simp
         this.state = { popupPosition: null };
     }
 
+    componentDidMount() {
+        if (!this.props.isDialog) {
+            const canvas = document.getElementById('gameCanvas');
+            canvas.addEventListener('mousemove', (event: MouseEvent) => {
+                Object.assign({}, this.state, { popupPosition: { top: event.movementY, left: event.movementX, position: 'absolute' } })
+            });
+        }
+    }
+
     close = () => {
         console.log('... closing popup ...');
         this.props.closePopup();
     }
+
     render() {
 
         let popupBody = this.props.body ? this.props.body : this.props.children;
@@ -37,7 +47,12 @@ export class SimplePopupComponent extends React.Component<SimplePopupProps, Simp
                     <div className="horizontal-line__block extend-horizontal">
                         <p className="horizontal-line__block__caption" title={this.props.header}>{this.props.header}</p>
                         <span className="horizontal-line"></span>
-                        <a onClick={this.close}><span className="close-button fa fa-times fa-lg"></span></a>
+                        {this.props.isDialog ?
+                            <a onClick={this.close}><span className="close-button fa fa-times fa-lg"></span></a>
+                            :
+                            null
+                        }
+
                     </div>
                 </div>
 
