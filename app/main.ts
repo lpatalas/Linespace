@@ -1,4 +1,5 @@
-﻿import { Galaxy } from './rendering/galaxy';
+﻿import { EventManager } from './shared/eventManager';
+import { Galaxy } from './rendering/galaxy';
 import { GalaxyRenderer } from './rendering/galaxyRenderer';
 import { Vec2D, vec, vcopy, vsub } from './common/vec2D';
 import { Game } from './game'
@@ -19,6 +20,8 @@ const starCountParam = parseStarCountParam();
 
 export function runGame(canvas2d: HTMLCanvasElement, canvas3d: HTMLCanvasElement) {
 
+    const eventHandle = EventManager.GetGameEventHandle();
+
     const hookMouseEvents = function (game: Game, galaxy: Galaxy) {
         const body = document.getElementsByTagName('body')[0];
         let initialMousePos: Vec2D = null;
@@ -37,7 +40,7 @@ export function runGame(canvas2d: HTMLCanvasElement, canvas3d: HTMLCanvasElement
             }
         });
 
-        canvas3d.addEventListener('mousemove', (event: MouseEvent) => {
+        eventHandle.addEventListener('mousemove', (event: MouseEvent) => {
             // const markerElem = document.getElementById('selectionMarker');
             const clickPos = game.canvasToWorld(vec(event.offsetX, event.offsetY));
             const nearestStarPos = galaxy.getNearestStarPosition(clickPos, game.getGameTime(), 10);
@@ -53,14 +56,15 @@ export function runGame(canvas2d: HTMLCanvasElement, canvas3d: HTMLCanvasElement
 
                 let ce: CustomEvent = new CustomEvent('celestialBodyEvent');
                 ce.initCustomEvent('celestialBodyEvent', true, true, { event: event, id: celestialBodyId });
-                canvas3d.dispatchEvent(ce);
+
+                eventHandle.dispatchEvent(ce);
             }
             else {
                 // markerElem.style.display = 'none';
 
                 let ce: CustomEvent = new CustomEvent('celestialBodyLeaveEvent');
                 ce.initCustomEvent('celestialBodyLeaveEvent', true, true, { event: event, id: -1 });
-                canvas3d.dispatchEvent(ce);
+                eventHandle.dispatchEvent(ce);
             }
         });
 

@@ -1,3 +1,4 @@
+import { EventManager } from '../../shared/eventManager';
 import * as React from 'react';
 import { CSSProperties } from "react";
 
@@ -7,18 +8,34 @@ export interface SimplePopupState { popupPosition: any }
 export class SimplePopupComponent extends React.Component<SimplePopupProps, SimplePopupState> {
 
     // private popupPosition = (this.props) ? { top: this.props.y, left: this.props.x, position: 'absolute' } : null;
+    private _windowHeight: number;
+    private _windowWidth: number;
 
     constructor() {
         super();
+
+        this._windowHeight = 300;
+        this._windowWidth = 300;
 
         this.state = { popupPosition: null };
     }
 
     componentDidMount() {
         if (!this.props.isDialog) {
-            const canvas = document.getElementById('gameCanvas');
-            canvas.addEventListener('mousemove', (event: MouseEvent) => {
-                Object.assign({}, this.state, { popupPosition: { top: event.movementY, left: event.movementX, position: 'absolute' } })
+            const eventHandle = EventManager.GetGameEventHandle();
+            eventHandle.addEventListener('mousemove', (event: MouseEvent) => {
+                let topX  = event.movementX;
+                let topY = event.movementY;
+
+                // if(topX + this._windowWidth > window.screen.availWidth){
+                //     topX = window.screen.availWidth - this._windowWidth - 10;
+                // }
+
+                // if(topY + this._windowHeight > window.screen.availHeight){
+                //     topX = window.screen.availHeight - this._windowHeight - 10;
+                // }
+
+                Object.assign({}, this.state, { popupPosition: { top: topY, left: topX, position: 'absolute' } })
             });
         }
     }

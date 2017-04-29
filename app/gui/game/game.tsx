@@ -1,3 +1,4 @@
+import { EventManager } from '../../shared/eventManager';
 import { SimplePopupComponent } from '../popups/simplePopup';
 import { RegisterComponent } from './register';
 import { PopupComponent } from '../popups/popup';
@@ -17,15 +18,15 @@ export interface GameState {
 }
 
 function getCanvas(id: string) {
-	return document.getElementById(id) as HTMLCanvasElement;
+    return document.getElementById(id) as HTMLCanvasElement;
 }
 
 // 'GameProps' describes the shape of props.
 // State is never set so we use the 'undefined' type.
 export class GameComponent extends React.Component<GameProps, GameState> {
 
-	private _canvas2d: HTMLCanvasElement;
-	private _canvas3d: HTMLCanvasElement;
+    private _canvas2d: HTMLCanvasElement;
+    private _canvas3d: HTMLCanvasElement;
     private _popupId: number;
     private _popupX: number;
     private _popupY: number;
@@ -39,7 +40,9 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     componentDidMount() {
         runGame(this._canvas2d, this._canvas3d);
 
-        this._canvas2d.addEventListener('celestialBodyEvent', (event: CustomEvent) => {
+        let eventHandle = EventManager.GetGameEventHandle();
+
+        eventHandle.addEventListener('celestialBodyEvent', (event: CustomEvent) => {
 
             if (!event.detail)
                 return;
@@ -47,10 +50,10 @@ export class GameComponent extends React.Component<GameProps, GameState> {
             this._popupX = event.detail.event.x + 10;
             this._popupY = event.detail.event.y + 20;
 
-            if(event.detail.id == this._popupId)
+            if (event.detail.id == this._popupId)
                 return;
 
-            if (event.detail.id <=0 ) {
+            if (event.detail.id <= 0) {
                 this._popupId = event.detail.id;
             }
 
@@ -60,7 +63,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
             this._popupId = event.detail.id;
         });
 
-        this._canvas2d.addEventListener('celestialBodyLeaveEvent', (event: Event) => {
+        eventHandle.addEventListener('celestialBodyLeaveEvent', (event: Event) => {
             this.closePopup();
         });
 
@@ -72,41 +75,46 @@ export class GameComponent extends React.Component<GameProps, GameState> {
 
     render() {
         return (
-            <div className="game-ui">
+            <div>
 
-				<div className="canvas-container">
-					<canvas className="game-canvas" ref={elem => this._canvas3d = elem}></canvas>
-					<canvas className="game-canvas" ref={elem => this._canvas2d = elem}></canvas>
-				</div>
+                <div id="game-event-handle"></div>
 
-                <div id="selectionMarker"></div>
+                <div className="game-ui">
 
-                <div className="galactic-zoom">
-                    <div>
-                        <h2>Galactic zoom</h2>
+                    <div className="canvas-container">
+                        <canvas className="game-canvas" ref={elem => this._canvas3d = elem}></canvas>
+                        <canvas className="game-canvas" ref={elem => this._canvas2d = elem}></canvas>
                     </div>
-                    <div className="zoom-body">
-                        <a onClick={() => this.changeZoom(1)}>- 1 -</a>
-                        <a onClick={() => this.changeZoom(2)}>- 2 -</a>
-                        <a onClick={() => this.changeZoom(3)}>- 3 -</a>
+
+                    <div id="selectionMarker"></div>
+
+                    <div className="galactic-zoom">
+                        <div>
+                            <h2>Galactic zoom</h2>
+                        </div>
+                        <div className="zoom-body">
+                            <a onClick={() => this.changeZoom(1)}>- 1 -</a>
+                            <a onClick={() => this.changeZoom(2)}>- 2 -</a>
+                            <a onClick={() => this.changeZoom(3)}>- 3 -</a>
+                        </div>
                     </div>
+
+                    <div className="main-menu">
+                        <div className="menu-item">
+                            <a></a>
+                        </div>
+                    </div>
+
+                    <SideMenuComponent executeAction={this.openDialog} />
+
+                    {
+                        (this.state.isPopupVisible && !this.state.isMenuDialogVisible) && <SimplePopupComponent header={"celestial body id: " + this._popupId} body="popup body" closePopup={this.closePopup} isDialog={false} x={this._popupX} y={this._popupY} />
+                    }
+
+                    {
+                        this.state.isMenuDialogVisible && <SimplePopupComponent header="menu" children={this.props.children} closePopup={this.closeDialog} isDialog={true} />
+                    }
                 </div>
-
-                <div className="main-menu">
-                    <div className="menu-item">
-                        <a></a>
-                    </div>
-                </div>
-
-                <SideMenuComponent executeAction={this.openDialog} />
-
-                {
-                    (this.state.isPopupVisible && !this.state.isMenuDialogVisible ) && <SimplePopupComponent header={"celestial body id: " + this._popupId} body="popup body" closePopup={this.closePopup} isDialog={false} x={this._popupX} y={this._popupY} />
-                }
-
-                {
-                    this.state.isMenuDialogVisible && <SimplePopupComponent header="menu" children={this.props.children} closePopup={this.closeDialog} isDialog={true} />
-                }
             </div>
         );
     }

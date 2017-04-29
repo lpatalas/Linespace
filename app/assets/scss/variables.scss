@@ -17,3 +17,9 @@ $elem-accent: rgba(62, 119, 153, .9);
 // aside menu
 $aside-menu-width: 6vh;
 $aside-menu-extended-width: 14vh;
+
+// z-index levels
+$z-base: 0;
+$z-canvas: 100;
+$z-canvas-overlayer: 1000;
+$z-ui: 2000;

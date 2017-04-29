@@ -26,6 +26,7 @@ body {
     position: fixed;
     left: 300px;
     top: 70px;
+    pointer-events: all;
     &.single-popup-container__dialog {
         top: calc(100% - 70vh);
         left: 50%;
