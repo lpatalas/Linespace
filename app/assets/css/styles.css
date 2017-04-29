@@ -266,13 +266,15 @@ body {
     from { transform: scale(0); }
     to { transform: scale(1); }
 } */
-#gameCanvas {
-  position: fixed;
+.canvas-container {
   left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0; }
+  position: absolute;
+  top: 0; }
+
+.game-canvas {
+  left: 0;
+  position: absolute;
+  top: 0; }
 
 /* html elements */
 body {

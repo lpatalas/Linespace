@@ -15,7 +15,6 @@ nbproject/
 Scripts/generated/**
 build/Output/**
 .idea/
-Scripts/
 typings/
 *.css
 .vscode/

@@ -1,7 +1,5 @@
 ﻿import * as React from 'react';
 import { browserHistory } from 'react-router'
-import { run } from '../../main';
-
 
 export class Resource { name: string; amount: number; volume: string }
 
