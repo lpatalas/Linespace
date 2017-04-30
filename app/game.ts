@@ -40,7 +40,7 @@ export class Game {
         mainLoopStep();
 	}
 
-	private getGameTime() {
+	getGameTime() {
 		return this.gameTime;
 	}
 

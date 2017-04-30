@@ -7,7 +7,7 @@ import * as ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router'
 import { SideMenuComponent } from '../menu/sideMenu';
 import { Game } from "../../game";
-import { vec } from "../../common/vec2D";
+import { vec, Vec2D } from "../../common/vec2D";
 import { Galaxy } from "../../rendering/galaxy";
 import { createRandomSolarSystem } from "../../rendering/solarSystem";
 
@@ -34,6 +34,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     private popupX: number;
     private popupY: number;
 	private game: Game;
+	private galaxy: Galaxy;
 
     constructor() {
         super();
@@ -53,6 +54,57 @@ export class GameComponent extends React.Component<GameProps, GameState> {
 		}
 
         let eventHandle = EventManager.GetGameEventHandle();
+		const body = document.getElementsByTagName('body')[0];
+		let initialMousePos: Vec2D = null;
+		let mousePressed = false;
+		let initialPosition: Vec2D;
+
+		this.canvas3d.addEventListener('mousedown', (event: MouseEvent) => {
+			if (event.button == 0) {
+				mousePressed = true;
+			}
+		});
+
+		this.canvas3d.addEventListener('mouseup', (event: MouseEvent) => {
+			if (event.button == 0) {
+				mousePressed = false;
+			}
+		});
+
+		eventHandle.addEventListener('mousemove', (event: MouseEvent) => {
+			// const markerElem = document.getElementById('selectionMarker');
+			const clickPos = this.game.canvasToWorld(vec(event.offsetX, event.offsetY));
+			const nearestStarPos = this.galaxy.getNearestStarPosition(clickPos, this.game.getGameTime(), 10);
+			//console.log(`nearestStarPos = ${JSON.stringify(nearestStarPos)}`)
+
+			if (nearestStarPos) {
+				const celestialBodyId = nearestStarPos.x ^ nearestStarPos.y;
+				const markerPos = this.game.worldToCanvas(nearestStarPos);
+				//console.log(`markerPos = ${JSON.stringify(markerPos)}`);
+				// markerElem.style.left = `${markerPos.x}px`;
+				// markerElem.style.top = `${markerPos.y}px`;
+				// markerElem.style.display = 'block';
+
+				let ce: CustomEvent = new CustomEvent('celestialBodyEvent');
+				ce.initCustomEvent('celestialBodyEvent', true, true, { event: event, id: celestialBodyId });
+
+				eventHandle.dispatchEvent(ce);
+			}
+			else {
+				// markerElem.style.display = 'none';
+
+				let ce: CustomEvent = new CustomEvent('celestialBodyLeaveEvent');
+				ce.initCustomEvent('celestialBodyLeaveEvent', true, true, { event: event, id: -1 });
+				eventHandle.dispatchEvent(ce);
+			}
+		});
+
+		this.canvas3d.addEventListener('click', (event: MouseEvent) => {
+			//console.log(`x: ${event.x} y: ${event.y}`);
+			if (event.button == 0 && event.altKey) {
+				// Gui.popup(event);
+			}
+		});
 
         eventHandle.addEventListener('celestialBodyEvent', (event: CustomEvent) => {
 
@@ -127,17 +179,18 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     }
 
 	private showGalaxy = () => {
-		const galaxy = new Galaxy({
+		this.galaxy = new Galaxy({
 			center: vec(0, 0),
 			rotationSpeed: 0.03,
 			size: 400,
 			sizeRatio: 0.875,
 			starCount: 10000
 		});
-		this.game.showGalaxy(galaxy);
+		this.game.showGalaxy(this.galaxy);
 	}
 
 	private showSolarSystem = () => {
+		this.galaxy = null;
 		const solarSystem = createRandomSolarSystem();
 		this.game.showSolarSystem(solarSystem);
 	}
