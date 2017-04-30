@@ -5,8 +5,11 @@ import { PopupComponent } from '../popups/popup';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router'
-import { runGame } from '../../main';
 import { SideMenuComponent } from '../menu/sideMenu';
+import { Game } from "../../game";
+import { vec } from "../../common/vec2D";
+import { Galaxy } from "../../rendering/galaxy";
+import { createRandomSolarSystem } from "../../rendering/solarSystem";
 
 export interface GameProps {
 }
@@ -30,6 +33,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     private _popupId: number;
     private _popupX: number;
     private _popupY: number;
+	private _game: Game;
 
     constructor() {
         super();
@@ -38,7 +42,15 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     }
 
     componentDidMount() {
-        runGame(this._canvas2d, this._canvas3d);
+		this._game = new Game(this._canvas2d, this._canvas3d, window);
+		this._game.run();
+
+		if (window.location.search.indexOf('mode=ss') >= 0) {
+			this.showSolarSystem();
+		}
+		else {
+			this.showGalaxy();
+		}
 
         let eventHandle = EventManager.GetGameEventHandle();
 
@@ -69,10 +81,6 @@ export class GameComponent extends React.Component<GameProps, GameState> {
 
     }
 
-    changeZoom(zoom: number) {
-        console.log(`... Zoom changed to: ${zoom} ...`);
-    }
-
     render() {
         return (
             <div>
@@ -93,9 +101,8 @@ export class GameComponent extends React.Component<GameProps, GameState> {
                             <h2>Galactic zoom</h2>
                         </div>
                         <div className="zoom-body">
-                            <a onClick={() => this.changeZoom(1)}>- 1 -</a>
-                            <a onClick={() => this.changeZoom(2)}>- 2 -</a>
-                            <a onClick={() => this.changeZoom(3)}>- 3 -</a>
+                            <a onClick={this.showGalaxy}>Galaxy</a>
+                            <a onClick={this.showSolarSystem}>Solar System</a>
                         </div>
                     </div>
 
@@ -118,6 +125,22 @@ export class GameComponent extends React.Component<GameProps, GameState> {
             </div>
         );
     }
+
+	private showGalaxy = () => {
+		const galaxy = new Galaxy({
+			center: vec(0, 0),
+			rotationSpeed: 0.03,
+			size: 400,
+			sizeRatio: 0.875,
+			starCount: 10000
+		});
+		this._game.showGalaxy(galaxy);
+	}
+
+	private showSolarSystem = () => {
+		const solarSystem = createRandomSolarSystem();
+		this._game.showSolarSystem(solarSystem);
+	}
 
     private toggleSideMenu = () => {
         const newState = Object.assign({}, this.state, { isSideMenuCollapsed: !this.state.isSideMenuCollapsed });

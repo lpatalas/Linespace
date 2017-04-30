@@ -26,8 +26,8 @@ export class SolarSystemRenderer implements Renderer {
 		const p = planet.initialPosition + (time / planet.orbitalPeriod) * TWO_PI;
 		const x = Math.sin(p) * planet.semiMajorAxis;
 		const y = Math.cos(p) * planet.semiMinorAxis;
-		const xx = x * Math.cos(planet.argumentOfPeriapsis) - y * Math.sin(planet.argumentOfPeriapsis);
-		const yy = x * Math.sin(planet.argumentOfPeriapsis) + y * Math.cos(planet.argumentOfPeriapsis);
+		const xx = x * Math.cos(planet.orbitRotation) - y * Math.sin(planet.orbitRotation);
+		const yy = x * Math.sin(planet.orbitRotation) + y * Math.cos(planet.orbitRotation);
 
 		this.context.fillStyle = rgbToHex(planet.color);
 		this.context.beginPath();
@@ -38,7 +38,7 @@ export class SolarSystemRenderer implements Renderer {
 	private drawOrbit(planet: Planet) {
 		this.context.strokeStyle = 'rgb(64,64,64)';
 		this.context.beginPath();
-		this.context.ellipse(0, 0, planet.semiMajorAxis, planet.semiMinorAxis, planet.argumentOfPeriapsis, 0, TWO_PI);
+		this.context.ellipse(0, 0, planet.semiMajorAxis, planet.semiMinorAxis, planet.orbitRotation, 0, TWO_PI);
 		this.context.stroke();
 	}
 }

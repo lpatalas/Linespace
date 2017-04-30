@@ -29,11 +29,22 @@ export class Game {
 		this.window = window;
 	}
 
-	getGameTime() {
+	run() {
+        this.setup();
+
+        const mainLoopStep = () => {
+			this.update();
+            requestAnimationFrame(mainLoopStep);
+        };
+
+        mainLoopStep();
+	}
+
+	private getGameTime() {
 		return this.gameTime;
 	}
 
-	setup() {
+	private setup() {
 		this.gl.clearColor(0.0, 0.0, 0, 0);
 		this.gl.disable(this.gl.DEPTH_TEST);
 
@@ -43,7 +54,7 @@ export class Game {
 		this.setupViewport();
 	};
 
-	update() {
+	private update() {
 		this.fitCanvasToWindow();
 		this.clearCanvas();
 

@@ -21,6 +21,6 @@ export class RandomNumberGenerator {
     }
 
     intRange(min: number, max: number): number {
-        return min + (this.rng.int32() % (max - min));
+        return min + Math.abs(this.rng.int32() % (max - min));
     }
 }
