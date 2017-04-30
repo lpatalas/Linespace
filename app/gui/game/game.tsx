@@ -28,12 +28,12 @@ function getCanvas(id: string) {
 // State is never set so we use the 'undefined' type.
 export class GameComponent extends React.Component<GameProps, GameState> {
 
-    private _canvas2d: HTMLCanvasElement;
-    private _canvas3d: HTMLCanvasElement;
-    private _popupId: number;
-    private _popupX: number;
-    private _popupY: number;
-	private _game: Game;
+    private canvas2d: HTMLCanvasElement;
+    private canvas3d: HTMLCanvasElement;
+    private popupId: number;
+    private popupX: number;
+    private popupY: number;
+	private game: Game;
 
     constructor() {
         super();
@@ -42,8 +42,8 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     }
 
     componentDidMount() {
-		this._game = new Game(this._canvas2d, this._canvas3d, window);
-		this._game.run();
+		this.game = new Game(this.canvas2d, this.canvas3d, window);
+		this.game.run();
 
 		if (window.location.search.indexOf('mode=ss') >= 0) {
 			this.showSolarSystem();
@@ -59,20 +59,20 @@ export class GameComponent extends React.Component<GameProps, GameState> {
             if (!event.detail)
                 return;
 
-            this._popupX = event.detail.event.x + 10;
-            this._popupY = event.detail.event.y + 20;
+            this.popupX = event.detail.event.x + 10;
+            this.popupY = event.detail.event.y + 20;
 
-            if (event.detail.id == this._popupId)
+            if (event.detail.id == this.popupId)
                 return;
 
             if (event.detail.id <= 0) {
-                this._popupId = event.detail.id;
+                this.popupId = event.detail.id;
             }
 
             this.closePopup();
             this.openPopup();
 
-            this._popupId = event.detail.id;
+            this.popupId = event.detail.id;
         });
 
         eventHandle.addEventListener('celestialBodyLeaveEvent', (event: Event) => {
@@ -90,8 +90,8 @@ export class GameComponent extends React.Component<GameProps, GameState> {
                 <div className="game-ui">
 
                     <div className="canvas-container">
-                        <canvas className="game-canvas" ref={elem => this._canvas3d = elem}></canvas>
-                        <canvas className="game-canvas" ref={elem => this._canvas2d = elem}></canvas>
+                        <canvas className="game-canvas" ref={elem => this.canvas3d = elem}></canvas>
+                        <canvas className="game-canvas" ref={elem => this.canvas2d = elem}></canvas>
                     </div>
 
                     <div id="selectionMarker"></div>
@@ -115,7 +115,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
                     <SideMenuComponent executeAction={this.openDialog} />
 
                     {
-                        (this.state.isPopupVisible && !this.state.isMenuDialogVisible) && <SimplePopupComponent header={"celestial body id: " + this._popupId} body="popup body" closePopup={this.closePopup} isDialog={false} x={this._popupX} y={this._popupY} />
+                        (this.state.isPopupVisible && !this.state.isMenuDialogVisible) && <SimplePopupComponent header={"celestial body id: " + this.popupId} body="popup body" closePopup={this.closePopup} isDialog={false} x={this.popupX} y={this.popupY} />
                     }
 
                     {
@@ -134,12 +134,12 @@ export class GameComponent extends React.Component<GameProps, GameState> {
 			sizeRatio: 0.875,
 			starCount: 10000
 		});
-		this._game.showGalaxy(galaxy);
+		this.game.showGalaxy(galaxy);
 	}
 
 	private showSolarSystem = () => {
 		const solarSystem = createRandomSolarSystem();
-		this._game.showSolarSystem(solarSystem);
+		this.game.showSolarSystem(solarSystem);
 	}
 
     private toggleSideMenu = () => {
