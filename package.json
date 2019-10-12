@@ -1,17 +1,17 @@
 {
-  "name": "linespace",
-  "version": "0.1.0",
-  "description": "Linespace game",
-  "main": "index.js",
-  "author": "Linespace Team",
-  "license": "UNLICENSED",
-  "private": true,
-  "homepage": "https://bitbucket.org/lpatalas/linespace#readme",
-  "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch"
-  },
-  "devDependencies": {
-    "typescript": "3.6.3"
-  }
+    "name": "linespace",
+    "version": "0.1.0",
+    "description": "Linespace game",
+    "main": "index.js",
+    "author": "Linespace Team",
+    "license": "UNLICENSED",
+    "private": true,
+    "homepage": "https://bitbucket.org/lpatalas/linespace#readme",
+    "scripts": {
+        "build": "tsc",
+        "build:watch": "tsc --watch"
+    },
+    "devDependencies": {
+        "typescript": "3.6.3"
+    }
 }

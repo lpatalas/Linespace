@@ -1,8 +1,10 @@
 {
-	"compileOnSave": true,
-	"include": [ "src" ],
+    "compileOnSave": true,
+    "include": [
+        "src"
+    ],
     "compilerOptions": {
-		"outFile": "bin/app.js",
+        "outFile": "bin/app.js",
         "strict": true,
         "target": "es6"
     }

@@ -30,5 +30,5 @@ function vsqrt(v: Vec2D): Vec2D {
 function vdist(a: Vec2D, b: Vec2D): number {
     const dx = a.x - b.x;
     const dy = a.y - b.y;
-    return Math.sqrt(dx*dx + dy*dy);
+    return Math.sqrt(dx * dx + dy * dy);
 }

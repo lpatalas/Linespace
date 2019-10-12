@@ -7,5 +7,5 @@ interface ViewParameters {
 }
 
 interface Renderer {
-	render(time: number, view: ViewParameters): void;
+    render(time: number, view: ViewParameters): void;
 }

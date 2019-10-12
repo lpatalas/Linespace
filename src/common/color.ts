@@ -4,7 +4,7 @@
     b: number;
 }
 
-const clamp = function(x: number, min: number, max: number) {
+const clamp = function (x: number, min: number, max: number) {
     return Math.min(max, Math.max(x, min));
 };
 

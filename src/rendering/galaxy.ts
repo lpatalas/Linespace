@@ -18,11 +18,11 @@ interface StarDefinition {
     color: Rgb;
 }
 
-const lerp = function(a: number, b: number, t: number) {
+const lerp = function (a: number, b: number, t: number) {
     return a + (b - a) * t;
 };
 
-const calculateStarColor = function(rng: RandomNumberGenerator, distance: number): Rgb {
+const calculateStarColor = function (rng: RandomNumberGenerator, distance: number): Rgb {
     const x = Math.pow(rng.float(), 5);
     const y = Math.pow(rng.float(), 8);
     const df = Math.pow(1 - distance, 1.1);
@@ -34,10 +34,10 @@ const calculateStarColor = function(rng: RandomNumberGenerator, distance: number
     return { r, g, b };
 };
 
-const generateStars = function(params: GalaxyParameters): StarDefinition[] {
+const generateStars = function (params: GalaxyParameters): StarDefinition[] {
     const rng = new RandomNumberGenerator(JSON.stringify(params));
 
-	const TWO_PI = Math.PI * 2;
+    const TWO_PI = Math.PI * 2;
     const angleDelta = TWO_PI / params.starCount;
     const SIZE_MIN = 1;
     const sizeDelta = (params.size - SIZE_MIN) / params.starCount;

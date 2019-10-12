@@ -62,7 +62,7 @@ interface Uniforms {
 }
 
 class GalaxyRenderer implements Renderer {
-	private gl: WebGLRenderingContext;
+    private gl: WebGLRenderingContext;
     private galaxy: Galaxy;
     private program: WebGLProgram;
     private vertexBuffer: WebGLBuffer;
@@ -71,7 +71,7 @@ class GalaxyRenderer implements Renderer {
     private uniforms: Uniforms;
 
     constructor(gl: WebGLRenderingContext, galaxy: Galaxy) {
-		this.gl = gl;
+        this.gl = gl;
         this.galaxy = galaxy;
 
         this.program = GLUtils.createProgram(gl, vertexShaderSource, fragmentShaderSource);
