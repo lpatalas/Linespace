@@ -22,8 +22,6 @@ class Game {
 	private activeRenderer: Renderer;
 	private gl: WebGLRenderingContext;
 	private window: Window;
-	private gameTime: number = 0;
-	private lastTime: number = 0;
 
 	constructor(canvas: HTMLCanvasElement, window: Window, galaxy: Galaxy) {
 		this.canvas3d = canvas;
@@ -43,10 +41,6 @@ class Game {
         mainLoopStep();
 	}
 
-	getGameTime() {
-		return this.gameTime;
-	}
-
 	private setup() {
 		this.gl.clearColor(0.0, 0.0, 0, 0);
 		this.gl.disable(this.gl.DEPTH_TEST);
@@ -61,23 +55,14 @@ class Game {
 		this.fitCanvasToWindow();
 		this.clearCanvas();
 
-		const currentTime = new Date().getTime() / 1000;
-		if (this.lastTime) {
-			const deltaTime = currentTime - this.lastTime;
-			this.gameTime += deltaTime;
+		const currentTime = performance.now() / 1000.0;
+		const view = {
+			scale: 1,
+			translation: vec(0, 0),
+			viewportSize: vec(this.canvas3d.width, this.canvas3d.height)
+		};
 
-			if (this.activeRenderer) {
-				const view = {
-					scale: 1,
-					translation: vec(0, 0),
-					viewportSize: vec(this.canvas3d.width, this.canvas3d.height)
-				};
-
-				this.activeRenderer.render(this.gameTime, view);
-			}
-		}
-
-		this.lastTime = currentTime;
+		this.activeRenderer.render(currentTime, view);
 	}
 
 	canvasToWorld(canvasPos: Vec2D): Vec2D {

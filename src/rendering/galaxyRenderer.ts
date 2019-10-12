@@ -9,7 +9,6 @@ precision mediump float;
 uniform float scale;
 uniform float rotationSpeed;
 uniform float time;
-uniform vec2 translation;
 uniform vec2 viewportSize;
 
 attribute vec4 starParams;
@@ -30,7 +29,7 @@ void main() {
     float xx = x * cos(orbitRotation) - y * sin(orbitRotation);
     float yy = x * sin(orbitRotation) + y * cos(orbitRotation);
 
-    vec2 vpos = vec2(xx, yy) + translation;
+    vec2 vpos = vec2(xx, yy);
     vec2 screenPos = vpos / (viewportSize * 0.5);
 
     gl_Position = vec4(screenPos.x, screenPos.y, 0, 1);
@@ -59,7 +58,6 @@ interface Uniforms {
     scale: WebGLUniformLocation,
     rotationSpeed: WebGLUniformLocation;
     time: WebGLUniformLocation;
-    translation: WebGLUniformLocation;
     viewportSize: WebGLUniformLocation;
 }
 
@@ -91,7 +89,6 @@ class GalaxyRenderer implements Renderer {
             scale: gl.getUniformLocation(this.program, 'scale')!,
             rotationSpeed: gl.getUniformLocation(this.program, 'rotationSpeed')!,
             time: gl.getUniformLocation(this.program, 'time')!,
-            translation: gl.getUniformLocation(this.program, 'translation')!,
             viewportSize: gl.getUniformLocation(this.program, 'viewportSize')!
         };
 
@@ -118,7 +115,6 @@ class GalaxyRenderer implements Renderer {
         this.gl.uniform1f(this.uniforms.scale, view.scale);
         this.gl.uniform1f(this.uniforms.rotationSpeed, this.galaxy.rotationSpeed);
         this.gl.uniform1f(this.uniforms.time, time);
-        this.gl.uniform2f(this.uniforms.translation, view.translation.x, view.translation.y);
         this.gl.uniform2f(this.uniforms.viewportSize, view.viewportSize.x, view.viewportSize.y);
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
