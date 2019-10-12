@@ -1,6 +1,0 @@
-﻿# Copy to deploy.ini.user and fill correct values
-contentPath = websitename
-ComputerName = https://waws-prod-XXX-XXX.publish.azurewebsites.windows.net/MsDeploy.axd?site=websitename
-UserName = user
-Password = passw0rd
-AuthType = Basic
