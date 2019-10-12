@@ -25,9 +25,9 @@ class Game {
 	private gameTime: number = 0;
 	private lastTime: number = 0;
 
-	constructor(canvas2d: HTMLCanvasElement, canvas3d: HTMLCanvasElement, window: Window, galaxy: Galaxy) {
-		this.canvas3d = canvas3d;
-    	this.gl = getWebGLContext(canvas3d);
+	constructor(canvas: HTMLCanvasElement, window: Window, galaxy: Galaxy) {
+		this.canvas3d = canvas;
+    	this.gl = getWebGLContext(canvas);
 		this.activeRenderer = new GalaxyRenderer(this.gl, galaxy);
 		this.window = window;
 	}
@@ -80,10 +80,6 @@ class Game {
 		this.lastTime = currentTime;
 	}
 
-	showGalaxy(galaxy: Galaxy) {
-		this.activeRenderer = new GalaxyRenderer(this.gl, galaxy);
-	}
-
 	canvasToWorld(canvasPos: Vec2D): Vec2D {
         const halfWidth = this.canvas3d.width / 2;
         const halfHeight = this.canvas3d.height / 2;
@@ -97,10 +93,6 @@ class Game {
 
         return vec(worldPos.x + halfWidth, -worldPos.y + halfHeight);
     }
-
-	private getCenter(): Vec2D {
-		return { x: this.canvas3d.width / 2, y: this.canvas3d.height / 2 };
-	};
 
 	private clearCanvas() {
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT);

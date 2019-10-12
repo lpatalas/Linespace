@@ -5,10 +5,10 @@ class RandomNumberGenerator {
 
     constructor(seed?: any) {
         if (seed != null) {
-            this.rng = seedrandom(JSON.stringify(seed));
+            this.rng = new Math.seedrandom(JSON.stringify(seed));
         }
         else {
-            this.rng = seedrandom();
+            this.rng = new Math.seedrandom();
         }
     }
 

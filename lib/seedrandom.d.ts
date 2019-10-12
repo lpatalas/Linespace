@@ -3,5 +3,6 @@ interface prng {
 	quick(): number;
 }
 
-declare function seedrandom(): prng;
-declare function seedrandom(seed: string): prng;
+interface Math {
+	seedrandom: new (seed?: string) => prng;
+}
