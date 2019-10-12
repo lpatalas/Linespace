@@ -1,2 +1,3 @@
 * text=auto
 bin/*.js -diff linguist-generated=true
+lib/*.js -diff linguist-generated=true
